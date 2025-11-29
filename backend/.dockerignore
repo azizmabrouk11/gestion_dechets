@@ -1,0 +1,6 @@
+.env
+application.properties
+application-dev.properties
+application-prod.properties
+target
+.idea

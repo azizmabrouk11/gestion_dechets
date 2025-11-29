@@ -1,0 +1,56 @@
+# Development Guide
+
+
+
+## Option 2: Run Backend/Frontend Manually (Recommended for Development)
+
+### 1. Start Infrastructure Only
+```bash
+docker compose up -d mongo mongo-express postgres keycloak
+```
+
+### 2. Run Backend Manually
+```bash
+cd backend
+mvn clean package -DskipTests
+mvn spring-boot:run
+```
+Backend runs on: http://localhost:8082
+
+### 3. Run Frontend Manually
+```bash
+cd frontend
+npm start
+```
+Frontend runs on: http://localhost:4200
+
+## Access URLs
+- Frontend: http://localhost:4200
+- Backend API: http://localhost:8082/api
+- Keycloak Admin: http://localhost:8080 (admin/admin)
+- Mongo Express: http://localhost:8089 (admin/admin)
+
+## Stop Services
+```bash
+# Stop all
+docker compose down
+
+# Stop and remove volumes
+docker compose down -v
+```
+
+
+users :
+- admin role :
+              username:admin password:nour123
+  normal user :
+                username:testuser password:test@restaurant.com
+mongo express
+USERNAME=exproot
+PASSWORD=expadmin
+
+
+
+realm import  keycloak
+realm-config-dev.json
+realm-config-prod.json

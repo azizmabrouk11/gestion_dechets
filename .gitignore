@@ -1,0 +1,16 @@
+KEYCLOAK_SYNC_GUIDE.md
+.idea
+.vscode
+
+
+
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log
+
+# Docker
+docker-compose.override.yml
+realm-config-dev.json
+realm-config-prod.json

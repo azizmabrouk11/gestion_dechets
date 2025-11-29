@@ -1,0 +1,7 @@
+ services:
+  frontend:
+    image: nourzakhama2003/dechet-frontend:${VERSION:-latest}
+    container_name: dechet-frontend
+    restart: always
+    ports:
+      - "4200:80"

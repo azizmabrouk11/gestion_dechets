@@ -1,0 +1,29 @@
+spring.application.name=backend
+server.port=8082
+
+spring.profiles.active=dev
+
+spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:8080/realms/dechetrealm
+
+# Keycloak Admin Client Configuration
+keycloak.admin.server-url=http://localhost:8080
+keycloak.admin.realm=master
+keycloak.admin.client-id=admin-cli
+keycloak.admin.username=admin
+keycloak.admin.password=admin
+keycloak.admin.target-realm=dechetrealm
+
+# MongoDB Configuration
+spring.data.mongodb.host=localhost
+spring.data.mongodb.port=27017
+spring.data.mongodb.database=dechet_db
+spring.data.mongodb.username=root
+spring.data.mongodb.password=admin
+spring.data.mongodb.authentication-database=admin
+spring.data.mongodb.auto-index-creation=false
+
+#cros origin policy
+spring.web.cors.allowed-origins=http://localhost:4200
+spring.web.cors.allowed-methods=GET,POST,PUT,DELETE,OPTIONS
+spring.web.cors.allowed-headers=*
+spring.web.cors.allow-credentials=true
