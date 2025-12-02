@@ -4,6 +4,9 @@ package com.nourproject.backend.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import com.nourproject.backend.dtos.container.ContainerDto;
+import com.nourproject.backend.dtos.pickuppoint.PickUpPointDto;
+import com.nourproject.backend.dtos.route.RouteDto;
 import com.nourproject.backend.dtos.user.UserDto;
 import com.nourproject.backend.dtos.vehicule.VehiculeDto;
 import com.nourproject.backend.entities.Incident;
@@ -33,8 +36,18 @@ public class Response {
     private UserDto user;
     private List<UserDto> users;
 
-  private VehiculeDto vehicule;
-   private List<VehiculeDto> vehicules;
+    private VehiculeDto vehicule;
+    private List<VehiculeDto> vehicules;
+
+    private PickUpPointDto pickUpPoint;
+    private List<PickUpPointDto> pickUpPoints;
+
+    private ContainerDto container;
+    private List<ContainerDto> containers;
+
+    private RouteDto route;
+    private List<RouteDto> routes;
+  
 //
 //    private Incident incident;
 //    private List<Incident> incidents;

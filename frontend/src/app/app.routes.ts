@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { CitizenComponent } from './pages/citizen/citizen.component';
 import { BlankComponent } from './layout/blank/blank.component';
 import { AppComponent } from './app.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
@@ -16,6 +17,7 @@ export const routes: Routes = [
             { path: '', component: HomeComponent },
             { path: 'home', component: HomeComponent }, // Add explicit home route,
             { path: 'dashboard', component: DashboardComponent, data: { roles: ['admin'] }, canActivate: [AuthGuard] },
+            { path: 'citizen', component: CitizenComponent, data: { roles: ['user', 'employe'] }, canActivate: [AuthGuard] },
             { path: 'profile', component: ProfileComponent, data: { roles: ['user'] } }
         ]
     },
@@ -24,7 +26,7 @@ export const routes: Routes = [
         component: BlankComponent,
         children: [
             { path: 'blank', component: BlankComponent },
-        
+
         ]
     },
 ];

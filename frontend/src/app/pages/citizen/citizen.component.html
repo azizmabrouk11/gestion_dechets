@@ -1,0 +1,177 @@
+<div class="citizen-container">
+  <!-- Header -->
+  <div class="citizen-header">
+    <div class="header-content">
+      <h1>🏠 Espace Citoyen</h1>
+      <p>Suivez la collecte des déchets dans votre quartier</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading) {
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p>Chargement des données...</p>
+  </div>
+  }
+
+  <!-- Error State -->
+  @if (errorMessage && !isLoading) {
+  <div class="error-container">
+    <p class="error-message">{{ errorMessage }}</p>
+    <button class="btn-retry" (click)="loadData()">Réessayer</button>
+  </div>
+  }
+
+  <!-- Main Content -->
+  @if (!isLoading && !errorMessage) {
+  <div class="citizen-content">
+    <!-- Quick Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📍</div>
+        <div class="stat-info">
+          <h3>{{ pickUpPoints.length }}</h3>
+          <p>Points de collecte</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🗑️</div>
+        <div class="stat-info">
+          <h3>{{ containers.length }}</h3>
+          <p>Conteneurs disponibles</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🚛</div>
+        <div class="stat-info">
+          <h3>{{ upcomingRoutes.length }}</h3>
+          <p>Prochaines collectes</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pickup Points Section -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>📍 Points de Collecte Proches</h2>
+      </div>
+
+      @if (pickUpPoints.length > 0) {
+      <div class="pickup-points-grid">
+        @for (point of pickUpPoints; track point.id) {
+        <div class="pickup-point-card">
+          <div class="point-header">
+            <div class="point-icon">📍</div>
+            <div class="point-info">
+              <h3>{{ point.location }}</h3>
+              @if (point.address) {
+              <p class="point-address">{{ point.address }}</p>
+              }
+            </div>
+          </div>
+
+          <div class="point-containers">
+            <h4>Conteneurs disponibles :</h4>
+            @if (getContainersForPickUpPoint(point.id!).length > 0) {
+            <div class="containers-list">
+              @for (container of getContainersForPickUpPoint(point.id!); track
+              container.id) {
+              <div
+                class="container-tag"
+                [class]="getContainerStatusClass(container.containerStatus)"
+              >
+                <span class="container-icon">{{
+                  getContainerTypeIcon(container.type)
+                }}</span>
+                <span class="container-type">{{ container.type }}</span>
+                <span class="container-status">{{
+                  container.containerStatus
+                }}</span>
+              </div>
+              }
+            </div>
+            } @else {
+            <p class="no-containers">Aucun conteneur disponible</p>
+            }
+          </div>
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="empty-state">
+        <p>Aucun point de collecte disponible</p>
+      </div>
+      }
+    </div>
+
+    <!-- Upcoming Routes Section -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>🚛 Prochaines Collectes</h2>
+      </div>
+
+      @if (upcomingRoutes.length > 0) {
+      <div class="routes-list">
+        @for (route of upcomingRoutes; track route.id) {
+        <div class="route-card">
+          <div class="route-icon">🚛</div>
+          <div class="route-info">
+            <h3>
+              Collecte du {{ route.routeDate | date : "fullDate" : "" : "fr" }}
+            </h3>
+            <div class="route-details">
+              @if (route.startTime) {
+              <span class="route-time">⏰ Début: {{ route.startTime }}</span>
+              } @if (route.endTime) {
+              <span class="route-time">⏰ Fin: {{ route.endTime }}</span>
+              } @if (route.status) {
+              <span class="route-status">📊 {{ route.status }}</span>
+              }
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="empty-state">
+        <p>Aucune collecte programmée</p>
+      </div>
+      }
+    </div>
+
+    <!-- Information Section -->
+    <div class="info-section">
+      <div class="info-card">
+        <h3>ℹ️ Informations Importantes</h3>
+        <ul>
+          <li>Les collectes ont lieu selon le calendrier affiché ci-dessus</li>
+          <li>
+            Veuillez trier vos déchets selon les types de conteneurs disponibles
+          </li>
+          <li>Les conteneurs pleins sont collectés en priorité</li>
+          <li>Pour toute question, contactez le service municipal</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3>♻️ Guide de Tri</h3>
+        <div class="sorting-guide">
+          <div class="sort-item">
+            <span class="sort-icon">📦</span>
+            <span class="sort-text"
+              ><strong>Carton:</strong> Boîtes, emballages</span
+            >
+          </div>
+          <div class="sort-item">
+            <span class="sort-icon">♻️</span>
+            <span class="sort-text"
+              ><strong>Plastique:</strong> Bouteilles, sacs</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>

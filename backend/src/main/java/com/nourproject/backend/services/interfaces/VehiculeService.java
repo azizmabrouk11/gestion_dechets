@@ -1,37 +1,23 @@
 package com.nourproject.backend.services.interfaces;
 
 import com.nourproject.backend.dtos.Response;
-import com.nourproject.backend.dtos.user.UserDto;
-import com.nourproject.backend.dtos.user.UserUpdateDto;
-import com.nourproject.backend.entities.User;
+import com.nourproject.backend.dtos.vehicule.VehiculeDto;
+import com.nourproject.backend.dtos.vehicule.VehiculeUpdateDto;
+import com.nourproject.backend.entities.Vehicule;
 
 public interface VehiculeService {
 
+    Response findAll();
 
-        Response findAll();
+    Response findById(String id);
 
+    Response findByMatricul(String matricul);
 
-        User getByUserName(String username);
+    Response save(VehiculeDto vehiculeDto);
 
-        User getByEmail(String email);
+    Response updateById(String id, VehiculeUpdateDto vehiculeUpdateDto);
 
+    Response deleteById(String id);
 
-        Response findById(String id);
-
-
-        Response findByUserName(String username);
-
-
-        Response findByEmail(String email);
-
-        Response save(UserDto userDto);
-
-        Response updateById(String id, UserUpdateDto userUpdateDto);
-
-
-        Response deleteByUserId(String id);
-
-
-        Response createOrUpdateUser(UserDto userDto);
-
+    Vehicule getByMatricul(String matricul);
 }

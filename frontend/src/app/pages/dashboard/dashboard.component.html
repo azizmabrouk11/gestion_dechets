@@ -1,67 +1,200 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
-    <h1>Admin Dashboard</h1>
-    <p>Welcome to the admin dashboard</p>
+    <h1>⚙️ Tableau de Bord Administrateur</h1>
+    <p>Gestion complète de la collecte des déchets</p>
   </div>
 
+  @if (isLoading) {
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p>Chargement des données...</p>
+  </div>
+  } @if (errorMessage && !isLoading) {
+  <div class="error-container">
+    <p class="error-message">{{ errorMessage }}</p>
+  </div>
+  } @if (!isLoading && !errorMessage) {
   <div class="dashboard-content">
-    <div class="dashboard-card">
-      <h2>🎯 Dashboard Overview</h2>
-      <p>
-        This is the admin-only dashboard page. You're seeing this because you
-        have admin privileges.
-      </p>
+    <!-- Statistics Cards -->
+    <div class="stats-row">
+      <div class="stat-card primary">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h3>{{ users.length }}</h3>
+          <p>Total Utilisateurs</p>
+          <span class="stat-detail">{{ activeUsersCount }} actifs</span>
+        </div>
+      </div>
+
+      <div class="stat-card success">
+        <div class="stat-icon">🚛</div>
+        <div class="stat-content">
+          <h3>{{ vehicules.length }}</h3>
+          <p>Véhicules</p>
+          <span class="stat-detail"
+            >{{ availableVehiculesCount }} disponibles</span
+          >
+        </div>
+      </div>
+
+      <div class="stat-card warning">
+        <div class="stat-icon">🗑️</div>
+        <div class="stat-content">
+          <h3>{{ containers.length }}</h3>
+          <p>Conteneurs</p>
+          <span class="stat-detail"
+            >{{ functionalContainersCount }} fonctionnels</span
+          >
+        </div>
+      </div>
+
+      <div class="stat-card info">
+        <div class="stat-icon">📍</div>
+        <div class="stat-content">
+          <h3>{{ pickUpPoints.length }}</h3>
+          <p>Points de Collecte</p>
+        </div>
+      </div>
+
+      <div class="stat-card danger">
+        <div class="stat-icon">🛣️</div>
+        <div class="stat-content">
+          <h3>{{ routes.length }}</h3>
+          <p>Routes</p>
+          <span class="stat-detail">{{ todayRoutesCount }} aujourd'hui</span>
+        </div>
+      </div>
     </div>
 
-    <div class="dashboard-stats">
-      <div class="stat-card">
-        <h3>Total Users</h3>
-        <p class="stat-number">{{ users.length }}</p>
-      </div>
-      <div class="stat-card">
-        <h3>Active Users</h3>
-        <p class="stat-number">{{ activeUsersCount }}</p>
-      </div>
-      <div class="stat-card">
-        <h3>System Status</h3>
-        <p class="stat-status">✅ Online</p>
-      </div>
+    <!-- Navigation Tabs -->
+    <div class="tabs-container">
+      <button
+        class="tab-button"
+        [class.active]="activeSection === 'overview'"
+        (click)="setActiveSection('overview')"
+      >
+        📊 Vue d'ensemble
+      </button>
+      <button
+        class="tab-button"
+        [class.active]="activeSection === 'users'"
+        (click)="setActiveSection('users')"
+      >
+        👥 Utilisateurs
+      </button>
+      <button
+        class="tab-button"
+        [class.active]="activeSection === 'vehicules'"
+        (click)="setActiveSection('vehicules')"
+      >
+        🚛 Véhicules
+      </button>
+      <button
+        class="tab-button"
+        [class.active]="activeSection === 'containers'"
+        (click)="setActiveSection('containers')"
+      >
+        🗑️ Conteneurs
+      </button>
+      <button
+        class="tab-button"
+        [class.active]="activeSection === 'routes'"
+        (click)="setActiveSection('routes')"
+      >
+        🛣️ Routes
+      </button>
+      <button
+        class="tab-button"
+        [class.active]="activeSection === 'pickuppoints'"
+        (click)="setActiveSection('pickuppoints')"
+      >
+        📍 Points de Collecte
+      </button>
     </div>
 
-    <!-- Users List -->
-    <div class="dashboard-card">
-      <h2>👥 Users Management</h2>
+    <!-- Overview Section -->
+    @if (activeSection === 'overview') {
+    <div class="section-content">
+      <div class="overview-grid">
+        <div class="overview-card">
+          <h3>📈 Statistiques Récentes</h3>
+          <div class="stats-list">
+            <div class="stats-item">
+              <span class="label">Utilisateurs actifs:</span>
+              <span class="value"
+                >{{ activeUsersCount }} / {{ users.length }}</span
+              >
+            </div>
+            <div class="stats-item">
+              <span class="label">Véhicules opérationnels:</span>
+              <span class="value"
+                >{{ availableVehiculesCount }} / {{ vehicules.length }}</span
+              >
+            </div>
+            <div class="stats-item">
+              <span class="label">Conteneurs fonctionnels:</span>
+              <span class="value"
+                >{{ functionalContainersCount }} / {{ containers.length }}</span
+              >
+            </div>
+            <div class="stats-item">
+              <span class="label">Routes aujourd'hui:</span>
+              <span class="value">{{ todayRoutesCount }}</span>
+            </div>
+          </div>
+        </div>
 
-      @if (isLoading) {
-      <div class="loading-container">
-        <div class="spinner"></div>
-        <p>Loading users...</p>
+        <div class="overview-card">
+          <h3>⚡ Actions Rapides</h3>
+          <div class="quick-actions">
+            <button class="action-btn" (click)="setActiveSection('users')">
+              <span class="btn-icon">👥</span>
+              Gérer Utilisateurs
+            </button>
+            <button class="action-btn" (click)="setActiveSection('vehicules')">
+              <span class="btn-icon">🚛</span>
+              Gérer Véhicules
+            </button>
+            <button class="action-btn" (click)="setActiveSection('routes')">
+              <span class="btn-icon">🛣️</span>
+              Planifier Routes
+            </button>
+            <button class="action-btn" (click)="loadAllData()">
+              <span class="btn-icon">🔄</span>
+              Actualiser
+            </button>
+          </div>
+        </div>
       </div>
-      } @if (errorMessage && !isLoading) {
-      <div class="error-container">
-        <p class="error-message">{{ errorMessage }}</p>
+    </div>
+    }
+
+    <!-- Users Section -->
+    @if (activeSection === 'users') {
+    <div class="section-content">
+      <div class="section-header">
+        <h2>👥 Gestion des Utilisateurs</h2>
       </div>
-      } @if (!isLoading && !errorMessage && users.length > 0) {
-      <div class="users-table-container">
-        <table class="users-table">
+
+      @if (users.length > 0) {
+      <div class="table-container">
+        <table class="data-table">
           <thead>
             <tr>
-              <th>Username</th>
+              <th>Nom d'utilisateur</th>
               <th>Email</th>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Face Auth</th>
-              <th>Created</th>
+              <th>Nom Complet</th>
+              <th>Rôle</th>
+              <th>Statut</th>
+              <th>Auth Faciale</th>
+              <th>Date Création</th>
             </tr>
           </thead>
           <tbody>
             @for (user of users; track user.id) {
             <tr>
-              <td class="username-cell">
-                <span class="username">{{ user.userName }}</span>
-              </td>
-              <td class="email-cell">{{ user.email }}</td>
+              <td class="username-cell">{{ user.userName }}</td>
+              <td>{{ user.email }}</td>
               <td>{{ user.firstName }} {{ user.lastName }}</td>
               <td>
                 <span [class]="'role-badge ' + getRoleBadgeClass(user.role)">
@@ -75,7 +208,7 @@
                     (user.isActive ? 'status-active' : 'status-inactive')
                   "
                 >
-                  {{ user.isActive ? "✓ Active" : "✗ Inactive" }}
+                  {{ user.isActive ? "✓ Actif" : "✗ Inactif" }}
                 </span>
               </td>
               <td class="text-center">
@@ -88,7 +221,7 @@
                   {{ user.faceAuthEnabled ? "✓" : "✗" }}
                 </span>
               </td>
-              <td class="date-cell">
+              <td>
                 {{ user.createdAt ? (user.createdAt | date : "short") : "N/A" }}
               </td>
             </tr>
@@ -96,11 +229,170 @@
           </tbody>
         </table>
       </div>
-      } @if (!isLoading && !errorMessage && users.length === 0) {
-      <div class="empty-state">
-        <p>No users found</p>
-      </div>
+      } @else {
+      <div class="empty-state">Aucun utilisateur trouvé</div>
       }
     </div>
+    }
+
+    <!-- Vehicules Section -->
+    @if (activeSection === 'vehicules') {
+    <div class="section-content">
+      <div class="section-header">
+        <h2>🚛 Gestion des Véhicules</h2>
+      </div>
+
+      @if (vehicules.length > 0) {
+      <div class="cards-grid">
+        @for (vehicule of vehicules; track vehicule.id) {
+        <div class="entity-card">
+          <div class="card-icon">🚛</div>
+          <div class="card-content">
+            <h3>{{ vehicule.matricul }}</h3>
+            <div class="card-details">
+              <span class="detail-item">
+                <strong>Type:</strong> {{ vehicule.type }}
+              </span>
+              <span class="detail-item">
+                <strong>Capacité:</strong> {{ vehicule.capacity }} kg
+              </span>
+              <span class="detail-item">
+                <strong>Statut:</strong>
+                <span
+                  [class]="'badge ' + getVehiculeStatusClass(vehicule.status)"
+                >
+                  {{ vehicule.status }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="empty-state">Aucun véhicule disponible</div>
+      }
+    </div>
+    }
+
+    <!-- Containers Section -->
+    @if (activeSection === 'containers') {
+    <div class="section-content">
+      <div class="section-header">
+        <h2>🗑️ Gestion des Conteneurs</h2>
+      </div>
+
+      @if (containers.length > 0) {
+      <div class="cards-grid">
+        @for (container of containers; track container.id) {
+        <div class="entity-card">
+          <div class="card-icon">🗑️</div>
+          <div class="card-content">
+            <h3>{{ container.type }}</h3>
+            <div class="card-details">
+              <span class="detail-item">
+                <strong>Capacité:</strong> {{ container.capacity }} L
+              </span>
+              <span class="detail-item">
+                <strong>Niveau:</strong> {{ container.fillLevel }}%
+              </span>
+              <span class="detail-item">
+                <strong>Statut:</strong>
+                <span
+                  [class]="
+                    'badge ' +
+                    getContainerStatusClass(container.containerStatus)
+                  "
+                >
+                  {{ container.containerStatus }}
+                </span>
+              </span>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress-fill"
+                [style.width.%]="container.fillLevel"
+              ></div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="empty-state">Aucun conteneur disponible</div>
+      }
+    </div>
+    }
+
+    <!-- Routes Section -->
+    @if (activeSection === 'routes') {
+    <div class="section-content">
+      <div class="section-header">
+        <h2>🛣️ Gestion des Routes</h2>
+      </div>
+
+      @if (routes.length > 0) {
+      <div class="routes-list">
+        @for (route of routes; track route.id) {
+        <div class="route-item">
+          <div class="route-header">
+            <span class="route-icon">🛣️</span>
+            <h3>
+              Route du {{ route.routeDate | date : "fullDate" : "" : "fr" }}
+            </h3>
+          </div>
+          <div class="route-details">
+            @if (route.startTime) {
+            <span class="detail-badge">⏰ Début: {{ route.startTime }}</span>
+            } @if (route.endTime) {
+            <span class="detail-badge">⏰ Fin: {{ route.endTime }}</span>
+            } @if (route.status) {
+            <span class="detail-badge">📊 {{ route.status }}</span>
+            }
+          </div>
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="empty-state">Aucune route planifiée</div>
+      }
+    </div>
+    }
+
+    <!-- PickUp Points Section -->
+    @if (activeSection === 'pickuppoints') {
+    <div class="section-content">
+      <div class="section-header">
+        <h2>📍 Gestion des Points de Collecte</h2>
+      </div>
+
+      @if (pickUpPoints.length > 0) {
+      <div class="cards-grid">
+        @for (point of pickUpPoints; track point.id) {
+        <div class="entity-card">
+          <div class="card-icon">📍</div>
+          <div class="card-content">
+            <h3>{{ point.location }}</h3>
+            @if (point.address) {
+            <p class="card-address">{{ point.address }}</p>
+            }
+            <div class="card-details">
+              @if (point.latitude && point.longitude) {
+              <span class="detail-item">
+                <strong>Coordonnées:</strong> {{ point.latitude }},
+                {{ point.longitude }}
+              </span>
+              }
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="empty-state">Aucun point de collecte disponible</div>
+      }
+    </div>
+    }
   </div>
+  }
 </div>
