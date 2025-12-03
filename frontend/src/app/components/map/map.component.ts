@@ -2,7 +2,9 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { PickUpPointService } from '../../services/pickup-point.service';
 import * as L from 'leaflet';
+import { AppResponse } from '../../models/AppResponse';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -31,7 +33,7 @@ export class MapComponent implements AfterViewInit {
 
   private readonly GRAPHHOPPER_KEY = '0f520a1f-6282-4995-bb8f-d285c7cb0f11';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private pickUpPointService: PickUpPointService) { }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -61,12 +63,12 @@ export class MapComponent implements AfterViewInit {
   }
 
   private loadPickupPoints(): void {
-    this.http.get<any>('http://127.0.0.1:8082/api/public/pickuppoints').subscribe({
-      next: (res) => {
+    this.pickUpPointService.getAll().subscribe({
+      next: (res: AppResponse) => {
         this.clearMap();
         this.fullPoints = [];
         this.addDepotMarker();
-        this.plotPoints(res.pickuppoints);
+        this.plotPoints(res.pickuppoints || []);
 
         if (this.fullPoints.length > 0) {
           this.drawBestRouteFromHome();  // ← Ça marche maintenant !
