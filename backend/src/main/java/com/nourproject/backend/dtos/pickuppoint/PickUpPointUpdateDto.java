@@ -18,5 +18,6 @@ import java.util.List;
 @Builder
 public class PickUpPointUpdateDto {
     private List<Container> containers;
-    private String location;
+    private double locationLatitude;
+    private double locationLongitude;
 }

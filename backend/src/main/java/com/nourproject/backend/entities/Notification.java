@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Builder
@@ -20,7 +21,13 @@ public class Notification {
     private String recipient;
     private String body;
     private NotificationType notificationType;
-    private Incident incident;
-    private Container container;
+    @Field("userId")
+    private String userId;
+
+    @Field("containerId")     // or "container_id" if you prefer snake_case in DB
+    private String containerId;
+
+    @Field("incidentId")
+    private String incidentId;
 
 }

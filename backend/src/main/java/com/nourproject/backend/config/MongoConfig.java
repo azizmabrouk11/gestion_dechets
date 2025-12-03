@@ -14,17 +14,7 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-/**
- * MongoDB Configuration
- * 
- * Enables MongoDB auditing for automatic timestamp management
- * and configures repository scanning.
- * Creates indexes manually to avoid authentication issues.
- * 
- * @author Senior Developer
- * @version 1.0
- * @since 2025-11-28
- */
+
 @Configuration
 @EnableMongoAuditing
 @EnableMongoRepositories(basePackages = "com.nourproject.backend.repositories")

@@ -29,33 +29,37 @@ public class PickUpPointServiceImpl implements PickUpPointService {
         return Response.builder()
                 .status(200)
                 .message("List of pickup points retrieved successfully")
-                .pickUpPoints(list)
+                .pickuppoints(list)
                 .build();
     }
+    @Override
+    public Response findAllFull() {
+        List<PickUpPointDto> list = pickUpPointRepository.findAll().stream()
+                .filter(p -> p.getContainers().stream()
+                        .anyMatch(c -> ((double) c.getFillLevel() / c.getCapacity()) * 100 >= 80)
+                )
+                .map(pickUpPointMapper::pickUpPointToPickUpPointDto)
+                .toList();
+
+        return Response.builder()
+                .status(200)
+                .message("List of pickup points retrieved successfully")
+                .pickuppoints(list)
+                .build();
+    }
+
+
 
     @Override
     public Response findById(String id) {
         PickUpPointDto pickUpPointDto = pickUpPointRepository.findById(id)
                 .map(pickUpPointMapper::pickUpPointToPickUpPointDto)
                 .orElseThrow(() -> new NotFoundException("PickUp Point with ID " + id + " not found"));
-        
-        return Response.builder()
-                .status(200)
-                .message("PickUp Point retrieved successfully")
-                .pickUpPoint(pickUpPointDto)
-                .build();
-    }
 
-    @Override
-    public Response findByLocation(String location) {
-        PickUpPointDto pickUpPointDto = pickUpPointRepository.findByLocation(location)
-                .map(pickUpPointMapper::pickUpPointToPickUpPointDto)
-                .orElseThrow(() -> new NotFoundException("PickUp Point with location " + location + " not found"));
-        
         return Response.builder()
                 .status(200)
                 .message("PickUp Point retrieved successfully")
-                .pickUpPoint(pickUpPointDto)
+                .pickuppoint(pickUpPointDto)
                 .build();
     }
 
@@ -64,11 +68,11 @@ public class PickUpPointServiceImpl implements PickUpPointService {
         PickUpPoint pickUpPoint = pickUpPointMapper.pickUpPointDtoToPickUpPoint(pickUpPointDto);
         PickUpPoint savedPickUpPoint = pickUpPointRepository.save(pickUpPoint);
         PickUpPointDto savedDto = pickUpPointMapper.pickUpPointToPickUpPointDto(savedPickUpPoint);
-        
+
         return Response.builder()
                 .status(201)
                 .message("PickUp Point created successfully")
-                .pickUpPoint(savedDto)
+                .pickuppoint(savedDto)
                 .build();
     }
 
@@ -76,15 +80,15 @@ public class PickUpPointServiceImpl implements PickUpPointService {
     public Response updateById(String id, PickUpPointUpdateDto pickUpPointUpdateDto) {
         PickUpPoint pickUpPoint = pickUpPointRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("PickUp Point with ID " + id + " not found"));
-        
+
         pickUpPointMapper.updatePickUpPointFromDto(pickUpPointUpdateDto, pickUpPoint);
         PickUpPoint updatedPickUpPoint = pickUpPointRepository.save(pickUpPoint);
         PickUpPointDto updatedDto = pickUpPointMapper.pickUpPointToPickUpPointDto(updatedPickUpPoint);
-        
+
         return Response.builder()
                 .status(200)
                 .message("PickUp Point updated successfully")
-                .pickUpPoint(updatedDto)
+                .pickuppoint(updatedDto)
                 .build();
     }
 
@@ -93,20 +97,14 @@ public class PickUpPointServiceImpl implements PickUpPointService {
     public Response deleteById(String id) {
         PickUpPoint pickUpPoint = pickUpPointRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("PickUp Point with ID " + id + " not found"));
-        
+
         PickUpPointDto deletedDto = pickUpPointMapper.pickUpPointToPickUpPointDto(pickUpPoint);
         pickUpPointRepository.delete(pickUpPoint);
-        
+
         return Response.builder()
                 .status(200)
                 .message("PickUp Point deleted successfully")
-                .pickUpPoint(deletedDto)
+                .pickuppoint(deletedDto)
                 .build();
-    }
-
-    @Override
-    public PickUpPoint getByLocation(String location) {
-        return pickUpPointRepository.findByLocation(location)
-                .orElseThrow(() -> new NotFoundException("PickUp Point with location " + location + " not found"));
     }
 }

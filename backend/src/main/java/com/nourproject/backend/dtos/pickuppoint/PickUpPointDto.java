@@ -19,5 +19,6 @@ import java.util.List;
 public class PickUpPointDto {
     private String id;
     private List<Container> containers;
-    private String location;
+    private double locationLatitude;
+    private double locationLongitude;
 }

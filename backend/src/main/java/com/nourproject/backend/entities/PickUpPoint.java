@@ -15,13 +15,13 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "collectpoints")
+@Document(collection = "pickuppoints")
 public class PickUpPoint {
     @Id
     private String _id;
     @Builder.Default
     List<Container> containers=new ArrayList<Container>();
-    private String location;
-
+    private double locationLatitude;
+    private double locationLongitude;
 
 }

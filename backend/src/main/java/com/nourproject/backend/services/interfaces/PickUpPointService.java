@@ -8,16 +8,12 @@ import com.nourproject.backend.entities.PickUpPoint;
 public interface PickUpPointService {
 
     Response findAll();
-
+   Response findAllFull();
     Response findById(String id);
-
-    Response findByLocation(String location);
 
     Response save(PickUpPointDto pickUpPointDto);
 
     Response updateById(String id, PickUpPointUpdateDto pickUpPointUpdateDto);
 
     Response deleteById(String id);
-
-    PickUpPoint getByLocation(String location);
 }

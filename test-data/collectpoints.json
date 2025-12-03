@@ -1,0 +1,55 @@
+[
+  {
+    "_id": "6568c1b2c3d4e5f6a7b8c9d0",
+    "locationLatitude": 36.8065,
+    "locationLongitude": 10.1815,
+    "containers": [
+      {
+        "_id": "6568d1b2c3d4e5f6a7b8c9d0",
+        "containerType": "Plastique",
+        "capacity": 1000.0,
+        "fillLevel": 450.0,
+        "containerStatus": "functional",
+        "PickUpPointId": "6568c1b2c3d4e5f6a7b8c9d0"
+      },
+      {
+        "_id": "6568d1b2c3d4e5f6a7b8c9d1",
+        "containerType": "Carton",
+        "capacity": 800.0,
+        "fillLevel": 720.0,
+        "containerStatus": "functional",
+        "PickUpPointId": "6568c1b2c3d4e5f6a7b8c9d0"
+      }
+    ]
+  },
+  {
+    "_id": "6568c1b2c3d4e5f6a7b8c9d1",
+    "locationLatitude": 36.8500,
+    "locationLongitude": 10.2000,
+    "containers": [
+      {
+        "_id": "6568d1b2c3d4e5f6a7b8c9d2",
+        "containerType": "Plastique",
+        "capacity": 1200.0,
+        "fillLevel": 900.0,
+        "containerStatus": "functional",
+        "PickUpPointId": "6568c1b2c3d4e5f6a7b8c9d1"
+      }
+    ]
+  },
+  {
+    "_id": "6568c1b2c3d4e5f6a7b8c9d2",
+    "locationLatitude": 36.7800,
+    "locationLongitude": 10.1500,
+    "containers": [
+      {
+        "_id": "6568d1b2c3d4e5f6a7b8c9d3",
+        "containerType": "Carton",
+        "capacity": 1000.0,
+        "fillLevel": 200.0,
+        "containerStatus": "non_functional",
+        "PickUpPointId": "6568c1b2c3d4e5f6a7b8c9d2"
+      }
+    ]
+  }
+]

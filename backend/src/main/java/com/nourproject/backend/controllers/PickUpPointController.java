@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/pickuppoints")
+@RequestMapping("/api/public/pickuppoints")
 @RequiredArgsConstructor
 public class PickUpPointController {
 
@@ -21,15 +21,14 @@ public class PickUpPointController {
     public ResponseEntity<Response> getAllPickUpPoints() {
         return ResponseEntity.ok(pickUpPointService.findAll());
     }
+    @GetMapping( "/full")
+    public ResponseEntity<Response> getFullPickUpPoints() {
+        return ResponseEntity.ok(pickUpPointService.findAllFull());
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Response> getPickUpPointById(@PathVariable String id) {
         return ResponseEntity.ok(pickUpPointService.findById(id));
-    }
-
-    @GetMapping("/location/{location}")
-    public ResponseEntity<Response> getPickUpPointByLocation(@PathVariable String location) {
-        return ResponseEntity.ok(pickUpPointService.findByLocation(location));
     }
 
     @PostMapping

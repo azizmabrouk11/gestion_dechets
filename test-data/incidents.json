@@ -1,0 +1,44 @@
+[
+  {
+    "_id": "6568f1b2c3d4e5f6a7b8c9d0",
+    "description": "Container overflowing with plastic waste",
+    "location": "Near City Center Mall, Tunis",
+    "status": "REPORTED",
+    "priority": "HIGH",
+    "citizenId": "6568a1b2c3d4e5f6a7b8c9d0",
+    "pickUpPointId": "6568c1b2c3d4e5f6a7b8c9d0",
+    "imageUrl": "https://example.com/images/incident1.jpg",
+    "reportedAt": "2025-12-02T14:30:00",
+    "resolvedAt": null,
+    "assignedTo": null,
+    "resolutionNotes": null
+  },
+  {
+    "_id": "6568f1b2c3d4e5f6a7b8c9d1",
+    "description": "Broken container needs replacement",
+    "location": "Avenue Habib Bourguiba",
+    "status": "IN_PROGRESS",
+    "priority": "MEDIUM",
+    "citizenId": "6568a1b2c3d4e5f6a7b8c9d0",
+    "pickUpPointId": "6568c1b2c3d4e5f6a7b8c9d2",
+    "imageUrl": "https://example.com/images/incident2.jpg",
+    "reportedAt": "2025-12-01T10:15:00",
+    "resolvedAt": null,
+    "assignedTo": "6568a1b2c3d4e5f6a7b8c9d1",
+    "resolutionNotes": "Technician dispatched to location"
+  },
+  {
+    "_id": "6568f1b2c3d4e5f6a7b8c9d2",
+    "description": "Missed collection schedule",
+    "location": "Rue de la République",
+    "status": "RESOLVED",
+    "priority": "LOW",
+    "citizenId": "6568a1b2c3d4e5f6a7b8c9d0",
+    "pickUpPointId": "6568c1b2c3d4e5f6a7b8c9d1",
+    "imageUrl": null,
+    "reportedAt": "2025-11-28T16:45:00",
+    "resolvedAt": "2025-11-29T09:00:00",
+    "assignedTo": "6568a1b2c3d4e5f6a7b8c9d1",
+    "resolutionNotes": "Collection completed on next route"
+  }
+]

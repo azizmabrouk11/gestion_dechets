@@ -56,3 +56,9 @@ realm import  keycloak
 realm-config-dev.json
 realm-config-prod.json
 https://github.com/nourzakhama2003/projet-dechet.git
+
+
+
+database 
+docker cp test-data\containers.json projet-dechet-mongo-1:/tmp/containers.json;
+docker exec projet-dechet-mongo-1 mongoimport --db dechet_db --collection containers --file /tmp/containers.json --jsonArray --username root --password admin --authenticationDatabase admin

@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/containers")
+@RequestMapping("/api/public/containers")
 @RequiredArgsConstructor
 public class ContainerController {
 

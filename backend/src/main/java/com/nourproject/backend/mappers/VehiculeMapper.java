@@ -11,11 +11,13 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface VehiculeMapper {
 
-
+    @Mapping(target = "_id", ignore = true)
     Vehicule vehiculeDtoToVehicule(VehiculeDto vehiculeDto);
 
+    @Mapping(source = "_id", target = "id")
     VehiculeDto vehiculeToVehiculeDto(Vehicule vehicule);
 
+    @Mapping(target = "_id", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateVehiculeFromDto(VehiculeUpdateDto vehiculeUpdateDto, @MappingTarget Vehicule vehicule);
 

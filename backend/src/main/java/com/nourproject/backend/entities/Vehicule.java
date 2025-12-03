@@ -24,6 +24,7 @@ public class Vehicule {
     private double capacity;
     private VehiculeStatus vehiculeStatus;
     private VehiculeType vehiculeType;
+    @Builder.Default
     List<User> users=new ArrayList<User>();
 
 

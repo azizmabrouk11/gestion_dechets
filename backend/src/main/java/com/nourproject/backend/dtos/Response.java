@@ -1,17 +1,15 @@
 package com.nourproject.backend.dtos;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import com.nourproject.backend.dtos.container.ContainerDto;
+import com.nourproject.backend.dtos.incident.IncidentDto;
+import com.nourproject.backend.dtos.Notification.NotificationDto;
 import com.nourproject.backend.dtos.pickuppoint.PickUpPointDto;
 import com.nourproject.backend.dtos.route.RouteDto;
 import com.nourproject.backend.dtos.user.UserDto;
 import com.nourproject.backend.dtos.vehicule.VehiculeDto;
-import com.nourproject.backend.entities.Incident;
-import com.nourproject.backend.entities.Route;
-import com.nourproject.backend.entities.Vehicule;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,30 +37,20 @@ public class Response {
     private VehiculeDto vehicule;
     private List<VehiculeDto> vehicules;
 
-    private PickUpPointDto pickUpPoint;
-    private List<PickUpPointDto> pickUpPoints;
+    private PickUpPointDto pickuppoint;
+    private List<PickUpPointDto> pickuppoints;
 
     private ContainerDto container;
     private List<ContainerDto> containers;
 
     private RouteDto route;
     private List<RouteDto> routes;
-  
-//
-//    private Incident incident;
-//    private List<Incident> incidents;
-//
-//    private Route route;
-//    private List<Route> routes;
-//
 
+    private IncidentDto incident;
+    private List<IncidentDto> incidents;
 
-
-
-
-    //Payment data output
-    // private NotificationDto notification;
-    // private List<NotificationDto> notifications;
+    private NotificationDto notification;
+    private List<NotificationDto> notifications;
 
     private final LocalDateTime time = LocalDateTime.now();
 
