@@ -9,7 +9,7 @@ import { Route } from "../models/Route";
     providedIn: 'root'
 })
 export class RouteService {
-    URL = `${environment.API_URL}/routes`;
+    URL = `${environment.API_URL}/public/routes`;
 
     constructor(private http: HttpClient) { }
 

@@ -9,7 +9,7 @@ import { PickUpPoint } from "../models/PickUpPoint";
     providedIn: 'root'
 })
 export class PickUpPointService {
-    URL = `${environment.API_URL}/pickuppoints`;
+    URL = `${environment.API_URL}/public/pickuppoints`;
 
     constructor(private http: HttpClient) { }
 
@@ -19,10 +19,6 @@ export class PickUpPointService {
 
     getById(id: string): Observable<AppResponse> {
         return this.http.get<AppResponse>(`${this.URL}/${id}`);
-    }
-
-    getByLocation(location: string): Observable<AppResponse> {
-        return this.http.get<AppResponse>(`${this.URL}/location/${location}`);
     }
 
     create(pickUpPoint: Partial<PickUpPoint>): Observable<AppResponse> {

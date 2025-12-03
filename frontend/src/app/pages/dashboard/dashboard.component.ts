@@ -11,6 +11,7 @@ import { Container } from '../../models/Container';
 import { Route } from '../../models/Route';
 import { PickUpPoint } from '../../models/PickUpPoint';
 import { Subscription } from 'rxjs';
+import { AppResponse } from '../../models/AppResponse';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,7 +24,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   vehicules: Vehicule[] = [];
   containers: Container[] = [];
   routes: Route[] = [];
-  pickUpPoints: PickUpPoint[] = [];
+  pickuppoints: PickUpPoint[] = [];
 
   isLoading = true;
   errorMessage = '';
@@ -112,9 +113,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   loadPickUpPoints(): void {
     const sub = this.pickUpPointService.getAll().subscribe({
-      next: (response) => {
-        if (response.pickUpPoints) {
-          this.pickUpPoints = response.pickUpPoints;
+      next: (response:AppResponse) => {
+        if (response.pickuppoints) {
+          this.pickuppoints = response.pickuppoints;
         }
       },
       error: (error) => console.error('Error loading pickup points:', error)

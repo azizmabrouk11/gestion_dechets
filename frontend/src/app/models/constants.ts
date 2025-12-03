@@ -1,7 +1,8 @@
 export const links=[
     { name: 'Home', path: '/home' },
-    { name: 'page', path: '/rooms' },
-  
+    { name: 'map', path: '/map' },
+    { name: 'Resources', path: '/Resources' },
     { name: 'dashboard', path: '/dashboard' },
+
    
 ]

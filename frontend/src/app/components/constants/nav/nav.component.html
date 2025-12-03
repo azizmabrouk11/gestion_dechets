@@ -3,9 +3,9 @@
     <ng-container *ngFor="let link of links">
       <a
         *ngIf="
-          (link.name !== 'dashboard' && link.name !== 'All-Bookings') ||
+          (link.name !== 'dashboard' && link.name !== 'Resources') ||
           (link.name === 'dashboard' && admin) ||
-          (link.name === 'All-Bookings' && admin)
+          (link.name === 'Resources' && admin)
         "
         [routerLink]="link.path"
         routerLinkActive="active"

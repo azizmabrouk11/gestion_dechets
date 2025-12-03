@@ -51,7 +51,7 @@
       <div class="stat-card info">
         <div class="stat-icon">📍</div>
         <div class="stat-content">
-          <h3>{{ pickUpPoints.length }}</h3>
+          <h3>{{ pickuppoints.length }}</h3>
           <p>Points de Collecte</p>
         </div>
       </div>
@@ -366,21 +366,21 @@
         <h2>📍 Gestion des Points de Collecte</h2>
       </div>
 
-      @if (pickUpPoints.length > 0) {
+      @if (pickuppoints.length > 0) {
       <div class="cards-grid">
-        @for (point of pickUpPoints; track point.id) {
+        @for (point of pickuppoints; track point.id) {
         <div class="entity-card">
           <div class="card-icon">📍</div>
           <div class="card-content">
-            <h3>{{ point.location }}</h3>
-            @if (point.address) {
-            <p class="card-address">{{ point.address }}</p>
-            }
+            <h3>Point de Collecte</h3>
             <div class="card-details">
-              @if (point.latitude && point.longitude) {
               <span class="detail-item">
-                <strong>Coordonnées:</strong> {{ point.latitude }},
-                {{ point.longitude }}
+                <strong>Coordonnées:</strong> {{ point.locationLatitude }},
+                {{ point.locationLongitude }}
+              </span>
+              @if (point.containers && point.containers.length > 0) {
+              <span class="detail-item">
+                <strong>Conteneurs:</strong> {{ point.containers.length }}
               </span>
               }
             </div>

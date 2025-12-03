@@ -10,7 +10,7 @@ import { ContainerStatus } from "../models/enums/ContainerStatus";
     providedIn: 'root'
 })
 export class ContainerService {
-    URL = `${environment.API_URL}/containers`;
+    URL = `${environment.API_URL}/public/containers`;
 
     constructor(private http: HttpClient) { }
 

@@ -1,9 +1,12 @@
+import { NotificationType } from './enums/NotificationType';
+
 export interface Notification {
     id?: string;
-    userId: string;
-    title: string;
-    message: string;
-    type: 'INFO' | 'WARNING' | 'SUCCESS' | 'ERROR';
-    read: boolean;
-    createdAt?: string;
+    subject: string;
+    recipient: string;
+    body: string;
+    notificationType: NotificationType;
+    userId?: string;
+    containerId?: string;
+    incidentId?: string;
 }

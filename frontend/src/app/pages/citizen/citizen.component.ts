@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
     styleUrl: './citizen.component.css'
 })
 export class CitizenComponent implements OnInit, OnDestroy {
-    pickUpPoints: PickUpPoint[] = [];
+    pickuppoints: PickUpPoint[] = [];
     containers: Container[] = [];
     upcomingRoutes: Route[] = [];
 
@@ -43,27 +43,23 @@ export class CitizenComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.errorMessage = '';
 
-        // Load pickup points
+        // Load pickup points (which include embedded containers)
         const pickUpSub = this.pickUpPointService.getAll().subscribe({
             next: (response) => {
-                if (response.pickUpPoints) {
-                    this.pickUpPoints = response.pickUpPoints;
+                if (response.pickuppoints) {
+                    this.pickuppoints = response.pickuppoints;
+                    // Extract all containers from pickup points
+                    this.containers = [];
+                    this.pickuppoints.forEach(point => {
+                        if (point.containers && point.containers.length > 0) {
+                            this.containers.push(...point.containers);
+                        }
+                    });
                 }
             },
             error: (error) => {
                 console.error('Error loading pickup points:', error);
-            }
-        });
-
-        // Load containers
-        const containerSub = this.containerService.getAll().subscribe({
-            next: (response) => {
-                if (response.containers) {
-                    this.containers = response.containers;
-                }
-            },
-            error: (error) => {
-                console.error('Error loading containers:', error);
+                this.errorMessage = 'Erreur lors du chargement des points de collecte';
             }
         });
 
@@ -82,7 +78,7 @@ export class CitizenComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.subscriptions.push(pickUpSub, containerSub, routeSub);
+        this.subscriptions.push(pickUpSub, routeSub);
     }
 
     getContainerStatusClass(status: string): string {
@@ -98,6 +94,7 @@ export class CitizenComponent implements OnInit, OnDestroy {
     }
 
     getContainersForPickUpPoint(pickUpPointId: string): Container[] {
-        return this.containers.filter(c => c.pickUpPointId === pickUpPointId);
+        const point = this.pickuppoints.find(p => p.id === pickUpPointId);
+        return point?.containers || [];
     }
 }

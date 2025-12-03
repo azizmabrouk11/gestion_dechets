@@ -8,6 +8,8 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout.component'
 import { AuthGuard } from './keycloak/auth.guard';
 // import { FaceLoginComponent } from './pages/face-login/face-login.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { ResourcesComponent } from './components/resources/resources.component';
+import { MapComponent } from './components/map/map.component';
 
 export const routes: Routes = [
     {
@@ -17,7 +19,8 @@ export const routes: Routes = [
             { path: '', component: HomeComponent },
             { path: 'home', component: HomeComponent }, // Add explicit home route,
             { path: 'dashboard', component: DashboardComponent, data: { roles: ['admin'] }, canActivate: [AuthGuard] },
-            { path: 'citizen', component: CitizenComponent, data: { roles: ['user', 'employe'] }, canActivate: [AuthGuard] },
+            { path: 'Resources', component: ResourcesComponent, data: { roles: ['admin'] }, canActivate: [AuthGuard] },
+            { path: 'map', component: MapComponent, data: { roles: ['admin', 'employe'] }, canActivate: [AuthGuard] },
             { path: 'profile', component: ProfileComponent, data: { roles: ['user'] } }
         ]
     },

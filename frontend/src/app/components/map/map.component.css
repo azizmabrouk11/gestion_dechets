@@ -1,0 +1,22 @@
+.map-container {
+  width: 100%;
+  height: 600px;        /* or 100vh if you want full screen */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  margin: 20px 0;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+/* Color markers */
+::ng-deep .green-marker {
+  filter: hue-rotate(90deg) saturate(150%);
+}
+
+::ng-deep .red-marker {
+  filter: hue-rotate(340deg) saturate(200%) brightness(0.9);
+}

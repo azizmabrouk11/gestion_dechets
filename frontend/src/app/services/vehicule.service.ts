@@ -9,7 +9,7 @@ import { Vehicule } from "../models/Vehicule";
     providedIn: 'root'
 })
 export class VehiculeService {
-    URL = `${environment.API_URL}/vehicules`;
+    URL = `${environment.API_URL}/public/vehicules`;
 
     constructor(private http: HttpClient) { }
 

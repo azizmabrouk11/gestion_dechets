@@ -31,7 +31,7 @@
       <div class="stat-card">
         <div class="stat-icon">📍</div>
         <div class="stat-info">
-          <h3>{{ pickUpPoints.length }}</h3>
+          <h3>{{ pickuppoints.length }}</h3>
           <p>Points de collecte</p>
         </div>
       </div>
@@ -57,26 +57,25 @@
         <h2>📍 Points de Collecte Proches</h2>
       </div>
 
-      @if (pickUpPoints.length > 0) {
+      @if (pickuppoints.length > 0) {
       <div class="pickup-points-grid">
-        @for (point of pickUpPoints; track point.id) {
+        @for (point of pickuppoints; track point.id) {
         <div class="pickup-point-card">
           <div class="point-header">
             <div class="point-icon">📍</div>
             <div class="point-info">
-              <h3>{{ point.location }}</h3>
-              @if (point.address) {
-              <p class="point-address">{{ point.address }}</p>
-              }
+              <h3>Point de Collecte #{{ point.id?.substring(0, 8) }}</h3>
+              <p class="point-address">
+                📍 {{ point.locationLatitude }}, {{ point.locationLongitude }}
+              </p>
             </div>
           </div>
 
           <div class="point-containers">
             <h4>Conteneurs disponibles :</h4>
-            @if (getContainersForPickUpPoint(point.id!).length > 0) {
+            @if (point.containers && point.containers.length > 0) {
             <div class="containers-list">
-              @for (container of getContainersForPickUpPoint(point.id!); track
-              container.id) {
+              @for (container of point.containers; track container.id) {
               <div
                 class="container-tag"
                 [class]="getContainerStatusClass(container.containerStatus)"
