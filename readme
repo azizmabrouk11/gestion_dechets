@@ -45,7 +45,7 @@ users :
 - admin role :
               username:admin password:nour123
   normal user :
-                username:testuser password:test@restaurant.com
+                username:testuser password:test123
 mongo express
 USERNAME=exproot
 PASSWORD=expadmin

@@ -21,4 +21,5 @@ public class PickUpPointDto {
     private List<Container> containers;
     private double locationLatitude;
     private double locationLongitude;
+    private String address;
 }

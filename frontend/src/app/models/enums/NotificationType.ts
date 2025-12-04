@@ -1,4 +1,4 @@
 export enum NotificationType {
-    incidentNotification = 'incidentNotification',
-    CapacityNotification = 'CapacityNotification'
+    incident_notification = 'incident_notification',
+    capacity_notification = 'capacity_notification'
 }

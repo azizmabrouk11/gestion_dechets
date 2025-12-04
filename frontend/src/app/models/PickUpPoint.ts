@@ -5,4 +5,5 @@ export interface PickUpPoint {
     locationLatitude: number;
     locationLongitude: number;
     containers?: Container[];
+    address?:string;
 }

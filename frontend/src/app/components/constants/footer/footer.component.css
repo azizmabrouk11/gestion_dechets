@@ -1,0 +1,108 @@
+/* Professional Footer Styling */
+:host {
+  display: block;
+  width: 100%;
+}
+
+footer {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Background Grid Pattern */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Smooth transitions for all interactive elements */
+footer a,
+footer button {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Newsletter input focus state enhancement */
+input[type="email"]:focus {
+  transform: translateY(-1px);
+}
+
+/* Social media icon hover effects */
+footer svg {
+  transition: transform 0.2s ease-in-out;
+}
+
+footer a:hover svg {
+  transform: scale(1.1);
+}
+
+/* Gradient text animation */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.bg-clip-text {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  footer .grid {
+    gap: 2rem;
+  }
+  
+  footer h2 {
+    font-size: 1.5rem;
+  }
+  
+  footer h3 {
+    font-size: 1rem;
+  }
+}
+
+/* Link hover underline effect */
+footer a:not(.inline-flex) {
+  position: relative;
+}
+
+footer a:not(.inline-flex)::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: currentColor;
+  transition: width 0.3s ease-in-out;
+}
+
+footer a:not(.inline-flex):hover::after {
+  width: 100%;
+}
+
+/* Button shadow enhancement */
+button[type="submit"] {
+  box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
+}
+
+button[type="submit"]:hover {
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+}
+
+/* Accessibility improvements */
+footer a:focus,
+footer button:focus {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}

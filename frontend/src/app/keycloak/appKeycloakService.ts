@@ -133,9 +133,9 @@ export class AppKeycloakService {
 
             if (tokenParsed) {
                 const keycloakRole = tokenParsed['realm_access']?.roles || "";
-                let userRole = UserRole.User; // Match your backend enum exactly
+                let userRole = UserRole.user; // Match your backend enum exactly
                 if (keycloakRole.includes("admin")) {
-                    userRole = UserRole.Admin; // Match your backend enum exactly
+                    userRole = UserRole.admin; // Match your backend enum exactly
                 }
 
                 this._profile = {
@@ -186,7 +186,7 @@ export class AppKeycloakService {
                 profileImage: faceAuthProfileImage || '',
                 faceAuthEnabled: faceAuthEnabled === 'true',
                 token: faceAuthToken,
-                role: UserRole.User, // Face authenticated users are USER role
+                role: UserRole.user, // Face authenticated users are USER role
             } as Partial<UserProfile>;
 
             console.log('Face auth profile loaded:', this._profile);

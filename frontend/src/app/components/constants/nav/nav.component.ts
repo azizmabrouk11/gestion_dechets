@@ -19,7 +19,7 @@ export class NavComponent implements OnInit {
   profileSubscription!: Subscription
   ngOnInit(): void {
     this.appkeycloakSerice.profileObservable.subscribe(profile => {
-      this.admin = profile?.role && profile?.role == UserRole.Admin ? true : false;
+      this.admin = profile?.role && profile?.role == UserRole.admin ? true : false;
     })
 
   }

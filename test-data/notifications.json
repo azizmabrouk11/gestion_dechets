@@ -4,7 +4,7 @@
     "subject": "Container Capacity Alert",
     "recipient": "john.doe@example.com",
     "body": "The plastic container at City Center Mall has reached 90% capacity and needs urgent attention.",
-    "notificationType": "CapacityNotification",
+    "notificationType": "capacity_notification",
     "userId": "6568a1b2c3d4e5f6a7b8c9d0",
     "containerId": "6568d1b2c3d4e5f6a7b8c9d2",
     "incidentId": null
@@ -14,7 +14,7 @@
     "subject": "Incident Reported",
     "recipient": "jane.smith@example.com",
     "body": "A new incident has been reported: Container overflowing with plastic waste. Location: Near City Center Mall, Tunis. Priority: HIGH",
-    "notificationType": "incidentNotification",
+    "notificationType": "incident_notification",
     "userId": "6568a1b2c3d4e5f6a7b8c9d1",
     "containerId": null,
     "incidentId": "6568f1b2c3d4e5f6a7b8c9d0"
@@ -24,7 +24,7 @@
     "subject": "Incident Resolved",
     "recipient": "john.doe@example.com",
     "body": "Your reported incident 'Missed collection schedule' has been resolved. Resolution: Collection completed on next route",
-    "notificationType": "incidentNotification",
+    "notificationType": "incident_notification",
     "userId": "6568a1b2c3d4e5f6a7b8c9d0",
     "containerId": null,
     "incidentId": "6568f1b2c3d4e5f6a7b8c9d2"

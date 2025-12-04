@@ -42,7 +42,7 @@ public class UserDto {
 
 
     @Builder.Default
-    private UserRole role = UserRole.User;
+    private UserRole role = UserRole.user;
 
 
     @Builder.Default

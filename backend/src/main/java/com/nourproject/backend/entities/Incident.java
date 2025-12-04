@@ -30,9 +30,12 @@ public class Incident {
 
     private String imageUrl;
 
-    private LocalDateTime reportedAt;
+
     private LocalDateTime resolvedAt;
 
     private String assignedTo;
     private String resolutionNotes;
+
+    @Builder.Default
+    private LocalDateTime date=LocalDateTime.now() ;
 }

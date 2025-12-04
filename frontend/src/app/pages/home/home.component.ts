@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.isAuthenticated = this.AppkeyCloakService.isLoggedIn();
         this.profileSubscription = this.AppkeyCloakService.profileObservable.subscribe(profile => {
-            this.admin = profile && profile.role === UserRole.Admin ? true : false;
+            this.admin = profile && profile.role === UserRole.admin ? true : false;
         });
     }
 
@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     get isAdmin(): boolean {
         const currentProfile = this.AppkeyCloakService.profile;
-        return currentProfile && currentProfile.role === UserRole.Admin ? true : false;
+        return currentProfile && currentProfile.role === UserRole.admin ? true : false;
     }
 
     navigateToDashboard(): void {

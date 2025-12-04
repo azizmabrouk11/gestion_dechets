@@ -1,6 +1,8 @@
 package com.nourproject.backend.entities;
 
 
+import com.nourproject.backend.dtos.RouteInstructionDTO;
+import com.nourproject.backend.enums.RouteStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,15 +22,27 @@ import java.util.List;
 public class Route {
     @Id
     private String _id;
+
     @Builder.Default
-    List<PickUpPoint> pickUpPoints=new ArrayList<PickUpPoint>();
+    private List<PickUpPoint> pickUpPoints = new ArrayList<>();
+
     private Vehicule vehicule;
+
     @Builder.Default
-    List<User> users=new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
+    private LocalDateTime routeDate;
 
-    private LocalDateTime RouteDate;
+    // GraphHopper route optimization data
+    private Double totalDistance; // in meters
+    private Long totalTime; // in milliseconds
+    private String encodedPolyline; // GraphHopper encoded route for visualization
 
+    @Builder.Default
+    private List<RouteInstructionDTO> instructions = new ArrayList<>(); // Turn-by-turn directions
 
+    private RouteStatus status; // PLANNED, IN_PROGRESS, COMPLETED, CANCELLED
 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

@@ -1,4 +1,4 @@
 export enum VehiculeStatus {
-    Fonctionnel = 'Fonctionnel',
-    En_maintenance = 'En_maintenance'
+    fonctionnel = 'fonctionnel',
+    en_maintenance = 'en_maintenance'
 }

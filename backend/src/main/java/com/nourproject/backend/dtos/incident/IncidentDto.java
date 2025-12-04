@@ -25,8 +25,8 @@ public class IncidentDto {
     private String citizenId;
     private String pickUpPointId;
     private String imageUrl;
-    private LocalDateTime reportedAt;
     private LocalDateTime resolvedAt;
     private String assignedTo;
     private String resolutionNotes;
+    private LocalDateTime date ;
 }

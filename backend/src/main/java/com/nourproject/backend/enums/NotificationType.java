@@ -1,7 +1,6 @@
 package com.nourproject.backend.enums;
 
 public enum NotificationType {
-    incidentNotification,
-    CapacityNotification
-
+    incident_notification,
+    capacity_notification
 }

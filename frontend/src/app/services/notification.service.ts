@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment-dev';
     providedIn: 'root'
 })
 export class NotificationService {
-    private apiUrl =  environment.API_URL+'public/notifications';
+    private apiUrl =  environment.API_URL+'/public/notifications';
 
     constructor(private http: HttpClient) { }
 

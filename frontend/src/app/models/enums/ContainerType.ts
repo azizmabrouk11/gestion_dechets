@@ -1,4 +1,4 @@
 export enum ContainerType {
-    Plastique = 'Plastique',
-    Carton = 'Carton'
+    plastique = 'plastique',
+    carton = 'carton'
 }

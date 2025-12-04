@@ -1,6 +1,6 @@
 export enum IncidentStatus {
-    REPORTED = 'REPORTED',
-    IN_PROGRESS = 'IN_PROGRESS',
-    RESOLVED = 'RESOLVED',
-    CLOSED = 'CLOSED'
+    reported = 'reported',
+    in_progress = 'in_progress',
+    resolved = 'resolved',
+    closed = 'closed'
 }

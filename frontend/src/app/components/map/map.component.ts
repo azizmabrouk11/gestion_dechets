@@ -3,8 +3,12 @@ import { Component, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { PickUpPointService } from '../../services/pickup-point.service';
+import { RouteService } from '../../services/route.service';
+import { Route } from '../../models/Route';
+import { RouteStatus } from '../../models/enums/RouteStatus';
 import * as L from 'leaflet';
 import { AppResponse } from '../../models/AppResponse';
+import { ToastService } from '../../services/toast.service';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -23,6 +27,9 @@ L.Icon.Default.mergeOptions({
 export class MapComponent implements AfterViewInit {
   private map!: L.Map;
   private routeLayer: L.Polyline | null = null;
+  optimizedRouteData: Route | null = null; // Store optimized route without saving
+  isDuplicateRoute: boolean = false;
+  duplicateCheckLoading: boolean = false;
 
   private readonly depot = { lat: 35.77799, lng: 10.82617, name: 'Dépôt Central - Monastir' };
   private fullPoints: { lat: number; lng: number; point: any }[] = [];
@@ -33,7 +40,12 @@ export class MapComponent implements AfterViewInit {
 
   private readonly GRAPHHOPPER_KEY = '0f520a1f-6282-4995-bb8f-d285c7cb0f11';
 
-  constructor(private http: HttpClient, private pickUpPointService: PickUpPointService) { }
+  constructor(
+    private http: HttpClient,
+    private pickUpPointService: PickUpPointService,
+    private routeService: RouteService,
+    private toastService: ToastService
+  ) { }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -71,7 +83,7 @@ export class MapComponent implements AfterViewInit {
         this.plotPoints(res.pickuppoints || []);
 
         if (this.fullPoints.length > 0) {
-          this.drawBestRouteFromHome();  // ← Ça marche maintenant !
+          this.drawBestRouteFromHome();
         } else {
           this.map.setView([this.depot.lat, this.depot.lng], 13);
         }
@@ -83,6 +95,7 @@ export class MapComponent implements AfterViewInit {
   private clearMap(): void {
     this.map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline) this.map.removeLayer(l); });
     if (this.routeLayer) { this.map.removeLayer(this.routeLayer); this.routeLayer = null; }
+    this.optimizedRouteData = null;
   }
 
   private addDepotMarker(): void {
@@ -130,6 +143,7 @@ export class MapComponent implements AfterViewInit {
   // VERSION QUI MARCHE À 100% – DÉCODE LE FORMAT ENCODÉ DE GRAPHHOPPER
   private async drawBestRouteFromHome(): Promise<void> {
     if (this.routeLayer) { this.map.removeLayer(this.routeLayer); this.routeLayer = null; }
+    this.optimizedRouteData = null; // Reset when recalculating
 
     const points = [[this.depot.lng, this.depot.lat], ...this.fullPoints.map(p => [p.lng, p.lat] as [number, number])];
 
@@ -171,6 +185,56 @@ export class MapComponent implements AfterViewInit {
           .openPopup();
 
         this.map.fitBounds(this.routeLayer.getBounds().pad(0.4));
+
+        // Store optimized route data without saving to backend
+        const pickupIds = this.fullPoints.map(p => {
+          console.log('Processing pickup point:', p.point);
+          const id = p.point._id || p.point.id;
+          console.log('Extracted ID:', id);
+          return id;
+        });
+
+        this.optimizedRouteData = {
+          routeDate: new Date().toISOString(),
+          totalDistance: path.distance,
+          totalTime: path.time,
+          encodedPolyline: path.points,
+          pickUpPointIds: pickupIds,
+          status: RouteStatus.planned,
+          instructions: path.instructions.map((i: any) => ({
+            distance: i.distance,
+            sign: i.sign,
+            text: i.text,
+            time: i.time,
+            streetName: i.street_name
+          }))
+        };
+
+        // Check for duplicates
+        this.duplicateCheckLoading = true;
+        this.routeService.checkDuplicate(pickupIds).subscribe({
+          next: (response) => {
+            // 200 means duplicate found
+            this.isDuplicateRoute = true;
+            this.duplicateCheckLoading = false;
+            this.toastService.showWarning('Warning: A route with these pickup points already exists!', 'warning');
+          },
+          error: (err) => {
+            // 404 means not found (no duplicate), which is good
+            if (err.status === 404) {
+              this.isDuplicateRoute = false;
+            } else {
+              console.error('Error checking duplicate:', err);
+            }
+            this.duplicateCheckLoading = false;
+          }
+        });
+
+        console.log('=== ROUTE OPTIMIZATION COMPLETE ===');
+        console.log('Total pickup points:', this.optimizedRouteData.pickUpPointIds?.length);
+        console.log('Pickup Point IDs being sent:', this.optimizedRouteData.pickUpPointIds);
+        console.log('Full points array:', this.fullPoints);
+        console.log('Ready to save. Click "Create Route" button.');
       }
     } catch (err) {
       console.error(err);
@@ -207,5 +271,42 @@ export class MapComponent implements AfterViewInit {
       array.push(L.latLng(lat * 1e-5, lng * 1e-5));
     }
     return array;
+  }
+
+  // Public method to save the optimized route
+  public saveOptimizedRoute(): void {
+    if (!this.optimizedRouteData) {
+      this.toastService.showError('No optimized route found  to save');
+      return;
+    }
+
+    console.log('=== SAVING ROUTE TO BACKEND ===');
+    console.log('Route data:', JSON.stringify(this.optimizedRouteData, null, 2));
+    console.log('Pickup Point IDs count:', this.optimizedRouteData.pickUpPointIds?.length);
+    console.log('Pickup Point IDs:', this.optimizedRouteData.pickUpPointIds);
+
+    this.routeService.create(this.optimizedRouteData).subscribe({
+      next: (res) => {
+        console.log('=== ROUTE SAVED SUCCESSFULLY ===');
+        console.log('Backend response:', res);
+        console.log('Pickup points sent:', this.optimizedRouteData?.pickUpPointIds?.length);
+        console.log('Pickup points in response:', res.route?.pickUpPoints?.length);
+        console.log('Response route:', res.route);
+        this.optimizedRouteData = null; // Clear after saving
+        this.toastService.showSuccess(`${res.message}`, 'Route Saved');
+      },
+      error: (err) => {
+        console.error('=== ERROR SAVING ROUTE ===');
+        console.error('Error:', err);
+        console.error('Error response:', err.error);
+        this.toastService.showError(`${err.error.message}`, 'Error saving route');
+
+      }
+    });
+  }
+
+  // Check if there's an optimized route ready to save
+  public hasOptimizedRoute(): boolean {
+    return this.optimizedRouteData !== null;
   }
 }

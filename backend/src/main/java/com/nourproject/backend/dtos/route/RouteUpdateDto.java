@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.nourproject.backend.entities.PickUpPoint;
 import com.nourproject.backend.entities.User;
 import com.nourproject.backend.entities.Vehicule;
+import com.nourproject.backend.enums.RouteStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,4 +25,5 @@ public class RouteUpdateDto {
     private Vehicule vehicule;
     private List<User> users;
     private LocalDateTime routeDate;
+    private RouteStatus status;
 }

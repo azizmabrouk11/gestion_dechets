@@ -1,59 +1,255 @@
-<main class="modern-home">
-  <div class="home-container">
-    <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-background">
-        <div class="gradient-orb orb-1"></div>
-        <div class="gradient-orb orb-2"></div>
-        <div class="gradient-orb orb-3"></div>
-      </div>
+<main class="min-h-screen bg-gray-50 font-sans">
+  <!-- Hero Section with Image -->
+  <div class="relative bg-white border-b border-gray-200 overflow-hidden">
+    <!-- Background Pattern -->
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-green-50 to-blue-50 opacity-50"
+    ></div>
 
-      <div class="hero-content">
-        <div class="hero-badge">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center py-16 lg:py-24">
+        <!-- Left Content -->
+        <div class="text-left">
+          <div
+            class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 mb-6 shadow-lg"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+
+          <h1 class="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            Bienvenue sur<br />
+            <span class="text-green-600">EcoCollect</span>
+          </h1>
+
+          <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+            Système de gestion intelligente de la collecte des déchets pour un
+            environnement plus propre et durable
+          </p>
+
+          <div class="flex flex-wrap gap-4">
+            <a
+              routerLink="/dashboard"
+              class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+            >
+              Accéder au tableau de bord
+            </a>
+            <button
+              class="px-8 py-4 bg-white hover:bg-gray-50 text-gray-900 font-semibold rounded-xl border-2 border-gray-200 hover:border-green-500 transition-all duration-300"
+            >
+              En savoir plus
+            </button>
+          </div>
+
+          <!-- Key Stats -->
+          <div
+            class="grid grid-cols-3 gap-6 mt-12 pt-12 border-t border-gray-200"
+          >
+            <div>
+              <div class="text-3xl font-bold text-green-600 mb-1">5000+</div>
+              <div class="text-sm text-gray-600">Collectes</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-blue-600 mb-1">150+</div>
+              <div class="text-sm text-gray-600">Points actifs</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-orange-600 mb-1">95%</div>
+              <div class="text-sm text-gray-600">Satisfaction</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Image -->
+        <div class="relative lg:block">
+          <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+            <img
+              src="assets/images/home.jpg"
+              alt="EcoCollect - Gestion des déchets"
+              class="w-full h-auto object-cover"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"
+            ></div>
+          </div>
+
+          <!-- Floating Card -->
+          <div
+            class="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl p-6 border border-gray-100"
+          >
+            <div class="flex items-center space-x-4">
+              <div
+                class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-green-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-gray-900">100%</div>
+                <div class="text-sm text-gray-600">Écologique</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">
+        Nos Solutions Intelligentes
+      </h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Des outils innovants pour optimiser la gestion des déchets
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Feature 1 -->
+      <div
+        class="group bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hover:shadow-xl hover:border-green-200 transition-all duration-300 transform hover:-translate-y-2"
+      >
+        <div
+          class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-green-100 mb-6 group-hover:bg-green-600 transition-colors duration-300"
+        >
           <svg
-            class="badge-icon"
-            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7 text-green-600 group-hover:text-white transition-colors duration-300"
             fill="none"
+            viewBox="0 0 24 24"
             stroke="currentColor"
           >
             <path
-              d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
-              stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
             />
           </svg>
         </div>
-
-        <h1 class="hero-title">Bienvenue</h1>
-
-        <p class="hero-subtitle">
-          Système de gestion intelligente de la collecte des déchets
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Gestion Écologique</h3>
+        <p class="text-gray-600 leading-relaxed">
+          Tri et collecte optimisés pour un environnement durable. Réduisez
+          votre empreinte carbone avec nos solutions intelligentes.
         </p>
-
-       
-
-        <!-- Feature Cards -->
-        <div class="feature-grid">
-          <div class="feature-card">
-            <div class="feature-icon">♻️</div>
-            <h3>Gestion Écologique</h3>
-            <p>Tri et collecte optimisés pour un environnement durable</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">📍</div>
-            <h3>Points de Collecte</h3>
-            <p>Localisez facilement les points de dépôt proches de chez vous</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">🚛</div>
-            <h3>Suivi en Temps Réel</h3>
-            <p>Suivez les tournées de collecte et planifiez vos dépôts</p>
-          </div>
-        </div>
       </div>
+
+      <!-- Feature 2 -->
+      <div
+        class="group bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hover:shadow-xl hover:border-blue-200 transition-all duration-300 transform hover:-translate-y-2"
+      >
+        <div
+          class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-blue-100 mb-6 group-hover:bg-blue-600 transition-colors duration-300"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7 text-blue-600 group-hover:text-white transition-colors duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Points de Collecte</h3>
+        <p class="text-gray-600 leading-relaxed">
+          Localisez facilement les points de dépôt proches de chez vous.
+          Cartographie interactive et itinéraires optimisés.
+        </p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div
+        class="group bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hover:shadow-xl hover:border-orange-200 transition-all duration-300 transform hover:-translate-y-2"
+      >
+        <div
+          class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-orange-100 mb-6 group-hover:bg-orange-600 transition-colors duration-300"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7 text-orange-600 group-hover:text-white transition-colors duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">
+          Suivi en Temps Réel
+        </h3>
+        <p class="text-gray-600 leading-relaxed">
+          Suivez les tournées de collecte et planifiez vos dépôts. Notifications
+          intelligentes et alertes personnalisées.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="bg-gradient-to-br from-green-600 to-green-700 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-4xl font-bold text-white mb-6">
+        Prêt à transformer votre gestion des déchets ?
+      </h2>
+      <p class="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
+        Rejoignez des centaines d'organisations qui utilisent déjà EcoCollect
+        pour un avenir plus propre
+      </p>
+      <a
+        routerLink="/dashboard"
+        class="inline-block px-8 py-4 bg-white hover:bg-gray-100 text-green-600 font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+      >
+        Commencer maintenant
+      </a>
     </div>
   </div>
 </main>

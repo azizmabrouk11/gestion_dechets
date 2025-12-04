@@ -1,4 +1,4 @@
 export enum VehiculeType {
-    Camion = 'Camion',
-    Car = 'Car'
+    camion = 'camion',
+    car = 'car'
 }

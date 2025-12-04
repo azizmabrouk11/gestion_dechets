@@ -9,9 +9,11 @@ import org.mapstruct.*;
 public interface RouteMapper {
 
     @Mapping(target = "_id", ignore = true)
+    @Mapping(target = "pickUpPoints", ignore = true)
     Route routeDtoToRoute(RouteDto routeDto);
 
     @Mapping(source = "_id", target = "id")
+    @Mapping(source = "pickUpPoints", target = "pickUpPoints")
     RouteDto routeToRouteDto(Route route);
 
     @Mapping(target = "_id", ignore = true)

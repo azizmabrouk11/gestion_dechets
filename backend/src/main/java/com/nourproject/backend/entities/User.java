@@ -44,7 +44,7 @@ public class User {
     private String lastName;
     @Builder.Default
     @Field("role")
-    private UserRole role = UserRole.User;
+    private UserRole role = UserRole.user;
     @Builder.Default
     @Field("is_active")
     private Boolean isActive = false;

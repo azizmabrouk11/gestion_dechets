@@ -113,7 +113,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   loadPickUpPoints(): void {
     const sub = this.pickUpPointService.getAll().subscribe({
-      next: (response:AppResponse) => {
+      next: (response: AppResponse) => {
         if (response.pickuppoints) {
           this.pickuppoints = response.pickuppoints;
         }
@@ -128,7 +128,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   get availableVehiculesCount(): number {
-    return this.vehicules.filter(v => v.status === 'Fonctionnel').length;
+    return this.vehicules.filter(v => v.vehiculeStatus === 'fonctionnel').length;
   }
 
   get functionalContainersCount(): number {
@@ -145,7 +145,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getVehiculeStatusClass(status: string): string {
-    return status === 'Fonctionnel' ? 'status-available' : 'status-maintenance';
+    return status === 'fonctionnel' ? 'status-available' : 'status-maintenance';
   }
 
   getContainerStatusClass(status: string): string {

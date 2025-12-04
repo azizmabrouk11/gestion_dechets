@@ -1,8 +1,8 @@
 package com.nourproject.backend.enums;
 
 public enum IncidentPriority {
-    LOW,
-    MEDIUM,
-    HIGH,
-    URGENT
+    low,
+    medium,
+    high,
+    urgent
 }

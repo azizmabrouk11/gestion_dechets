@@ -12,6 +12,27 @@
         [routerLinkActiveOptions]="{ exact: true }"
         class="nav-link"
       >
+        <img
+          *ngIf="link.isPng"
+          [src]="link.icon"
+          [alt]="link.name + ' icon'"
+          class="nav-link-icon"
+        />
+        <svg
+          *ngIf="!link.isPng"
+          xmlns="http://www.w3.org/2000/svg"
+          class="nav-link-icon"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            [attr.d]="link.icon"
+          />
+        </svg>
         <span class="nav-link-text">{{ link.name }}</span>
         <div class="nav-link-indicator"></div>
       </a>

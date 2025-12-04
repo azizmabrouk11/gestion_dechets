@@ -271,22 +271,22 @@ public class UserSyncService implements CommandLineRunner {
             // Check roles in priority order (Admin > Employe > User)
             if (userRoles.contains("admin")) {
                 log.debug("User {} has admin role", keycloakUser.getEmail());
-                return UserRole.Admin;
+                return UserRole.admin;
             }
             
             if (userRoles.contains("employe")) {
                 log.debug("User {} has employe role", keycloakUser.getEmail());
-                return UserRole.Employe;
+                return UserRole.employe;
             }
             
             // Default to User role
             log.debug("User {} has user role (default)", keycloakUser.getEmail());
-            return UserRole.User;
+            return UserRole.user;
             
         } catch (Exception e) {
             log.warn("Failed to extract role from Keycloak user {}, defaulting to User role: {}", 
                 keycloakUser.getEmail(), e.getMessage());
-            return UserRole.User;
+            return UserRole.user;
         }
     }
 

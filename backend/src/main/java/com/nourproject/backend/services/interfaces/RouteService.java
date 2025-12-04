@@ -16,6 +16,8 @@ public interface RouteService {
 
     Response findByDateRange(LocalDateTime startDate, LocalDateTime endDate);
 
+    Response checkDuplicate(java.util.List<String> pickUpPointIds);
+
     Response save(RouteDto routeDto);
 
     Response updateById(String id, RouteUpdateDto routeUpdateDto);
