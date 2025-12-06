@@ -1,7 +1,7 @@
 package com.nourproject.backend.entities;
 
 
-import com.nourproject.backend.dtos.RouteInstructionDTO;
+import com.nourproject.backend.dtos.route.RouteInstructionDTO;
 import com.nourproject.backend.enums.RouteStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

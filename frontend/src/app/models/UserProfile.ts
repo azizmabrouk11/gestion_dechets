@@ -20,4 +20,5 @@ export interface UserProfile {
     competences?: string[];
     department?: string;
     shift?: string;
+    driver?: boolean;
 }

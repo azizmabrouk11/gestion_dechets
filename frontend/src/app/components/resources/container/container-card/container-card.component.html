@@ -40,23 +40,22 @@
     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
     [ngClass]="{
       'bg-green-100 text-green-800':
-        container.containerStatus !== 'non_functional',
-      'bg-red-100 text-red-800': container.containerStatus === 'non_functional'
+        container.containerStatus !== 'non_functionel',
+      'bg-red-100 text-red-800': container.containerStatus === 'non_functionel'
     }"
   >
-    {{ container.containerStatus === "non_functional" ? "Damaged" : "Active" }}
+    {{ container.containerStatus === "non_functionel" ? "Damaged" : "Active" }}
   </span>
 </td>
 <td class="px-6 py-4 whitespace-nowrap">
   <span
     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
     [ngClass]="{
-      'bg-green-100 text-green-800':
-        container.pickUpPointId === null,
-      'bg-red-100 text-red-800': container.pickUpPointId !== null
+      'bg-green-100 text-green-800': !container.pickUpPointId,
+      'bg-red-100 text-red-800': container.pickUpPointId
     }"
   >
-    {{ container.pickUpPointId === null ? "Unassigned" : "Assigned" }}
+    {{ container.pickUpPointId ? "Assigned" : "Unassigned" }}
   </span>
 </td>
 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

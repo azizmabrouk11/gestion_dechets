@@ -514,7 +514,9 @@ export class ResourcesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log('Dialog closed with result:', result);
       if (result) {
+        console.log('Creating vehicle with data:', result);
         this.loading = true;
         this.vehiculeService.create(result).subscribe({
           next: (res: AppResponse) => {

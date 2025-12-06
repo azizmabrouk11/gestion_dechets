@@ -128,11 +128,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   get availableVehiculesCount(): number {
-    return this.vehicules.filter(v => v.vehiculeStatus === 'fonctionnel').length;
+    return this.vehicules.filter(v => v.vehiculeStatus === 'functionel').length;
   }
 
   get functionalContainersCount(): number {
-    return this.containers.filter(c => c.containerStatus === 'functional').length;
+    return this.containers.filter(c => c.containerStatus === 'functionel').length;
   }
 
   get todayRoutesCount(): number {

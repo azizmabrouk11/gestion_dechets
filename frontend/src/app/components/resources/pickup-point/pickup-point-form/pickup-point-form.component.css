@@ -550,6 +550,11 @@ select.form-input option:first-child {
   font-weight: 500;
   position: relative;
   overflow: hidden;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.location-option:last-child {
+  border-bottom: none;
 }
 
 .location-option::before {

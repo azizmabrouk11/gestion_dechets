@@ -57,21 +57,50 @@
       <!-- Vehicle Type -->
       <div class="form-group">
         <label for="type" class="form-label"
-          >🚛 Vehicle Type <span class="required">*</span></label
+          > Vehicle Type <span class="required">*</span></label
         >
-        <div class="select-wrapper">
-          <select id="type" formControlName="type" class="form-select">
-            <option value="" disabled>Select type</option>
-            <option *ngFor="let type of vehicleTypes" [value]="type">
-              {{
-                type === "TRUCK"
-                  ? "🚛 Truck"
-                  : type === "VAN"
-                  ? "🚐 Van"
-                  : "🗜️ Compactor"
-              }}
-            </option>
-          </select>
+        <div class="custom-select-wrapper">
+          <div
+            class="custom-select-box"
+            [class.active]="showTypeDropdown"
+            (click)="toggleTypeDropdown()"
+          >
+            <span
+              class="custom-select-text"
+              [class.placeholder]="!selectedTypeName"
+            >
+              {{ selectedTypeName || "Select type" }}
+            </span>
+          
+          </div>
+
+          <div class="custom-dropdown" *ngIf="showTypeDropdown">
+            <div class="custom-dropdown-container">
+              <div
+                *ngFor="let type of vehicleTypes"
+                class="custom-option"
+                [class.selected]="formGroup.get('type')?.value === type"
+                (click)="selectType(type)"
+              >
+                <span>{{ getVehicleTypeDisplay(type) }}</span>
+                <svg
+                  *ngIf="formGroup.get('type')?.value === type"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="check-icon"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="error-message"

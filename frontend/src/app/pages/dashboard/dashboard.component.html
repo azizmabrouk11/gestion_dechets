@@ -518,13 +518,13 @@
               class="px-3 py-1 text-xs font-semibold rounded-full"
               [ngClass]="{
                 'bg-green-100 text-green-700':
-                  vehicule.vehiculeStatus === 'fonctionnel',
+                  vehicule.vehiculeStatus === 'functionel',
                 'bg-red-100 text-red-700':
-                  vehicule.vehiculeStatus === 'en_maintenance'
+                  vehicule.vehiculeStatus === 'non_functionel'
               }"
             >
               {{
-                vehicule.vehiculeStatus === "fonctionnel"
+                vehicule.vehiculeStatus === "functionel"
                   ? "Opérationnel"
                   : "Maintenance"
               }}
@@ -597,13 +597,13 @@
               class="px-3 py-1 text-xs font-semibold rounded-full"
               [ngClass]="{
                 'bg-green-100 text-green-700':
-                  container.containerStatus !== 'non_functional',
+                  container.containerStatus !== 'non_functionel',
                 'bg-red-100 text-red-700':
-                  container.containerStatus === 'non_functional'
+                  container.containerStatus === 'non_functionel'
               }"
             >
               {{
-                container.containerStatus === "non_functional"
+                container.containerStatus === "non_functionel"
                   ? "Endommagé"
                   : "Fonctionnel"
               }}

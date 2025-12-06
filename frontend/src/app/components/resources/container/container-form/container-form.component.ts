@@ -26,7 +26,7 @@ export class ContainerFormComponent implements OnInit {
   id: string = '';
   pickUpPoints: Partial<PickUpPoint>[] = [];
   containerTypes: string[] = [ContainerType.carton, ContainerType.plastique];
-  containerStatus: string[] = [ContainerStatus.functional, ContainerStatus.non_functional];
+  containerStatus: string[] = [ContainerStatus.functionel, ContainerStatus.non_functionel];
   editMode: boolean = false;
   formGroup!: FormGroup;
 
@@ -45,10 +45,10 @@ export class ContainerFormComponent implements OnInit {
     if (this.editMode) {
       this.id = this.data.id!;
       if (this.data.containerType) {
-        this.selectedTypeName = this.data.containerType === 'carton' ? '📦 Carton' : '🧴 Plastique';
+        this.selectedTypeName = this.data.containerType === 'carton' ? ' Carton' : ' Plastique';
       }
       if (this.data.containerStatus) {
-        this.selectedStatusName = this.data.containerStatus === 'functional' ? '✅ Functional' : '⚠️ Non-Functional';
+        this.selectedStatusName = this.data.containerStatus === 'functionel' ? '✅ Functionel' : '⚠️ Non-Functionel';
       }
     }
     this.formGroup = this.formBuilder.group({
@@ -66,6 +66,9 @@ export class ContainerFormComponent implements OnInit {
         capacity: Number(this.formGroup.value.capacity),
         fillLevel: Number(this.formGroup.value.fillLevel)
       };
+
+      console.log('Container form submitting:', formData);
+      console.log('containerStatus value:', this.formGroup.get('containerStatus')?.value);
 
       if (this.editMode) {
         this.matDialogRef.close({ id: this.id, ...formData });
@@ -96,13 +99,13 @@ export class ContainerFormComponent implements OnInit {
   }
 
   selectType(type: string) {
-    this.selectedTypeName = type === 'carton' ? '📦 Carton' : '🧴 Plastique';
+    this.selectedTypeName = type === 'carton' ? ' Carton' : ' Plastique';
     this.formGroup.patchValue({ containerType: type });
     this.showTypeDropdown = false;
   }
 
   selectStatus(status: string) {
-    this.selectedStatusName = status === 'functional' ? '✅ Functional' : '⚠️ Non-Functional';
+    this.selectedStatusName = status === 'functionel' ? '✅ Functionel' : '⚠️ Non-Functionel';
     this.formGroup.patchValue({ containerStatus: status });
     this.showStatusDropdown = false;
   }

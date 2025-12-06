@@ -7,6 +7,7 @@
         <th class="px-6 py-4">Route ID</th>
         <th class="px-6 py-4">Date</th>
         <th class="px-6 py-4">Vehicle</th>
+        <th class="px-6 py-4">Employees</th>
         <th class="px-6 py-4">Pickup Points</th>
         <th class="px-6 py-4">Distance</th>
         <th class="px-6 py-4">Status</th>
@@ -26,7 +27,7 @@
         ></app-route-card>
       </tr>
       <tr *ngIf="routes.length === 0" class="bg-white">
-        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+        <td colspan="8" class="px-6 py-12 text-center text-gray-500">
           No routes found.
         </td>
       </tr>

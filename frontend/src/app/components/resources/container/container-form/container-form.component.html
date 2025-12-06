@@ -149,9 +149,9 @@
                 (click)="selectStatus(status)"
               >
                 <span>{{
-                  status === "functional"
-                    ? "✅ Functional"
-                    : "⚠️ Non-Functional"
+                  status === "functionel"
+                    ? "Functionel"
+                    : " Non-Functionel"
                 }}</span>
                 <svg
                   *ngIf="formGroup.get('containerStatus')?.value === status"

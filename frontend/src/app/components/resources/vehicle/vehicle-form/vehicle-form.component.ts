@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../../../services/toast.service';
+import { VehiculeType } from '../../../../models/enums/VehiculeType';
+import { VehiculeStatus } from '../../../../models/enums/VehiculeStatus';
 
 @Component({
     selector: 'app-vehicle-form',
@@ -17,8 +19,8 @@ export class VehicleFormComponent implements OnInit {
     id?: string;
     isLoading = false;
 
-    vehicleTypes = ['TRUCK', 'VAN', 'COMPACTOR'];
-    vehicleStatuses = ['AVAILABLE', 'IN_USE', 'MAINTENANCE', 'OUT_OF_SERVICE'];
+    vehicleTypes = [VehiculeType.car, VehiculeType.camion];
+    vehicleStatuses = [VehiculeStatus.functional, VehiculeStatus.non_functional];
 
     // Custom dropdown states
     showTypeDropdown: boolean = false;
@@ -52,17 +54,27 @@ export class VehicleFormComponent implements OnInit {
             matricul: [this.data.matricul || '', [Validators.required, Validators.minLength(3)]],
             type: [this.data.type || '', Validators.required],
             capacity: [this.data.capacity || 1000, [Validators.required, Validators.min(1)]],
-            status: [this.data.status || 'AVAILABLE', Validators.required],
+            status: [this.data.status || 'functional', Validators.required],
             currentLocation: [this.data.currentLocation || '']
         });
+        console.log('Form initialized with values:', this.formGroup.value);
+        console.log('Form valid:', this.formGroup.valid);
+        console.log('Form errors:', this.formGroup.errors);
     }
 
     onSubmit() {
         if (this.formGroup.valid) {
             const formData = {
-                ...this.formGroup.value,
-                capacity: Number(this.formGroup.value.capacity)
+                matricul: this.formGroup.value.matricul,
+                capacity: Number(this.formGroup.value.capacity),
+                vehiculeType: this.formGroup.value.type,  // Map 'type' to 'vehiculeType' for backend
+                vehiculeStatus: this.formGroup.value.status,  // Map 'status' to 'vehiculeStatus' for backend
+                currentLocation: this.formGroup.value.currentLocation
             };
+
+            console.log('Form is valid, submitting data:', formData);
+            console.log('Type value:', this.formGroup.get('type')?.value);
+            console.log('Status value:', this.formGroup.get('status')?.value);
 
             if (this.editMode) {
                 this.matDialogRef.close({ ...formData, id: this.id });
@@ -70,6 +82,13 @@ export class VehicleFormComponent implements OnInit {
                 this.matDialogRef.close(formData);
             }
         } else {
+            console.error('Form is invalid:', this.formGroup.errors);
+            console.error('Form controls status:', {
+                matricul: this.formGroup.get('matricul')?.errors,
+                type: this.formGroup.get('type')?.errors,
+                capacity: this.formGroup.get('capacity')?.errors,
+                status: this.formGroup.get('status')?.errors
+            });
             Object.keys(this.formGroup.controls).forEach(key => {
                 this.formGroup.get(key)?.markAsTouched();
             });
@@ -93,32 +112,33 @@ export class VehicleFormComponent implements OnInit {
     }
 
     selectType(type: string) {
+        console.log('selectType called with:', type);
         this.selectedTypeName = this.getVehicleTypeDisplay(type);
         this.formGroup.patchValue({ type });
+        console.log('Form type value after patch:', this.formGroup.get('type')?.value);
         this.showTypeDropdown = false;
     }
 
     selectStatus(status: string) {
+        console.log('selectStatus called with:', status);
         this.selectedStatusName = this.getVehicleStatusDisplay(status);
         this.formGroup.patchValue({ status });
+        console.log('Form status value after patch:', this.formGroup.get('status')?.value);
         this.showStatusDropdown = false;
     }
 
     getVehicleTypeDisplay(type: string): string {
         const typeMap: { [key: string]: string } = {
-            'TRUCK': '🚛 Truck',
-            'VAN': '🚐 Van',
-            'COMPACTOR': '🗆️ Compactor'
+            'car': ' Car',
+            'camion': ' Camion'
         };
         return typeMap[type] || type;
     }
 
     getVehicleStatusDisplay(status: string): string {
         const statusMap: { [key: string]: string } = {
-            'AVAILABLE': '✅ Available',
-            'IN_USE': '🚀 In Use',
-            'MAINTENANCE': '🔧 Maintenance',
-            'OUT_OF_SERVICE': '⛔ Out of Service'
+            'functional': ' Functional',
+            'non_functional': ' Non-Functional'
         };
         return statusMap[status] || status;
     }

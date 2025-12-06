@@ -42,6 +42,30 @@
 </td>
 <td class="px-6 py-4">
   <div class="flex items-center">
+    <div *ngIf="route.users && route.users.length > 0" class="flex -space-x-2">
+      <div
+        *ngFor="let user of route.users.slice(0, 3)"
+        class="h-8 w-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white text-xs font-semibold border-2 border-white shadow-sm"
+        [title]="user.firstName + ' ' + user.lastName"
+      >
+        {{ user.firstName?.charAt(0) }}{{ user.lastName?.charAt(0) }}
+      </div>
+      <div
+        *ngIf="route.users.length > 3"
+        class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-xs font-semibold border-2 border-white shadow-sm"
+      >
+        +{{ route.users.length - 3 }}
+      </div>
+    </div>
+    <span
+      *ngIf="!route.users || route.users.length === 0"
+      class="text-sm text-gray-400"
+      >No employees</span
+    >
+  </div>
+</td>
+<td class="px-6 py-4">
+  <div class="flex items-center">
     <span class="text-sm text-gray-600">
       {{ route.pickUpPoints?.length || 0 }} points
     </span>
@@ -68,8 +92,9 @@
 </td>
 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
   <button
-    (click)="edit()"
-    class="text-gray-400 hover:text-blue-600 transition-colors duration-200 mr-3"
+    (click)="viewDetails()"
+    class="text-gray-400 hover:text-purple-600 transition-colors duration-200 mr-3"
+    title="View Details"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -95,6 +120,7 @@
   <button
     (click)="delete()"
     class="text-gray-400 hover:text-red-600 transition-colors duration-200"
+    title="Delete Route"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"

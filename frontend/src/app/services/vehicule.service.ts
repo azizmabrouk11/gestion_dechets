@@ -26,6 +26,7 @@ export class VehiculeService {
     }
 
     create(vehicule: Partial<Vehicule>): Observable<AppResponse> {
+        console.log('Creating vehicule:', vehicule);
         return this.http.post<AppResponse>(this.URL, vehicule);
     }
 

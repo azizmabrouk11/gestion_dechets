@@ -1,7 +1,7 @@
 package com.nourproject.backend.services;
 
-import com.nourproject.backend.dtos.RouteDTO;
-import com.nourproject.backend.dtos.RouteInstructionDTO;
+import com.nourproject.backend.dtos.route.RouteDto;
+import com.nourproject.backend.dtos.route.RouteInstructionDTO;
 import com.nourproject.backend.entities.PickUpPoint;
 import com.nourproject.backend.entities.Route;
 import com.nourproject.backend.entities.User;
@@ -31,7 +31,7 @@ public class RouteService {
     /**
      * Create a new route from GraphHopper optimization result
      */
-    public Route createRoute(RouteDTO routeDTO) {
+    public Route createRoute(RouteDto routeDTO) {
         // Fetch pickup points
         List<PickUpPoint> pickUpPoints = routeDTO.getPickUpPointIds().stream()
                 .map(id -> pickUpPointRepository.findById(id).orElse(null))

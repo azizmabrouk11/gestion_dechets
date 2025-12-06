@@ -1,4 +1,4 @@
-package com.nourproject.backend.dtos;
+package com.nourproject.backend.dtos.route;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

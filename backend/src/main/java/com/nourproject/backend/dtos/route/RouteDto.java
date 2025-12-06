@@ -33,6 +33,6 @@ public class RouteDto {
     private Double totalDistance;
     private Long totalTime;
     private String encodedPolyline;
-    private List<com.nourproject.backend.dtos.RouteInstructionDTO> instructions;
+    private List<RouteInstructionDTO> instructions;
     private RouteStatus status;
 }

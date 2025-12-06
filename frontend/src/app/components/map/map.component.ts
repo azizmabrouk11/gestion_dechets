@@ -213,15 +213,22 @@ export class MapComponent implements AfterViewInit {
         this.duplicateCheckLoading = true;
         this.routeService.checkDuplicate(pickupIds).subscribe({
           next: (response) => {
-            // 200 means duplicate found
-            this.isDuplicateRoute = true;
-            this.duplicateCheckLoading = false;
-            this.toastService.showInfo('A route with these pickup points already exists!', 'Route Exists');
+            // Check the status code: 409 means duplicate found, 200 means no duplicate
+            if (response.status === 409) {
+              this.isDuplicateRoute = true;
+              this.duplicateCheckLoading = false;
+              this.toastService.showInfo('A route with these pickup points already exists!', 'Route Exists');
+            } else {
+              // 200 means no duplicate - safe to create
+              this.isDuplicateRoute = false;
+              this.duplicateCheckLoading = false;
+            }
           },
           error: (err) => {
-            // 404 means not found (no duplicate), which is good
-            if (err.status === 404) {
-              this.isDuplicateRoute = false;
+            // Handle error cases
+            if (err.status === 409) {
+              this.isDuplicateRoute = true;
+              this.toastService.showInfo('A route with these pickup points already exists!', 'Route Exists');
             } else {
               console.error('Error checking duplicate:', err);
             }

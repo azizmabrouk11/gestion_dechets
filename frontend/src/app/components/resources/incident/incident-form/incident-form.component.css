@@ -405,6 +405,11 @@
   font-weight: 500;
   position: relative;
   overflow: hidden;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.custom-option:last-child {
+  border-bottom: none;
 }
 
 .custom-option::before {

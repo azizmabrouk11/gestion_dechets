@@ -23,7 +23,9 @@ import java.util.List;
 public class RouteUpdateDto {
     private List<PickUpPoint> pickUpPoints;
     private Vehicule vehicule;
+    private String vehiculeId;
     private List<User> users;
+    private List<String> userIds;
     private LocalDateTime routeDate;
     private RouteStatus status;
 }
