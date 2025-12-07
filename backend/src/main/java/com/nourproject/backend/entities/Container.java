@@ -21,6 +21,6 @@ public class Container {
     private double capacity;
     private double fillLevel;
     private ContainerStatus containerStatus;
-    private String PickUpPointId;
+    private String pickUpPointId;
 
 }

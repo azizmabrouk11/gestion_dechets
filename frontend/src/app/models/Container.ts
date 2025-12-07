@@ -3,7 +3,7 @@ import { ContainerStatus } from './enums/ContainerStatus';
 
 export interface Container {
     id?: string;
-    type: ContainerType;
+    containerType: ContainerType;
     capacity: number;
     fillLevel: number;
     containerStatus: ContainerStatus;

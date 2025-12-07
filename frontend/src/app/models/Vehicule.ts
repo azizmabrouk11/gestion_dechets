@@ -1,13 +1,15 @@
 import { VehiculeType } from './enums/VehiculeType';
 import { VehiculeStatus } from './enums/VehiculeStatus';
+import { UserProfile } from './UserProfile';
 
 export interface Vehicule {
     id?: string;
+    _id?: string;
     matricul: string;
-    type: VehiculeType;
     capacity: number;
-    status: VehiculeStatus;
-    users?: string[];
+    vehiculeStatus: VehiculeStatus;
+    vehiculeType: VehiculeType;
+    users?: UserProfile[];
     createdAt?: string;
     updatedAt?: string;
 }

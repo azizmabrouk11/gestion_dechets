@@ -7,7 +7,7 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface IncidentMapper {
-
+@Mapping(source = "_id", target = "id")
     IncidentDto toDto(Incident incident);
 
     @Mapping(target = "_id", ignore = true)

@@ -33,7 +33,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if (profile?.profileImage) {
 
         this.profileImage = profile.profileImage;
-        this.admin = profile.role && profile?.role == UserRole.Admin ? true : false;
+        this.admin = profile.role && profile?.role == UserRole.admin ? true : false;
       }
     });
   }

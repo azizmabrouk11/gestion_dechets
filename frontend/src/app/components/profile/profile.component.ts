@@ -51,9 +51,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   private initializeForm(): void {
+    const isEditMode = !!this.data.userName;
+
     this.profileForm = this.formBuilder.group({
-      userName: [{ value: this.data.userName || '', disabled: true }],
-      email: [{ value: this.data.email || '', disabled: true }, [Validators.email]],
+      userName: [{ value: this.data.userName || '', disabled: isEditMode }, [Validators.required, Validators.minLength(3)]],
+      email: [{ value: this.data.email || '', disabled: isEditMode }, [Validators.required, Validators.email]],
       firstName: [
         this.data.firstName || '',
         [Validators.required, Validators.minLength(2), Validators.maxLength(50)]
@@ -78,6 +80,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const formValues = this.profileForm.getRawValue() as ProfileFormData;
     const updatedProfile: Partial<UserProfile> = {
       ...this.data,
+      userName: formValues.userName,
+      email: formValues.email,
       firstName: formValues.firstName.trim(),
       lastName: formValues.lastName.trim(),
       profileImage: (this.selectedImage as string) || formValues.profileImage || undefined

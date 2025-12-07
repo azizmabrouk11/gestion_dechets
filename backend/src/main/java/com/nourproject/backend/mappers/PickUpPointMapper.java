@@ -15,6 +15,7 @@ public interface PickUpPointMapper {
     PickUpPointDto pickUpPointToPickUpPointDto(PickUpPoint pickUpPoint);
 
     @Mapping(target = "_id", ignore = true)
+    @Mapping(target = "containers", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updatePickUpPointFromDto(PickUpPointUpdateDto pickUpPointUpdateDto, @MappingTarget PickUpPoint pickUpPoint);
 }

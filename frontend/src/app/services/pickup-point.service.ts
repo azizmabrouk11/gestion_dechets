@@ -29,6 +29,10 @@ export class PickUpPointService {
         return this.http.put<AppResponse>(`${this.URL}/${id}`, pickUpPoint);
     }
 
+    syncContainers(id: string): Observable<AppResponse> {
+        return this.http.post<AppResponse>(`${this.URL}/${id}/sync-containers`, {});
+    }
+
     delete(id: string): Observable<AppResponse> {
         return this.http.delete<AppResponse>(`${this.URL}/${id}`);
     }

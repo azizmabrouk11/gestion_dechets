@@ -15,5 +15,7 @@ public interface PickUpPointService {
 
     Response updateById(String id, PickUpPointUpdateDto pickUpPointUpdateDto);
 
+    Response syncContainers(String id);
+
     Response deleteById(String id);
 }

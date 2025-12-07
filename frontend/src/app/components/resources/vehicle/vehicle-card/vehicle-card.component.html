@@ -1,0 +1,133 @@
+<td class="px-6 py-4 whitespace-nowrap">
+  <div class="flex items-center">
+    <div
+      class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shadow-sm"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"
+        />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
+        />
+      </svg>
+    </div>
+    <div class="ml-3">
+      <div class="text-sm font-medium text-gray-900">
+        {{ vehicle.matricul }}
+      </div>
+      <div class="text-xs text-gray-500">
+        #{{ vehicle.id?.substring(0, 8) }}
+      </div>
+    </div>
+  </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+  <span
+    class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+    [ngClass]="{
+      'bg-purple-50 text-purple-700 border border-purple-100':
+        vehicle.vehiculeType === 'camion',
+      'bg-cyan-50 text-cyan-700 border border-cyan-100':
+        vehicle.vehiculeType === 'car'
+    }"
+  >
+    {{ vehicle.vehiculeType === "camion" ? "Truck" : "Car" }}
+  </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+  {{ vehicle.capacity | number : "1.0-0" }} kg
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+  <span
+    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+    [ngClass]="{
+      'bg-green-100 text-green-800': vehicle.vehiculeStatus === 'fonctionnel',
+      'bg-red-100 text-red-800': vehicle.vehiculeStatus === 'en_maintenance'
+    }"
+  >
+    {{
+      vehicle.vehiculeStatus === "functionel" ? "fonctionnel" : "Maintenance"
+    }}
+  </span>
+</td>
+<td class="px-6 py-4">
+  <div
+    *ngIf="vehicle.users && vehicle.users.length > 0"
+    class="flex flex-col space-y-1"
+  >
+    <div *ngFor="let user of vehicle.users" class="flex items-center text-xs">
+      <div
+        class="h-6 w-6 rounded-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center text-green-600 font-bold text-[10px] shadow-sm mr-2"
+      >
+        {{ user.firstName?.charAt(0) || "U"
+        }}{{ user.lastName?.charAt(0) || "" }}
+      </div>
+      <span class="font-medium text-gray-700"
+        >{{ user.firstName }} {{ user.lastName }}</span
+      >
+      <span
+        class="ml-2 px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded text-[10px] font-semibold"
+        >{{ user.role }}</span
+      >
+    </div>
+  </div>
+  <div
+    *ngIf="!vehicle.users || vehicle.users.length === 0"
+    class="text-xs text-gray-400 italic"
+  >
+    No users assigned
+  </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+  <button
+    (click)="edit()"
+    class="text-gray-400 hover:text-blue-600 transition-colors duration-200 mr-3"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+      />
+    </svg>
+  </button>
+  <button
+    (click)="delete()"
+    class="text-gray-400 hover:text-red-600 transition-colors duration-200"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+      />
+    </svg>
+  </button>
+</td>

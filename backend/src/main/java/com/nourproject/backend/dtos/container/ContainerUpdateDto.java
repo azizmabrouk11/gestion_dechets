@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
 public class ContainerUpdateDto {
     private ContainerType containerType;
-    private double capacity;
-    private double fillLevel;
+    private Double capacity;
+    private Double fillLevel;
     private ContainerStatus containerStatus;
     private String pickUpPointId;
 }

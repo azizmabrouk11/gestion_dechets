@@ -1,0 +1,36 @@
+<div class="overflow-x-auto">
+  <table class="w-full text-left border-collapse">
+    <thead>
+      <tr
+        class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 tracking-wider font-semibold"
+      >
+        <th class="px-6 py-4">Route ID</th>
+        <th class="px-6 py-4">Date</th>
+        <th class="px-6 py-4">Vehicle</th>
+        <th class="px-6 py-4">Employees</th>
+        <th class="px-6 py-4">Pickup Points</th>
+        <th class="px-6 py-4">Distance</th>
+        <th class="px-6 py-4">Status</th>
+        <th class="px-6 py-4 text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-50">
+      <tr
+        *ngFor="let route of routes"
+        class="hover:bg-gray-50 transition-colors duration-150"
+      >
+        <app-route-card
+          [route]="route"
+          (onView)="viewRoute($event)"
+          (onDelete)="deleteRoute($event)"
+          style="display: contents"
+        ></app-route-card>
+      </tr>
+      <tr *ngIf="routes.length === 0" class="bg-white">
+        <td colspan="8" class="px-6 py-12 text-center text-gray-500">
+          No routes found.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

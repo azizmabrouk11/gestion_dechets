@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +20,13 @@ import java.util.List;
 @AllArgsConstructor
 @Document(collection = "pickuppoints")
 public class PickUpPoint {
-    @Id
+    @MongoId(FieldType.OBJECT_ID)
     private String _id;
-    @Builder.Default
-    List<Container> containers=new ArrayList<Container>();
+    
+    @DocumentReference(lazy = true)  // Store container references, load on demand
+    private List<Container> containers;
     private double locationLatitude;
     private double locationLongitude;
+    private String address;
 
 }

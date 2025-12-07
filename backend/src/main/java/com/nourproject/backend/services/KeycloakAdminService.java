@@ -236,4 +236,95 @@ public class KeycloakAdminService {
             return List.of();
         }
     }
+
+    /**
+     * Create a new user in Keycloak
+     * 
+     * @param username the username
+     * @param email the email
+     * @param firstName the first name
+     * @param lastName the last name
+     * @param temporaryPassword the temporary password
+     * @return true if user was created successfully
+     */
+    public boolean createUserInKeycloak(String username, String email, String firstName, String lastName, String temporaryPassword) {
+        try {
+            UsersResource usersResource = realmResource.users();
+            
+            // Check if user already exists by username
+            List<UserRepresentation> existingUsersByUsername = usersResource.search(username, true);
+            if (!existingUsersByUsername.isEmpty()) {
+                log.warn("User already exists in Keycloak with username: {}", username);
+                return false;
+            }
+            
+            // Check if user already exists by email
+            List<UserRepresentation> existingUsersByEmail = usersResource.searchByEmail(email, true);
+            if (!existingUsersByEmail.isEmpty()) {
+                log.warn("User already exists in Keycloak with email: {}", email);
+                return false;
+            }
+            
+            // Create new user representation
+            UserRepresentation user = new UserRepresentation();
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setEnabled(true);
+            user.setEmailVerified(true);
+            
+            // Create user
+            try {
+                usersResource.create(user);
+                log.info("Successfully created user in Keycloak: {}", username);
+                
+                // Set temporary password if provided
+                if (temporaryPassword != null && !temporaryPassword.trim().isEmpty()) {
+                    // Find the newly created user to get their ID
+                    List<UserRepresentation> createdUsers = usersResource.search(username, true);
+                    if (!createdUsers.isEmpty()) {
+                        String userId = createdUsers.get(0).getId();
+                        setUserPassword(userId, temporaryPassword, true);
+                    }
+                }
+                
+                return true;
+            } catch (Exception createEx) {
+                log.error("Failed to create user in Keycloak: {}", username, createEx);
+                return false;
+            }
+            
+        } catch (Exception e) {
+            log.error("Exception while creating user in Keycloak: {}", username, e);
+            return false;
+        }
+    }
+    
+    /**
+     * Set user password in Keycloak
+     * 
+     * @param userId the Keycloak user ID
+     * @param password the new password
+     * @param temporary whether the password is temporary
+     * @return true if password was set successfully
+     */
+    private boolean setUserPassword(String userId, String password, boolean temporary) {
+        try {
+            UserResource userResource = realmResource.users().get(userId);
+            org.keycloak.representations.idm.CredentialRepresentation credential = new org.keycloak.representations.idm.CredentialRepresentation();
+            credential.setType(org.keycloak.representations.idm.CredentialRepresentation.PASSWORD);
+            credential.setValue(password);
+            credential.setTemporary(temporary);
+            
+            userResource.resetPassword(credential);
+            log.info("Successfully set password for user ID: {}", userId);
+            return true;
+            
+        } catch (Exception e) {
+            log.error("Failed to set password for user ID: {}", userId, e);
+            return false;
+        }
+    }
 }
+

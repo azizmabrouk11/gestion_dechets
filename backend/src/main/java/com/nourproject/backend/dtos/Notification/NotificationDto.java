@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Data
 @NoArgsConstructor
@@ -22,4 +24,5 @@ public class NotificationDto {
     private String userId;
     private String containerId;
     private String incidentId;
+    private LocalDateTime date;
 }

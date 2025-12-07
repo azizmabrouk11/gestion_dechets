@@ -1,6 +1,6 @@
 export enum IncidentPriority {
-    LOW = 'LOW',
-    MEDIUM = 'MEDIUM',
-    HIGH = 'HIGH',
-    URGENT = 'URGENT'
+    low = 'low',
+    medium = 'medium',
+    high = 'high',
+    urgent = 'urgent'
 }

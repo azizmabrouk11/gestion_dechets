@@ -1,0 +1,349 @@
+<div class="form-card">
+  <!-- Header -->
+  <div class="form-header">
+    <button class="close-btn" (click)="onCancel()" aria-label="Close">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <div class="title-container">
+      <span class="title-dot"></span>
+      <h2 class="form-title">
+        {{ editMode ? "Edit Pickup Point" : "New Pickup Point" }}
+      </h2>
+      <span class="title-dot"></span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="form-content">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <!-- Address -->
+      <div class="form-group">
+        <label for="address" class="form-label"
+          >Address <span class="required">*</span></label
+        >
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="address"
+            formControlName="address"
+            class="form-input"
+            placeholder="Enter address"
+          />
+        </div>
+        <div
+          class="error-message"
+          *ngIf="
+            formGroup.get('address')?.invalid &&
+            formGroup.get('address')?.touched
+          "
+        >
+          Address is required (min 3 characters)
+        </div>
+      </div>
+
+      <!-- Quick Location Picker - Custom Styled -->
+      <div class="form-group">
+        <label class="form-label">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="inline-block h-4 w-4 mr-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          Quick Location Picker
+        </label>
+
+        <div class="location-picker-wrapper">
+          <div
+            class="location-search-box"
+            [class.active]="showLocationDropdown"
+            (click)="toggleLocationDropdown()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="location-icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <span
+              class="selected-location"
+              [class.placeholder]="
+                !selectedLocationName ||
+                selectedLocationName === 'Select a location...'
+              "
+            >
+              {{ selectedLocationName || "Select a location..." }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="dropdown-arrow"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+
+          <div class="location-dropdown" *ngIf="showLocationDropdown">
+            <div class="location-options-container">
+              <div
+                *ngFor="let location of predefinedLocations; let i = index"
+                class="location-option"
+                [class.disabled]="i === 0"
+                [class.selected]="
+                  selectedLocationName === location.name && i !== 0
+                "
+                (click)="selectLocation(location, i)"
+              >
+                <span>{{ location.name }}</span>
+                <svg
+                  *ngIf="selectedLocationName === location.name && i !== 0"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="check-icon"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="help-text" style="margin-top: 0.5rem">
+          Select a location to automatically fill coordinates and address
+        </p>
+      </div>
+
+      <!-- Coordinates Row -->
+      <div style="display: flex; gap: 1.5rem">
+        <div class="form-group" style="flex: 1">
+          <label for="locationLatitude" class="form-label"
+            >Latitude <span class="required">*</span></label
+          >
+          <div class="input-wrapper">
+            <input
+              type="number"
+              id="locationLatitude"
+              formControlName="locationLatitude"
+              class="form-input"
+              placeholder="e.g. 35.75"
+              step="0.000001"
+            />
+          </div>
+          <div
+            class="error-message"
+            *ngIf="
+              formGroup.get('locationLatitude')?.invalid &&
+              formGroup.get('locationLatitude')?.touched
+            "
+          >
+            Required (-90 to 90)
+          </div>
+        </div>
+
+        <div class="form-group" style="flex: 1">
+          <label for="locationLongitude" class="form-label"
+            >Longitude <span class="required">*</span></label
+          >
+          <div class="input-wrapper">
+            <input
+              type="number"
+              id="locationLongitude"
+              formControlName="locationLongitude"
+              class="form-input"
+              placeholder="e.g. 10.81"
+              step="0.000001"
+            />
+          </div>
+          <div
+            class="error-message"
+            *ngIf="
+              formGroup.get('locationLongitude')?.invalid &&
+              formGroup.get('locationLongitude')?.touched
+            "
+          >
+            Required (-180 to 180)
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description" class="form-label">Description</label>
+        <div class="input-wrapper">
+          <textarea
+            id="description"
+            formControlName="description"
+            class="form-input form-textarea"
+            placeholder="Optional description"
+            rows="3"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Container Selection -->
+      <div class="form-group">
+        <label class="form-label">📦 Assign Containers</label>
+        <p class="help-text">
+          Only unassigned containers are shown. Containers can only belong to
+          one pickup point.
+        </p>
+
+        <!-- Search Input -->
+        <div class="input-wrapper" style="margin-bottom: 1rem">
+          <input
+            type="text"
+            [(ngModel)]="containerSearchTerm"
+            [ngModelOptions]="{ standalone: true }"
+            (input)="filterContainers()"
+            class="form-input"
+            placeholder="🔍 Search containers by type, status, or ID..."
+          />
+        </div>
+
+        <div class="container-selection">
+          <div
+            *ngIf="
+              filteredContainers.length === 0 &&
+              !isLoading &&
+              containers.length === 0
+            "
+            class="no-containers"
+          >
+            No available containers (all are already assigned)
+          </div>
+          <div
+            *ngIf="
+              filteredContainers.length === 0 &&
+              !isLoading &&
+              containers.length > 0
+            "
+            class="no-containers"
+          >
+            No containers match your search
+          </div>
+          <div *ngIf="isLoading" class="loading-containers">
+            Loading containers...
+          </div>
+          <div class="container-list" *ngIf="filteredContainers.length > 0">
+            <div
+              *ngFor="let container of filteredContainers"
+              class="container-item"
+              [class.selected]="isContainerSelected(container.id)"
+              (click)="toggleContainer(container.id)"
+            >
+              <div class="container-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="isContainerSelected(container.id)"
+                  (click)="$event.stopPropagation()"
+                  (change)="toggleContainer(container.id)"
+                />
+              </div>
+              <div class="container-info">
+                <div class="container-type">
+                  {{
+                    container.containerType === "carton"
+                      ? "📦 Carton"
+                      : "🧴 Plastique"
+                  }}
+                  <span
+                    class="container-badge"
+                    *ngIf="
+                      container.pickUpPointId && container.pickUpPointId === id
+                    "
+                  >
+                    Currently Assigned
+                  </span>
+                </div>
+                <div class="container-details">
+                  Capacity: {{ container.capacity }}L • Fill:
+                  {{ container.fillLevel }}L •
+                  {{ container.containerStatus === "functional" ? "✅" : "⚠️" }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="selected-count" *ngIf="selectedContainers.length > 0">
+            {{ selectedContainers.length }} container(s) selected
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Actions -->
+  <div class="form-actions">
+    <button
+      type="button"
+      class="btn-submit"
+      [disabled]="formGroup.invalid || isLoading"
+      (click)="onSubmit()"
+    >
+      {{
+        isLoading
+          ? "Saving..."
+          : editMode
+          ? "Update Pickup Point"
+          : "Create Pickup Point"
+      }}
+    </button>
+    <button type="button" class="btn-cancel" (click)="onCancel()">
+      Cancel
+    </button>
+  </div>
+</div>

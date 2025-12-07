@@ -1,0 +1,89 @@
+<td class="px-6 py-4 whitespace-nowrap">
+  <div class="flex items-center">
+    <div
+      class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 shadow-sm"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+        />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+        />
+      </svg>
+    </div>
+    <div class="ml-3">
+      <div class="text-sm font-medium text-gray-900">
+        Point #{{ point.id?.substring(0, 6) }}
+      </div>
+      <div class="text-xs text-gray-500">
+        Lat: {{ point.locationLatitude | number : "1.4-4" }}, Lng:
+        {{ point.locationLongitude | number : "1.4-4" }}
+      </div>
+    </div>
+  </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+  {{ point.address || "No address provided" }}
+</td>
+<td class="px-6 py-4">
+  <div class="flex flex-col space-y-2">
+    <div
+      *ngFor="let container of point.containers"
+      class="flex items-center text-xs"
+    >
+      <span
+        class="w-2 h-2 rounded-full mr-2"
+        [ngClass]="{
+          'bg-green-500': container.fillLevel / container.capacity < 0.5,
+          'bg-yellow-500':
+            container.fillLevel / container.capacity >= 0.5 &&
+            container.fillLevel / container.capacity < 0.8,
+          'bg-red-500':
+            container.fillLevel / container.capacity >= 0.8 ||
+            container.containerStatus === 'non_functional'
+        }"
+      >
+      </span>
+      <span class="font-medium text-gray-700 mr-1"
+        >{{ container.type || "Bin" }}:</span
+      >
+      <span class="text-gray-500"
+        >{{
+          (container.fillLevel / container.capacity) * 100 | number : "1.0-0"
+        }}%</span
+      >
+      <span
+        *ngIf="container.containerStatus === 'non_functional'"
+        class="ml-2 px-1.5 py-0.5 bg-red-100 text-red-800 rounded text-[10px] font-bold"
+        >DAMAGED</span
+      >
+    </div>
+    <div
+      *ngIf="!point.containers || point.containers.length === 0"
+      class="text-xs text-gray-400 italic"
+    >
+      No containers
+    </div>
+  </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+  <button
+    (click)="edit()"
+    class="text-blue-600 hover:text-blue-900 text-xs font-semibold"
+  >
+    Edit
+  </button>
+</td>

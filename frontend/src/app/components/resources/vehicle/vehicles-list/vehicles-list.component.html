@@ -1,0 +1,34 @@
+<div class="overflow-x-auto">
+  <table class="w-full text-left border-collapse">
+    <thead>
+      <tr
+        class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 tracking-wider font-semibold"
+      >
+        <th class="px-6 py-4">Matricule</th>
+        <th class="px-6 py-4">Type</th>
+        <th class="px-6 py-4">Capacity (kg)</th>
+        <th class="px-6 py-4">Status</th>
+        <th class="px-6 py-4">Assigned Users</th>
+        <th class="px-6 py-4 text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-50">
+      <tr
+        *ngFor="let vehicle of vehicles"
+        class="hover:bg-gray-50 transition-colors duration-150"
+      >
+        <app-vehicle-card
+          [vehicle]="vehicle"
+          (onEdit)="editVehicle($event)"
+          (onDelete)="deleteVehicle($event)"
+          style="display: contents"
+        ></app-vehicle-card>
+      </tr>
+      <tr *ngIf="vehicles.length === 0" class="bg-white">
+        <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+          No vehicles found.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

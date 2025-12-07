@@ -1,0 +1,33 @@
+<div class="overflow-x-auto">
+  <table class="w-full text-left border-collapse">
+    <thead>
+      <tr
+        class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 tracking-wider font-semibold"
+      >
+        <th class="px-6 py-4">Notification</th>
+        <th class="px-6 py-4">Type</th>
+        <th class="px-6 py-4">Recipient</th>
+        <th class="px-6 py-4">Date</th>
+        <th class="px-6 py-4 text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-50">
+      <tr
+        *ngFor="let notification of notifications"
+        class="hover:bg-gray-50 transition-colors duration-150"
+      >
+        <app-notification-card
+          [notification]="notification"
+          (onView)="viewNotification($event)"
+          (onDelete)="deleteNotification($event)"
+          style="display: contents"
+        ></app-notification-card>
+      </tr>
+      <tr *ngIf="notifications.length === 0" class="bg-white">
+        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+          No notifications found.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

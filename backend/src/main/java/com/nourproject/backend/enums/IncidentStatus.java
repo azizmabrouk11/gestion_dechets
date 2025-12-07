@@ -1,8 +1,8 @@
 package com.nourproject.backend.enums;
 
 public enum IncidentStatus {
-    REPORTED,
-    IN_PROGRESS,
-    RESOLVED,
-    CLOSED
+    reported,
+    in_progress,
+    resolved,
+    closed
 }

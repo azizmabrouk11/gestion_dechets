@@ -1,0 +1,32 @@
+<div class="overflow-x-auto">
+  <table class="w-full text-left border-collapse">
+    <thead>
+      <tr
+        class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 tracking-wider font-semibold"
+      >
+        <th class="px-6 py-4">Location</th>
+        <th class="px-6 py-4">Address</th>
+        <th class="px-6 py-4">Containers</th>
+        <th class="px-6 py-4 text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-50">
+      <tr
+        *ngFor="let point of pickupPoints"
+        class="hover:bg-gray-50 transition-colors duration-150"
+      >
+        <app-pickup-point-card
+          [point]="point"
+          (onEdit)="editPickupPoint($event)"
+          (onDelete)="deletePickupPoint($event)"
+          style="display: contents"
+        ></app-pickup-point-card>
+      </tr>
+      <tr *ngIf="pickupPoints.length === 0" class="bg-white">
+        <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+          No pickup points found.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

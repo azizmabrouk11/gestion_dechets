@@ -11,6 +11,7 @@ import com.nourproject.backend.mappers.UserMapper;
 import com.nourproject.backend.repositories.UserRepository;
 import com.nourproject.backend.services.KeycloakAdminService;
 import com.nourproject.backend.services.interfaces.UserService;
+import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
@@ -49,10 +51,25 @@ public class UserServiceImpl implements UserService {
     }
 
     public Response save(UserDto userDto) {
+        // Create user in Keycloak first
+        String temporaryPassword = "ChangeMe123!"; // Default temporary password
+        boolean keycloakSuccess = keycloakAdminService.createUserInKeycloak(
+            userDto.getUserName(),
+            userDto.getEmail(),
+            userDto.getFirstName(),
+            userDto.getLastName(),
+            temporaryPassword
+        );
+        
+        if (!keycloakSuccess) {
+            log.warn("Failed to create user in Keycloak, but proceeding with database save: {}", userDto.getUserName());
+        }
+        
+        // Save user in database
         UserDto user = userMapper.userToUserDto(userRepository.save(this.userMapper.userDtoToUser(userDto)));
         return Response.builder()
                 .status(200)
-                .message("User saved successfully")
+                .message("User saved successfully" + (keycloakSuccess ? " and synced to Keycloak" : ""))
                 .user(user)
                 .build();
     }

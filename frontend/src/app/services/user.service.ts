@@ -51,6 +51,14 @@ export class UserService {
         return this.http.put<AppResponse>(`${this.URL}/email/${email}`, updateData);
     }
 
+    updateUserById(id: string, profile: Partial<UserProfile>): Observable<AppResponse> {
+        return this.http.put<AppResponse>(`${this.URL}/${id}`, profile);
+    }
+
+    deleteUserById(id: string): Observable<AppResponse> {
+        return this.http.delete<AppResponse>(`${this.URL}/${id}`);
+    }
+
     getUserByUsername(username: string): Observable<AppResponse> {
         return this.http.get<AppResponse>(`${this.URL}/username/${username}`);
     }

@@ -33,6 +33,7 @@
             ],
             "styles": [
                 "node_modules/leaflet/dist/leaflet.css",
+                "node_modules/ngx-toastr/toastr.css",
               "src/custom-theme.scss",
               "src/styles.css"
             ],

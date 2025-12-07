@@ -45,13 +45,16 @@ users :
 - admin role :
               username:admin password:nour123
   normal user :
-                username:testuser password:test@restaurant.com
+                username:testuser password:test123
 mongo express
 USERNAME=exproot
 PASSWORD=expadmin
 
+Yes, you're absolutely right! The Route entity should use @DocumentReference for pickUpPoints, vehicule, and users to avoid the same problem. Without it, MongoDB will try to embed the entire objects, which can cause issues with updates and data consistency.
 
 
+
+cd frontend; Remove-Item -Recurse -Force .angular -ErrorAction SilentlyContinue ; 
 realm import  keycloak
 realm-config-dev.json
 realm-config-prod.json

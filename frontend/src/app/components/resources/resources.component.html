@@ -1,1 +1,550 @@
-<app-sidebar/>
+<div class="flex h-screen bg-gray-50 font-sans overflow-hidden">
+  <!-- Sidebar -->
+  <div class="realtive">
+    <button class="absolute left-2 mt-2" (click)="show()">
+      @if(!sidebarOpen){<svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-menu-icon lucide-menu"
+      >
+        <path d="M4 5h16" />
+        <path d="M4 12h16" />
+        <path d="M4 19h16" /></svg
+      >}@else{<svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-x-icon lucide-x hover:text-red-500 hover:rotate-45 transition-transform duration-300"
+      >
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" /></svg
+      >}
+    </button>
+    @if(sidebarOpen) {
+    <aside
+      class="w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm z-10"
+    >
+      <div
+        class="p-6 flex items-center justify-center border-b border-gray-100"
+      >
+        <h1
+          class="text-2xl font-bold bg-clip-text text-transparent bg-blue-500 tracking-tight"
+        >
+          Admin Panel
+        </h1>
+      </div>
+
+      <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
+        <button
+          (click)="setActiveTab('users')"
+          [class.bg-gray-100]="activeTab === 'users'"
+          [class.text-gray-700]="activeTab === 'users'"
+          class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-3 transition-colors duration-200"
+            [class.text-gray-700]="activeTab === 'users'"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+          <span class="font-medium">Users</span>
+        </button>
+
+        <button
+          (click)="setActiveTab('containers')"
+          [class.bg-gray-100]="activeTab === 'containers'"
+          [class.text-gray-700]="activeTab === 'containers'"
+          class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-3 transition-colors duration-200"
+            [class.text-gray-700]="activeTab === 'containers'"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+            />
+          </svg>
+          <span class="font-medium">Containers</span>
+        </button>
+
+        <button
+          (click)="setActiveTab('pickuppoints')"
+          [class.bg-gray-100]="activeTab === 'pickuppoints'"
+          [class.text-gray-700]="activeTab === 'pickuppoints'"
+          class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-3 transition-colors duration-200"
+            [class.text-gray-700]="activeTab === 'pickuppoints'"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          <span class="font-medium">Pickup Points</span>
+        </button>
+
+        <button
+          (click)="setActiveTab('vehicles')"
+          [class.bg-gray-100]="activeTab === 'vehicles'"
+          [class.text-gray-700]="activeTab === 'vehicles'"
+          class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-3 transition-colors duration-200"
+            [class.text-gray-700]="activeTab === 'vehicles'"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
+            />
+          </svg>
+          <span class="font-medium">Vehicles</span>
+        </button>
+
+        <button
+          (click)="setActiveTab('incidents')"
+          [class.bg-gray-100]="activeTab === 'incidents'"
+          [class.text-gray-700]="activeTab === 'incidents'"
+          class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-3 transition-colors duration-200"
+            [class.text-gray-700]="activeTab === 'incidents'"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+          <span class="font-medium">Incidents</span>
+        </button>
+
+        <button
+          (click)="setActiveTab('notifications')"
+          [class.bg-gray-100]="activeTab === 'notifications'"
+          [class.text-gray-700]="activeTab === 'notifications'"
+          class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-3 transition-colors duration-200"
+            [class.text-gray-700]="activeTab === 'notifications'"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+            />
+          </svg>
+          <span class="font-medium">Notifications</span>
+        </button>
+
+        <button
+          (click)="setActiveTab('routes')"
+          [class.bg-gray-100]="activeTab === 'routes'"
+          [class.text-gray-700]="activeTab === 'routes'"
+          class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-3 transition-colors duration-200"
+            [class.text-gray-700]="activeTab === 'routes'"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 9m0 11V9m0 0L9 7"
+            />
+          </svg>
+          <span class="font-medium">Routes</span>
+        </button>
+      </nav>
+
+      <div class="p-4 border-t border-gray-100">
+        <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+          <div
+            class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-xs"
+          >
+            AD
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-gray-700">Admin User</p>
+            <p class="text-xs text-gray-500">admin@example.com</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    }
+  </div>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto bg-gray-50 p-8">
+    <header class="mb-8 flex justify-between items-center">
+      <div>
+        <h2 class="text-3xl font-bold text-gray-800">
+          @switch(activeTab){ @case('users'){
+          <span>User Management</span>
+          } @case('containers'){
+          <span>Container Management</span>
+          } @case('pickuppoints'){
+          <span>Pickup Point Management</span>
+          } @case('vehicles'){
+          <span>Vehicle Management</span>
+          } @case('incidents'){
+          <span>Incident Management</span>
+          } @case('notifications'){
+          <span>Notification Management</span>
+          } @case('routes'){
+          <span>Route Management</span>
+          } }
+        </h2>
+        <p class="text-gray-500 mt-1">Manage your resources efficiently.</p>
+      </div>
+      <!-- Add Action Button (Optional) -->
+      <div class="inline-flex justify-between items-center gap-6">
+        <button
+          (click)="
+            activeTab === 'users'
+              ? addUser()
+              : activeTab === 'containers'
+              ? addContainer()
+              : activeTab === 'pickuppoints'
+              ? addPickupPoint()
+              : activeTab === 'vehicles'
+              ? addVehicle()
+              : activeTab === 'routes'
+              ? addRoute()
+              : activeTab === 'incidents'
+              ? addIncident()
+              : addNotification()
+          "
+          class="btnc"
+        >
+          <!-- SVG avec taille fixe + centrage parfait -->
+          <svg
+            class="btnsvg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 5v14m-7-7h14" />
+          </svg>
+          <span>
+            @if (activeTab === 'users') { Add User } @else if (activeTab ===
+            'containers') { Add Container } @else if (activeTab ===
+            'pickuppoints') { Add Pickup Point } @else if (activeTab ===
+            'vehicles') { Add Vehicle } @else if (activeTab === 'routes') { Add
+            Route } @else if (activeTab === 'incidents') { Add Incident } @else
+            { Add Notification }
+          </span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center h-64">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"
+      ></div>
+    </div>
+
+    <!-- Users View -->
+    <div
+      *ngIf="activeTab === 'users' && !loading"
+      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+    >
+      <div class="overflow-x-auto">
+        <app-users-list
+          [users]="users"
+          (onEditUser)="editUser($event)"
+          (onDeleteUser)="deleteUser($event)"
+        ></app-users-list>
+      </div>
+    </div>
+
+    <!-- Containers View -->
+    <div
+      *ngIf="activeTab === 'containers' && !loading"
+      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+    >
+      <app-containers-list
+        [containers]="containers"
+        (onDeleteContainer)="deleteContainer($event)"
+        (onEditContainer)="editContainer($event)"
+      ></app-containers-list>
+    </div>
+
+    <!-- Pickup Points View -->
+    <div *ngIf="activeTab === 'pickuppoints'" class="flex flex-col space-y-6">
+      <!-- Map Section -->
+      <div
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+      >
+        <div
+          class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50"
+        >
+          <h3 class="font-semibold text-gray-700 flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 text-green-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-.806-.984A10.001 10.001 0 018.022 16.697L9 20zm3-13v6m0 0l3-3m-3 3l-3-3"
+              />
+            </svg>
+            Interactive Map
+          </h3>
+          <div class="flex items-center gap-3">
+            <button
+              *ngIf="showMap && mapComponent && hasOptimizedRoute()"
+              (click)="createRouteFromMap()"
+              [disabled]="
+                mapComponent.isDuplicateRoute ||
+                mapComponent.duplicateCheckLoading
+              "
+              [class.opacity-50]="
+                mapComponent.isDuplicateRoute ||
+                mapComponent.duplicateCheckLoading
+              "
+              [class.cursor-not-allowed]="
+                mapComponent.isDuplicateRoute ||
+                mapComponent.duplicateCheckLoading
+              "
+              class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all flex items-center gap-2"
+            >
+              <svg
+                *ngIf="!mapComponent.duplicateCheckLoading"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              <svg
+                *ngIf="mapComponent.duplicateCheckLoading"
+                class="animate-spin h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              {{
+                mapComponent.isDuplicateRoute
+                  ? "Route Exists"
+                  : mapComponent.duplicateCheckLoading
+                  ? "Checking..."
+                  : "Create Route"
+              }}
+            </button>
+            <button
+              (click)="toggleMap()"
+              class="text-sm font-medium text-green-600 hover:text-green-800 transition-colors focus:outline-none"
+            >
+              {{ showMap ? "Hide Map" : "Show Map" }}
+            </button>
+          </div>
+        </div>
+        <div
+          *ngIf="showMap"
+          class="h-[500px] w-full transition-all duration-300 ease-in-out"
+        >
+          <app-map></app-map>
+        </div>
+      </div>
+
+      <!-- Pickup Points List -->
+      <div
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+      >
+        <div class="p-6 border-b border-gray-100">
+          <h3 class="text-lg font-bold text-gray-800">
+            Pickup Points & Containers
+          </h3>
+          <p class="text-sm text-gray-500 mt-1">
+            List of all collection points and their current status.
+          </p>
+        </div>
+
+        <app-pickup-points-list
+          [pickupPoints]="pickupPoints"
+          (onDeletePickupPoint)="deletePickupPoint($event)"
+          (onEditPickupPoint)="editPickupPoint($event)"
+        ></app-pickup-points-list>
+      </div>
+    </div>
+
+    <!-- Vehicles View -->
+    <div
+      *ngIf="activeTab === 'vehicles' && !loading"
+      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+    >
+      <div class="p-6 border-b border-gray-100">
+        <h3 class="text-lg font-bold text-gray-800">Fleet Management</h3>
+        <p class="text-sm text-gray-500 mt-1">
+          Overview of all collection vehicles and their operational status.
+        </p>
+      </div>
+
+      <app-vehicles-list
+        [vehicles]="vehicles"
+        (onDeleteVehicle)="deleteVehicle($event)"
+        (onEditVehicle)="editVehicle($event)"
+      ></app-vehicles-list>
+    </div>
+
+    <!-- Incidents View -->
+    <div
+      *ngIf="activeTab === 'incidents' && !loading"
+      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+    >
+      <div class="p-6 border-b border-gray-100">
+        <h3 class="text-lg font-bold text-gray-800">Incident Reports</h3>
+        <p class="text-sm text-gray-500 mt-1">
+          Track and manage reported issues and incidents.
+        </p>
+      </div>
+
+      <app-incidents-list
+        [incidents]="incidents"
+        (onResolveIncident)="resolveIncident($event)"
+        (onViewIncident)="viewIncident($event)"
+      ></app-incidents-list>
+    </div>
+
+    <!-- Notifications View -->
+    <div
+      *ngIf="activeTab === 'notifications' && !loading"
+      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+    >
+      <div class="p-6 border-b border-gray-100">
+        <h3 class="text-lg font-bold text-gray-800">System Notifications</h3>
+        <p class="text-sm text-gray-500 mt-1">
+          Alerts and updates from the system.
+        </p>
+      </div>
+
+      <app-notifications-list
+        [notifications]="notifications"
+        (onDeleteNotification)="deleteNotification($event)"
+        (onViewNotification)="viewNotification($event)"
+      ></app-notifications-list>
+    </div>
+
+    <!-- Routes View -->
+    <div
+      *ngIf="activeTab === 'routes' && !loading"
+      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+    >
+      <div class="p-6 border-b border-gray-100">
+        <h3 class="text-lg font-bold text-gray-800">Collection Routes</h3>
+        <p class="text-sm text-gray-500 mt-1">
+          Scheduled and active collection routes.
+        </p>
+      </div>
+
+      <app-routes-list
+        [routes]="routes"
+        (onDeleteRoute)="deleteRoute($event)"
+        (onViewRoute)="viewRoute($event)"
+      ></app-routes-list>
+    </div>
+  </main>
+</div>

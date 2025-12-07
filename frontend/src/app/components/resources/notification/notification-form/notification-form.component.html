@@ -1,0 +1,418 @@
+<div class="form-card">
+  <!-- Header -->
+  <div class="form-header">
+    <button class="close-btn" (click)="onCancel()" aria-label="Close">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <div class="title-container">
+      <span class="title-dot"></span>
+      <h2 class="form-title">
+        {{ editMode ? "Edit Notification" : "New Notification" }}
+      </h2>
+      <span class="title-dot"></span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="form-content">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <!-- Subject -->
+      <div class="form-group">
+        <label for="subject" class="form-label"
+          >Subject <span class="required">*</span></label
+        >
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="subject"
+            formControlName="subject"
+            class="form-input"
+            placeholder="Enter subject (min 5 characters)"
+          />
+        </div>
+        <div
+          class="error-message"
+          *ngIf="
+            formGroup.get('subject')?.invalid &&
+            formGroup.get('subject')?.touched
+          "
+        >
+          Subject is required (min 5 characters)
+        </div>
+      </div>
+
+      <!-- Recipient -->
+      <div class="form-group">
+        <label for="recipient" class="form-label"
+          >Recipient Email <span class="required">*</span></label
+        >
+        <div class="input-wrapper">
+          <input
+            type="email"
+            id="recipient"
+            formControlName="recipient"
+            class="form-input"
+            placeholder="Enter email address"
+          />
+        </div>
+        <div
+          class="error-message"
+          *ngIf="
+            formGroup.get('recipient')?.invalid &&
+            formGroup.get('recipient')?.touched
+          "
+        >
+          Valid email is required
+        </div>
+      </div>
+
+      <!-- Notification Type -->
+      <div class="form-group">
+        <label for="notificationType" class="form-label"
+          >Type <span class="required">*</span></label
+        >
+        <div class="custom-select-wrapper">
+          <div
+            class="custom-select-box"
+            [class.active]="showTypeDropdown"
+            (click)="toggleTypeDropdown()"
+          >
+            <span
+              class="custom-select-text"
+              [class.placeholder]="!selectedTypeName"
+            >
+              {{ selectedTypeName || "Select type" }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="dropdown-arrow"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+
+          <div class="custom-dropdown" *ngIf="showTypeDropdown">
+            <div class="custom-dropdown-container">
+              <div
+                *ngFor="let type of notificationTypes"
+                class="custom-option"
+                [class.selected]="
+                  formGroup.get('notificationType')?.value === type
+                "
+                (click)="selectType(type)"
+              >
+                <span>{{
+                  type === "incident_notification"
+                    ? "Incident Notification"
+                    : "Capacity Notification"
+                }}</span>
+                <svg
+                  *ngIf="formGroup.get('notificationType')?.value === type"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="check-icon"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="form-group">
+        <label for="body" class="form-label"
+          >Message <span class="required">*</span></label
+        >
+        <div class="input-wrapper">
+          <textarea
+            id="body"
+            formControlName="body"
+            class="form-input form-textarea"
+            placeholder="Enter message (min 10 characters)"
+            rows="4"
+          ></textarea>
+        </div>
+        <div
+          class="error-message"
+          *ngIf="
+            formGroup.get('body')?.invalid && formGroup.get('body')?.touched
+          "
+        >
+          Message is required (min 10 characters)
+        </div>
+      </div>
+
+      <!-- Related Entities Row -->
+      <div style="display: flex; gap: 1.5rem">
+        <div class="form-group" style="flex: 1">
+          <label for="userId" class="form-label">Related User</label>
+          <div class="custom-select-wrapper">
+            <div
+              class="custom-select-box"
+              [class.active]="showUserDropdown"
+              (click)="toggleUserDropdown()"
+            >
+              <span
+                class="custom-select-text"
+                [class.placeholder]="!selectedUserName"
+              >
+                {{ selectedUserName || "None" }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="dropdown-arrow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+
+            <div class="custom-dropdown" *ngIf="showUserDropdown">
+              <div class="custom-dropdown-container">
+                <div
+                  class="custom-option"
+                  [class.selected]="!formGroup.get('userId')?.value"
+                  (click)="
+                    formGroup.patchValue({ userId: '' });
+                    selectedUserName = '';
+                    showUserDropdown = false
+                  "
+                >
+                  <span>None</span>
+                </div>
+                <div
+                  *ngFor="let user of users"
+                  class="custom-option"
+                  [class.selected]="formGroup.get('userId')?.value === user.id"
+                  (click)="selectUser(user)"
+                >
+                  <span>{{ user.userName }}</span>
+                  <svg
+                    *ngIf="formGroup.get('userId')?.value === user.id"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="check-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="flex: 1">
+          <label for="containerId" class="form-label">Related Container</label>
+          <div class="custom-select-wrapper">
+            <div
+              class="custom-select-box"
+              [class.active]="showContainerDropdown"
+              (click)="toggleContainerDropdown()"
+            >
+              <span
+                class="custom-select-text"
+                [class.placeholder]="!selectedContainerName"
+              >
+                {{ selectedContainerName || "None" }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="dropdown-arrow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+
+            <div class="custom-dropdown" *ngIf="showContainerDropdown">
+              <div class="custom-dropdown-container">
+                <div
+                  class="custom-option"
+                  [class.selected]="!formGroup.get('containerId')?.value"
+                  (click)="
+                    formGroup.patchValue({ containerId: '' });
+                    selectedContainerName = '';
+                    showContainerDropdown = false
+                  "
+                >
+                  <span>None</span>
+                </div>
+                <div
+                  *ngFor="let container of containers"
+                  class="custom-option"
+                  [class.selected]="
+                    formGroup.get('containerId')?.value === container.id
+                  "
+                  (click)="selectContainer(container)"
+                >
+                  <span>Container #{{ container.id?.substring(0, 8) }}</span>
+                  <svg
+                    *ngIf="formGroup.get('containerId')?.value === container.id"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="check-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Incident -->
+      <div class="form-group">
+        <label for="incidentId" class="form-label">Related Incident</label>
+        <div class="custom-select-wrapper">
+          <div
+            class="custom-select-box"
+            [class.active]="showIncidentDropdown"
+            (click)="toggleIncidentDropdown()"
+          >
+            <span
+              class="custom-select-text"
+              [class.placeholder]="!selectedIncidentName"
+            >
+              {{ selectedIncidentName || "None" }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="dropdown-arrow"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+
+          <div class="custom-dropdown" *ngIf="showIncidentDropdown">
+            <div class="custom-dropdown-container">
+              <div
+                class="custom-option"
+                [class.selected]="!formGroup.get('incidentId')?.value"
+                (click)="
+                  formGroup.patchValue({ incidentId: '' });
+                  selectedIncidentName = '';
+                  showIncidentDropdown = false
+                "
+              >
+                <span>None</span>
+              </div>
+              <div
+                *ngFor="let incident of incidents"
+                class="custom-option"
+                [class.selected]="
+                  formGroup.get('incidentId')?.value === incident.id
+                "
+                (click)="selectIncident(incident)"
+              >
+                <span>{{ incident.description?.substring(0, 50) }}...</span>
+                <svg
+                  *ngIf="formGroup.get('incidentId')?.value === incident.id"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="check-icon"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Actions -->
+  <div class="form-actions">
+    <button
+      type="button"
+      class="btn-submit"
+      [disabled]="formGroup.invalid || isLoading"
+      (click)="onSubmit()"
+    >
+      {{
+        isLoading
+          ? "Sending..."
+          : editMode
+          ? "Update Notification"
+          : "Send Notification"
+      }}
+    </button>
+    <button type="button" class="btn-cancel" (click)="onCancel()">
+      Cancel
+    </button>
+  </div>
+</div>

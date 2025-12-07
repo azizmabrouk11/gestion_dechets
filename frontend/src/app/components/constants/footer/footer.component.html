@@ -1,12 +1,54 @@
-<footer class="bg-gray-800 text-white py-6 ">
-      <div class="container mx-auto px-4 text-center">
-        <ng-content select="[top]"></ng-content> <!-- Top section for custom content -->
-        <div class="mt-4">
-          <ng-content select="[middle]"></ng-content> <!-- Middle section (e.g., links) -->
+<footer class="footer-main">
+  <div class="footer-content">
+    <!-- Contact Information Section -->
+    <div class="footer-section">
+      <h3 class="footer-title">Nous Contacter</h3>
+      <div class="contact-info">
+        <div class="contact-item">
+          <span class="contact-label">Adresse :</span>
+          <p class="contact-value">Municipalité de Sfax, Rue de la Paix, Sfax 3000, Tunisie</p>
         </div>
-        <p class="mt-4 text-sm">
-          <ng-content select="[bottom]"></ng-content> <!-- Bottom section (e.g., copyright) -->
-          © 2025 Hotel Booking App. All rights reserved.
-        </p>
+        <div class="contact-item">
+          <span class="contact-label">Email :</span>
+          <p class="contact-value"><a href="mailto:contact@sfax.tn" class="contact-link">contact@sfax.tn</a></p>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">Téléphone Fixe :</span>
+          <p class="contact-value"><a href="tel:+21674123456" class="contact-link">+216 74 123 456</a></p>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">Téléphone Mobile :</span>
+          <p class="contact-value"><a href="tel:+21650123456" class="contact-link">+216 50 123 456</a></p>
+        </div>
       </div>
-    </footer>
+    </div>
+
+    <!-- Contact Form Section -->
+    <div class="footer-section">
+      <h3 class="footer-title">Formulaire de Contact</h3>
+      <form class="contact-form" (ngSubmit)="submitContactForm()">
+        <div class="form-group">
+          <label for="email" class="form-label">Email *</label>
+          <input type="email" id="email" name="email" class="form-input" placeholder="votre@email.com" [(ngModel)]="contactForm.email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="subject" class="form-label">Sujet *</label>
+          <input type="text" id="subject" name="subject" class="form-input" placeholder="Sujet du message" [(ngModel)]="contactForm.subject" required>
+        </div>
+
+        <div class="form-group">
+          <label for="message" class="form-label">Message *</label>
+          <textarea id="message" name="message" class="form-input form-textarea" placeholder="Votre message..." [(ngModel)]="contactForm.message" rows="4" required></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Envoyer</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <p class="copyright">© 2025 Municipalité de Sfax. Tous droits réservés.</p>
+  </div>
+</footer>

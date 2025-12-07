@@ -29,6 +29,10 @@ export class RouteService {
         return this.http.get<AppResponse>(`${this.URL}/date-range?startDate=${startDate}&endDate=${endDate}`);
     }
 
+    checkDuplicate(pickUpPointIds: string[]): Observable<AppResponse> {
+        return this.http.post<AppResponse>(`${this.URL}/check-duplicate`, pickUpPointIds);
+    }
+
     create(route: Partial<Route>): Observable<AppResponse> {
         return this.http.post<AppResponse>(this.URL, route);
     }

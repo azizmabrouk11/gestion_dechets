@@ -26,4 +26,5 @@ public class IncidentUpdateDto {
     private LocalDateTime resolvedAt;
     private String assignedTo;
     private String resolutionNotes;
+    private LocalDateTime date ;
 }

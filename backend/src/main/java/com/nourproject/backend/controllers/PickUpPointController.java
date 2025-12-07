@@ -43,6 +43,11 @@ public class PickUpPointController {
         return ResponseEntity.ok(pickUpPointService.updateById(id, pickUpPointUpdateDto));
     }
 
+    @PostMapping("/{id}/sync-containers")
+    public ResponseEntity<Response> syncContainers(@PathVariable String id) {
+        return ResponseEntity.ok(pickUpPointService.syncContainers(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Response> deletePickUpPoint(@PathVariable String id) {
         return ResponseEntity.ok(pickUpPointService.deleteById(id));

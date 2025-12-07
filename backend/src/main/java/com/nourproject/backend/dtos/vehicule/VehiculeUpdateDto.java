@@ -17,12 +17,12 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
 public class VehiculeUpdateDto {
 
     private String matricul;
-    private double capacity;
+    private Double capacity;
     private VehiculeStatus vehiculeStatus;
     private VehiculeType vehiculeType;
     List<User> users;

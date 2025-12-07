@@ -1,0 +1,259 @@
+<div class="form-card">
+  <!-- Header -->
+  <div class="form-header">
+    <button class="close-btn" (click)="onCancel()" aria-label="Close">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <div class="title-container">
+      <span class="title-dot"></span>
+      <h2 class="form-title">
+        {{ editMode ? "Edit Vehicle" : "New Vehicle" }}
+      </h2>
+      <span class="title-dot"></span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="form-content">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <!-- Matriculation -->
+      <div class="form-group">
+        <label for="matricul" class="form-label"
+          >License Plate <span class="required">*</span></label
+        >
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="matricul"
+            formControlName="matricul"
+            class="form-input"
+            placeholder="e.g. ABC-123"
+          />
+        </div>
+        <div
+          class="error-message"
+          *ngIf="
+            formGroup.get('matricul')?.invalid &&
+            formGroup.get('matricul')?.touched
+          "
+        >
+          License plate is required (min 3 characters)
+        </div>
+      </div>
+
+      <!-- Vehicle Type -->
+      <div class="form-group">
+        <label for="type" class="form-label"
+          >🚛 Vehicle Type <span class="required">*</span></label
+        >
+        <div class="custom-select-wrapper">
+          <div
+            class="custom-select-box"
+            [class.active]="showTypeDropdown"
+            (click)="toggleTypeDropdown()"
+          >
+            <span
+              class="custom-select-text"
+              [class.placeholder]="!selectedTypeName"
+            >
+              {{ selectedTypeName || "Select type" }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="dropdown-arrow"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+
+          <div class="custom-dropdown" *ngIf="showTypeDropdown">
+            <div class="custom-dropdown-container">
+              <div
+                *ngFor="let type of vehicleTypes"
+                class="custom-option"
+                [class.selected]="formGroup.get('type')?.value === type"
+                (click)="selectType(type)"
+              >
+                <span>{{ getVehicleTypeDisplay(type) }}</span>
+                <svg
+                  *ngIf="formGroup.get('type')?.value === type"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="check-icon"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="error-message"
+          *ngIf="
+            formGroup.get('type')?.invalid && formGroup.get('type')?.touched
+          "
+        >
+          Vehicle type is required
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="form-group">
+        <label for="status" class="form-label"
+          >Status <span class="required">*</span></label
+        >
+        <div class="custom-select-wrapper">
+          <div
+            class="custom-select-box"
+            [class.active]="showStatusDropdown"
+            (click)="toggleStatusDropdown()"
+          >
+            <span
+              class="custom-select-text"
+              [class.placeholder]="!selectedStatusName"
+            >
+              {{ selectedStatusName || "Select status" }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="dropdown-arrow"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+
+          <div class="custom-dropdown" *ngIf="showStatusDropdown">
+            <div class="custom-dropdown-container">
+              <div
+                *ngFor="let status of vehicleStatuses"
+                class="custom-option"
+                [class.selected]="formGroup.get('status')?.value === status"
+                (click)="selectStatus(status)"
+              >
+                <span>{{ getVehicleStatusDisplay(status) }}</span>
+                <svg
+                  *ngIf="formGroup.get('status')?.value === status"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="check-icon"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="error-message"
+          *ngIf="
+            formGroup.get('status')?.invalid && formGroup.get('status')?.touched
+          "
+        >
+          Status is required
+        </div>
+      </div>
+
+      <!-- Capacity & Current Location Row -->
+      <div style="display: flex; gap: 1.5rem">
+        <div class="form-group" style="flex: 1">
+          <label for="capacity" class="form-label"
+            >Capacity (kg) <span class="required">*</span></label
+          >
+          <div class="input-wrapper">
+            <input
+              type="number"
+              id="capacity"
+              formControlName="capacity"
+              class="form-input"
+              placeholder="e.g. 1000"
+            />
+          </div>
+          <div
+            class="error-message"
+            *ngIf="
+              formGroup.get('capacity')?.invalid &&
+              formGroup.get('capacity')?.touched
+            "
+          >
+            Required > 0
+          </div>
+        </div>
+
+        <div class="form-group" style="flex: 1">
+          <label for="currentLocation" class="form-label"
+            >Current Location</label
+          >
+          <div class="input-wrapper">
+            <input
+              type="text"
+              id="currentLocation"
+              formControlName="currentLocation"
+              class="form-input"
+              placeholder="Optional"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Actions -->
+  <div class="form-actions">
+    <button
+      type="button"
+      class="btn-submit"
+      [disabled]="formGroup.invalid || isLoading"
+      (click)="onSubmit()"
+    >
+      {{
+        isLoading ? "Saving..." : editMode ? "Update Vehicle" : "Create Vehicle"
+      }}
+    </button>
+    <button type="button" class="btn-cancel" (click)="onCancel()">
+      Cancel
+    </button>
+  </div>
+</div>

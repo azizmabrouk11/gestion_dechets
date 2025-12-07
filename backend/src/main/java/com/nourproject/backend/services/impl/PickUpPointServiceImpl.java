@@ -3,9 +3,11 @@ package com.nourproject.backend.services.impl;
 import com.nourproject.backend.dtos.Response;
 import com.nourproject.backend.dtos.pickuppoint.PickUpPointDto;
 import com.nourproject.backend.dtos.pickuppoint.PickUpPointUpdateDto;
+import com.nourproject.backend.entities.Container;
 import com.nourproject.backend.entities.PickUpPoint;
 import com.nourproject.backend.exceptions.NotFoundException;
 import com.nourproject.backend.mappers.PickUpPointMapper;
+import com.nourproject.backend.repositories.ContainerRepository;
 import com.nourproject.backend.repositories.PickUpPointRepository;
 import com.nourproject.backend.services.interfaces.PickUpPointService;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +22,19 @@ public class PickUpPointServiceImpl implements PickUpPointService {
 
     private final PickUpPointMapper pickUpPointMapper;
     private final PickUpPointRepository pickUpPointRepository;
+    private final ContainerRepository containerRepository;
 
     @Override
     public Response findAll() {
-        List<PickUpPointDto> list = pickUpPointRepository.findAll().stream()
+        List<PickUpPoint> pickUpPoints = pickUpPointRepository.findAll();
+        
+        // Populate containers for each pickup point
+        pickUpPoints.forEach(pickUpPoint -> {
+            List<Container> containers = containerRepository.findByPickUpPointId(pickUpPoint.get_id());
+            pickUpPoint.setContainers(containers);
+        });
+        
+        List<PickUpPointDto> list = pickUpPoints.stream()
                 .map(pickUpPointMapper::pickUpPointToPickUpPointDto).toList();
 
         return Response.builder()
@@ -34,8 +45,11 @@ public class PickUpPointServiceImpl implements PickUpPointService {
     }
     @Override
     public Response findAllFull() {
-        List<PickUpPointDto> list = pickUpPointRepository.findAll().stream()
-                .filter(p -> p.getContainers().stream()
+        List<PickUpPoint> pickUpPoints = pickUpPointRepository.findAll();
+        
+        // Filter pickup points with containers >= 80% full
+        List<PickUpPointDto> list = pickUpPoints.stream()
+                .filter(p -> p.getContainers() != null && p.getContainers().stream()
                         .anyMatch(c -> ((double) c.getFillLevel() / c.getCapacity()) * 100 >= 80)
                 )
                 .map(pickUpPointMapper::pickUpPointToPickUpPointDto)
@@ -52,9 +66,14 @@ public class PickUpPointServiceImpl implements PickUpPointService {
 
     @Override
     public Response findById(String id) {
-        PickUpPointDto pickUpPointDto = pickUpPointRepository.findById(id)
-                .map(pickUpPointMapper::pickUpPointToPickUpPointDto)
+        PickUpPoint pickUpPoint = pickUpPointRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("PickUp Point with ID " + id + " not found"));
+        
+        // Populate containers from the database
+        List<Container> containers = containerRepository.findByPickUpPointId(pickUpPoint.get_id());
+        pickUpPoint.setContainers(containers);
+        
+        PickUpPointDto pickUpPointDto = pickUpPointMapper.pickUpPointToPickUpPointDto(pickUpPoint);
 
         return Response.builder()
                 .status(200)
@@ -82,12 +101,38 @@ public class PickUpPointServiceImpl implements PickUpPointService {
                 .orElseThrow(() -> new NotFoundException("PickUp Point with ID " + id + " not found"));
 
         pickUpPointMapper.updatePickUpPointFromDto(pickUpPointUpdateDto, pickUpPoint);
+        
+        // Fetch and set the containers based on pickUpPointId
+        List<Container> containers = containerRepository.findByPickUpPointId(id);
+        pickUpPoint.setContainers(containers);
+        
         PickUpPoint updatedPickUpPoint = pickUpPointRepository.save(pickUpPoint);
+        
         PickUpPointDto updatedDto = pickUpPointMapper.pickUpPointToPickUpPointDto(updatedPickUpPoint);
 
         return Response.builder()
                 .status(200)
                 .message("PickUp Point updated successfully")
+                .pickuppoint(updatedDto)
+                .build();
+    }
+
+    @Override
+    public Response syncContainers(String id) {
+        PickUpPoint pickUpPoint = pickUpPointRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("PickUp Point with ID " + id + " not found"));
+        
+        // Fetch all containers assigned to this pickup point
+        List<Container> containers = containerRepository.findByPickUpPointId(id);
+        pickUpPoint.setContainers(containers);
+        
+        // Save the pickup point with updated container references
+        PickUpPoint updatedPickUpPoint = pickUpPointRepository.save(pickUpPoint);
+        PickUpPointDto updatedDto = pickUpPointMapper.pickUpPointToPickUpPointDto(updatedPickUpPoint);
+        
+        return Response.builder()
+                .status(200)
+                .message("Containers synced successfully")
                 .pickuppoint(updatedDto)
                 .build();
     }

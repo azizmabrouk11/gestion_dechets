@@ -1,0 +1,412 @@
+<div class="form-card">
+  <!-- Header -->
+  <div class="form-header">
+    <button class="close-btn" (click)="onCancel()" aria-label="Close">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <div class="title-container">
+      <span class="title-dot"></span>
+      <h2 class="form-title">
+        {{ editMode ? "Edit Incident" : "New Incident" }}
+      </h2>
+      <span class="title-dot"></span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="form-content">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description" class="form-label"
+          >Description <span class="required">*</span></label
+        >
+        <div class="input-wrapper">
+          <textarea
+            id="description"
+            formControlName="description"
+            class="form-input form-textarea"
+            placeholder="Describe the incident (min 10 characters)"
+            rows="3"
+          ></textarea>
+        </div>
+        <div
+          class="error-message"
+          *ngIf="
+            formGroup.get('description')?.invalid &&
+            formGroup.get('description')?.touched
+          "
+        >
+          Description is required (min 10 characters)
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div class="form-group">
+        <label for="location" class="form-label"
+          >Location <span class="required">*</span></label
+        >
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="location"
+            formControlName="location"
+            class="form-input"
+            placeholder="Enter location"
+          />
+        </div>
+        <div
+          class="error-message"
+          *ngIf="
+            formGroup.get('location')?.invalid &&
+            formGroup.get('location')?.touched
+          "
+        >
+          Location is required
+        </div>
+      </div>
+
+      <!-- Status & Priority Row -->
+      <div style="display: flex; gap: 1.5rem">
+        <div class="form-group" style="flex: 1">
+          <label for="status" class="form-label"
+            >Status <span class="required">*</span></label
+          >
+          <div class="custom-select-wrapper">
+            <div
+              class="custom-select-box"
+              [class.active]="showStatusDropdown"
+              (click)="toggleStatusDropdown()"
+            >
+              <span
+                class="custom-select-text"
+                [class.placeholder]="!selectedStatusName"
+              >
+                {{ selectedStatusName || "Select status" }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="dropdown-arrow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+
+            <div class="custom-dropdown" *ngIf="showStatusDropdown">
+              <div class="custom-dropdown-container">
+                <div
+                  *ngFor="let status of incidentStatuses"
+                  class="custom-option"
+                  [class.selected]="formGroup.get('status')?.value === status"
+                  (click)="selectStatus(status)"
+                >
+                  <span>{{ status | titlecase }}</span>
+                  <svg
+                    *ngIf="formGroup.get('status')?.value === status"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="check-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="flex: 1">
+          <label for="priority" class="form-label"
+            >Priority <span class="required">*</span></label
+          >
+          <div class="custom-select-wrapper">
+            <div
+              class="custom-select-box"
+              [class.active]="showPriorityDropdown"
+              (click)="togglePriorityDropdown()"
+            >
+              <span
+                class="custom-select-text"
+                [class.placeholder]="!selectedPriorityName"
+              >
+                {{ selectedPriorityName || "Select priority" }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="dropdown-arrow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+
+            <div class="custom-dropdown" *ngIf="showPriorityDropdown">
+              <div class="custom-dropdown-container">
+                <div
+                  *ngFor="let priority of incidentPriorities"
+                  class="custom-option"
+                  [class.selected]="
+                    formGroup.get('priority')?.value === priority
+                  "
+                  (click)="selectPriority(priority)"
+                >
+                  <span>{{ priority | titlecase }}</span>
+                  <svg
+                    *ngIf="formGroup.get('priority')?.value === priority"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="check-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Citizen & Pickup Point Row -->
+      <div style="display: flex; gap: 1.5rem">
+        <div class="form-group" style="flex: 1">
+          <label for="citizenId" class="form-label"
+            >Reported By <span class="required">*</span></label
+          >
+          <div class="custom-select-wrapper">
+            <div
+              class="custom-select-box"
+              [class.active]="showCitizenDropdown"
+              (click)="toggleCitizenDropdown()"
+            >
+              <span
+                class="custom-select-text"
+                [class.placeholder]="!selectedCitizenName"
+              >
+                {{ selectedCitizenName || "Select user" }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="dropdown-arrow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+
+            <div class="custom-dropdown" *ngIf="showCitizenDropdown">
+              <div class="custom-dropdown-container">
+                <div
+                  *ngFor="let user of users"
+                  class="custom-option"
+                  [class.selected]="
+                    formGroup.get('citizenId')?.value === user.id
+                  "
+                  (click)="selectCitizen(user)"
+                >
+                  <span>{{ user.userName }} ({{ user.email }})</span>
+                  <svg
+                    *ngIf="formGroup.get('citizenId')?.value === user.id"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="check-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="error-message"
+            *ngIf="
+              formGroup.get('citizenId')?.invalid &&
+              formGroup.get('citizenId')?.touched
+            "
+          >
+            Reporter is required
+          </div>
+        </div>
+
+        <div class="form-group" style="flex: 1">
+          <label for="pickUpPointId" class="form-label"
+            >Related Pickup Point</label
+          >
+          <div class="custom-select-wrapper">
+            <div
+              class="custom-select-box"
+              [class.active]="showPickupPointDropdown"
+              (click)="togglePickupPointDropdown()"
+            >
+              <span
+                class="custom-select-text"
+                [class.placeholder]="!selectedPickupPointName"
+              >
+                {{ selectedPickupPointName || "None" }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="dropdown-arrow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+
+            <div class="custom-dropdown" *ngIf="showPickupPointDropdown">
+              <div class="custom-dropdown-container">
+                <div
+                  class="custom-option"
+                  [class.selected]="!formGroup.get('pickUpPointId')?.value"
+                  (click)="
+                    formGroup.patchValue({ pickUpPointId: '' });
+                    selectedPickupPointName = '';
+                    showPickupPointDropdown = false
+                  "
+                >
+                  <span>None</span>
+                </div>
+                <div
+                  *ngFor="let p of pickUpPoints"
+                  class="custom-option"
+                  [class.selected]="
+                    formGroup.get('pickUpPointId')?.value === p.id
+                  "
+                  (click)="selectPickupPoint(p)"
+                >
+                  <span>{{ p.address }}</span>
+                  <svg
+                    *ngIf="formGroup.get('pickUpPointId')?.value === p.id"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="check-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assigned To -->
+      <div class="form-group">
+        <label for="assignedTo" class="form-label">Assigned To</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            class="form-input"
+            placeholder="Optional - Not yet implemented"
+            disabled
+          />
+        </div>
+        <p class="help-text">Auto-assignment feature coming soon</p>
+      </div>
+
+      <!-- Resolution Notes -->
+      <div class="form-group" *ngIf="editMode">
+        <label for="resolutionNotes" class="form-label">Resolution Notes</label>
+        <div class="input-wrapper">
+          <textarea
+            id="resolutionNotes"
+            formControlName="resolutionNotes"
+            class="form-input form-textarea"
+            placeholder="Optional resolution notes"
+            rows="3"
+          ></textarea>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Actions -->
+  <div class="form-actions">
+    <button
+      type="button"
+      class="btn-submit"
+      [disabled]="formGroup.invalid || isLoading"
+      (click)="onSubmit()"
+    >
+      {{
+        isLoading
+          ? "Saving..."
+          : editMode
+          ? "Update Incident"
+          : "Create Incident"
+      }}
+    </button>
+    <button type="button" class="btn-cancel" (click)="onCancel()">
+      Cancel
+    </button>
+  </div>
+</div>

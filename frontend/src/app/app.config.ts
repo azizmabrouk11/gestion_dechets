@@ -1,9 +1,9 @@
-import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom, APP_INITIALIZER} from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom, APP_INITIALIZER } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 
 import { provideHttpClient, withInterceptors, HTTP_INTERCEPTORS, withInterceptorsFromDi } from '@angular/common/http';
- import { AppKeycloakService } from './keycloak/appKeycloakService';
+import { AppKeycloakService } from './keycloak/appKeycloakService';
 import { AuthInterceptor } from './keycloak/auth.interceptor';
 
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
@@ -19,9 +19,16 @@ export function initializekeycloak(appKeycloakService: AppKeycloakService) {
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(ToastrModule.forRoot({
-      timeOut: 3000,
-      positionClass: 'toast-bottom-center',
+      timeOut: 4000,
+      positionClass: 'toast-top-right',
       preventDuplicates: true,
+      closeButton: true,
+      progressBar: true,
+      progressAnimation: 'decreasing' as const,
+      newestOnTop: true,
+      tapToDismiss: true,
+      maxOpened: 3,
+      autoDismiss: true
     })),
 
 

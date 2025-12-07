@@ -1,0 +1,27 @@
+ <table class="w-full text-left border-collapse">
+          <thead>
+            <tr
+              class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 tracking-wider font-semibold"
+            >
+              <th class="px-6 py-4">User</th>
+              <th class="px-6 py-4">Role</th>
+              <th class="px-6 py-4">Email</th>
+              <th class="px-6 py-4">Status</th>
+              <th class="px-6 py-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            <tr
+              *ngFor="let user of users"
+              class="hover:bg-gray-50 transition-colors duration-150 group"
+            >
+            <app-user-card [user]="user" (onEditUser)="editUser($event)" (onDeleteUser)="deleteUser($event)"></app-user-card>
+            
+            </tr>
+            <tr *ngIf="users.length === 0" class="bg-white">
+              <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                No users found.
+              </td>
+            </tr>
+          </tbody>
+        </table>

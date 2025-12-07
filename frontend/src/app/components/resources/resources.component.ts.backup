@@ -1,0 +1,820 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { UserService } from '../../services/user.service';
+import { ContainerService } from '../../services/container.service';
+import { PickUpPointService } from '../../services/pickup-point.service';
+import { VehiculeService } from '../../services/vehicule.service';
+import { IncidentService } from '../../services/incident.service';
+import { NotificationService } from '../../services/notification.service';
+import { RouteService } from '../../services/route.service';
+import { MapComponent } from '../map/map.component';
+import { ProfileComponent } from '../profile/profile.component';
+import { AppResponse } from '../../models/AppResponse';
+import { ToastService } from '../../services/toast.service';
+import { UserProfile } from '../../models/UserProfile';
+import { UsersListComponent } from './user/users-list/users-list.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { ContainersListComponent } from './container/containers-list/containers-list.component';
+import { PickupPointsListComponent } from './pickup-point/pickup-points-list/pickup-points-list.component';
+import { VehiclesListComponent } from './vehicle/vehicles-list/vehicles-list.component';
+import { IncidentsListComponent } from './incident/incidents-list/incidents-list.component';
+import { NotificationsListComponent } from './notification/notifications-list/notifications-list.component';
+import { RoutesListComponent } from './route/routes-list/routes-list.component';
+import { ContainerFormComponent } from './container/container-form/container-form.component';
+import { PickupPointFormComponent } from './pickup-point/pickup-point-form/pickup-point-form.component';
+import { VehicleFormComponent } from './vehicle/vehicle-form/vehicle-form.component';
+import { IncidentFormComponent } from './incident/incident-form/incident-form.component';
+import { NotificationFormComponent } from './notification/notification-form/notification-form.component';
+
+@Component({
+  selector: 'app-resources',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MapComponent,
+    MatDialogModule,
+    UsersListComponent,
+    ContainersListComponent,
+    PickupPointsListComponent,
+    VehiclesListComponent,
+    IncidentsListComponent,
+    NotificationsListComponent,
+    RoutesListComponent
+  ],
+  templateUrl: './resources.component.html',
+  styleUrl: './resources.component.css',
+})
+export class ResourcesComponent implements OnInit {
+  @ViewChild(MapComponent) mapComponent!: MapComponent;
+
+  activeTab: 'users' | 'containers' | 'pickuppoints' | 'vehicles' | 'incidents' | 'notifications' | 'routes' = 'users';
+  sidebarOpen: boolean = true;
+  users: any[] = [];
+  containers: any[] = [];
+  pickupPoints: any[] = [];
+  vehicles: any[] = [];
+  incidents: any[] = [];
+  notifications: any[] = [];
+  routes: any[] = [];
+
+  loading: boolean = false;
+  showMap: boolean = false; // Closed by default
+
+  constructor(
+    private userService: UserService,
+    private containerService: ContainerService,
+    private pickupPointService: PickUpPointService,
+    private vehiculeService: VehiculeService,
+    private incidentService: IncidentService,
+    private notificationService: NotificationService,
+    private routeService: RouteService,
+    private toastService: ToastService,
+    private dialog: MatDialog
+  ) { }
+
+  ngOnInit(): void {
+    this.loadUsers();
+  }
+
+  setActiveTab(tab: 'users' | 'containers' | 'pickuppoints' | 'vehicles' | 'incidents' | 'notifications' | 'routes') {
+    this.activeTab = tab;
+    if (tab === 'users' && this.users.length === 0) {
+      this.loadUsers();
+    } else if (tab === 'containers' && this.containers.length === 0) {
+      this.loadContainers();
+    } else if (tab === 'pickuppoints' && this.pickupPoints.length === 0) {
+      this.loadPickupPoints();
+    } else if (tab === 'vehicles' && this.vehicles.length === 0) {
+      this.loadVehicles();
+    } else if (tab === 'incidents' && this.incidents.length === 0) {
+      this.loadIncidents();
+    } else if (tab === 'notifications' && this.notifications.length === 0) {
+      this.loadNotifications();
+    } else if (tab === 'routes' && this.routes.length === 0) {
+      this.loadRoutes();
+    }
+  }
+
+  toggleMap() {
+    this.showMap = !this.showMap;
+  }
+
+  // --------------------------------------------------------------------------------
+  // USERS
+  // --------------------------------------------------------------------------------
+  loadUsers() {
+    this.loading = true;
+    this.userService.getAll().subscribe({
+      next: (res: AppResponse) => {
+        this.users = (res as any).users || [];
+        this.loading = false;
+      },
+      error: (err: any) => {
+        this.toastService.showError(`${err.error.message}`);
+        this.loading = false;
+      }
+    });
+  }
+
+  addUser() {
+    const dialogRef = this.dialog.open(ProfileComponent, {
+      width: '60%',
+      height: '90%',
+      data: {} // Empty data for new user
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.userService.createOrUpdateUser(result).subscribe({
+          next: (res: AppResponse) => {
+            this.toastService.showSuccess('User created successfully');
+            this.users = [...this.users, res.user];
+            this.loading = false;
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to create user');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  editUser(user: UserProfile) {
+    const dialogRef = this.dialog.open(ProfileComponent, {
+      width: '60%',
+      height: '90%',
+      data: { ...user } // Pass copy of user data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.userService.updateUserById(user.id!, result).subscribe({
+          next: (res: AppResponse) => {
+            this.toastService.showSuccess('User updated successfully');
+            if (res.user) {
+              this.users = this.users.map(u => u.id === user.id ? res.user : u);
+            }
+            this.loading = false;
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to update user');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  deleteUser(user: UserProfile) {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: { title: 'Confirm Deletion', message: `Are you sure you want to delete user ${user.userName}?` }
+    });
+    ref.afterClosed().subscribe({
+      next: (res) => {
+        if (res) {
+          this.loading = true;
+          this.userService.deleteUserById(user.id!).subscribe({
+            next: (res: AppResponse) => {
+              this.toastService.showSuccess('User deleted successfully');
+              this.users = this.users.filter(u => u.id !== user.id);
+              this.loading = false;
+            },
+            error: (err: any) => {
+              this.toastService.showError(err.error?.message || 'Failed to delete user');
+              this.loading = false;
+            }
+          });
+        }
+      }
+    });
+  }
+
+  // --------------------------------------------------------------------------------
+  // CONTAINERS
+  // --------------------------------------------------------------------------------
+  loadContainers() {
+    this.loading = true;
+    this.containerService.getAll().subscribe({
+      next: (res: AppResponse) => {
+        this.containers = (res as any).containers || [];
+        this.loading = false;
+      },
+      error: (err: any) => {
+        this.toastService.showError(`${err.error?.message || 'Failed to load containers'}`);
+        this.loading = false;
+      }
+    });
+  }
+
+  addContainer() {
+    const dialogRef = this.dialog.open(ContainerFormComponent, {
+      width: '500px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.containerService.create(result).subscribe({
+          next: (res: AppResponse) => {
+            this.toastService.showSuccess('Container created successfully');
+            if (res.container) {
+              this.containers = [...this.containers, res.container];
+            } else {
+              this.loadContainers();
+            }
+            this.loading = false;
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to create container');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  editContainer(container: any) {
+    const dialogRef = this.dialog.open(ContainerFormComponent, {
+      width: '500px',
+      data: { ...container }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.containerService.update(container.id, result).subscribe({
+          next: (res: AppResponse) => {
+            this.toastService.showSuccess('Container updated successfully');
+            if (res.container) {
+              this.containers = this.containers.map(c => c.id === container.id ? res.container : c);
+            } else {
+              this.loadContainers();
+            }
+            this.loading = false;
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to update container');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  deleteContainer(container: any) {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: { title: 'Confirm Deletion', message: `Are you sure you want to delete container #${container.id?.substring(0, 8)}?` }
+    });
+    ref.afterClosed().subscribe({
+      next: (res) => {
+        if (res) {
+          this.loading = true;
+          this.containerService.delete(container.id).subscribe({
+            next: (res: AppResponse) => {
+              this.toastService.showSuccess('Container deleted successfully');
+              this.containers = this.containers.filter(c => c.id !== container.id);
+              this.loading = false;
+            },
+            error: (err: any) => {
+              this.toastService.showError(err.error?.message || 'Failed to delete container');
+              this.loading = false;
+            }
+          });
+        }
+      }
+    });
+  }
+
+  // --------------------------------------------------------------------------------
+  // PICKUP POINTS
+  // --------------------------------------------------------------------------------
+  loadPickupPoints() {
+    this.loading = true;
+    this.pickupPointService.getAll().subscribe({
+      next: (res: AppResponse) => {
+        this.pickupPoints = (res as any).pickuppoints || [];
+        this.loading = false;
+      },
+      error: (err: any) => {
+        this.toastService.showError(`${err.error?.message || 'Failed to load pickup points'}`);
+        this.loading = false;
+      }
+    });
+  }
+
+  addPickupPoint() {
+    const dialogRef = this.dialog.open(PickupPointFormComponent, {
+      width: '600px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        const { containerIds, ...pickupPointData } = result;
+
+        this.pickupPointService.create(pickupPointData).subscribe({
+          next: (res: AppResponse) => {
+            const pickupPoint = (res as any).pickuppoint;
+
+            // If containers were selected, assign them
+            if (containerIds && containerIds.length > 0 && pickupPoint) {
+              this.assignContainersToPickupPoint(containerIds, pickupPoint.id).then(() => {
+                this.toastService.showSuccess('Pickup point created and containers assigned');
+                this.loadPickupPoints();
+                this.loadContainers(); // Refresh containers to show updated assignment
+                this.loading = false;
+              });
+            } else {
+              this.toastService.showSuccess('Pickup point created successfully');
+              if (pickupPoint) {
+                this.pickupPoints = [...this.pickupPoints, pickupPoint];
+              } else {
+                this.loadPickupPoints();
+              }
+              this.loading = false;
+            }
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to create pickup point');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  editPickupPoint(point: any) {
+    const dialogRef = this.dialog.open(PickupPointFormComponent, {
+      width: '600px',
+      data: { ...point }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        const { containerIds, ...pickupPointData } = result;
+
+        this.pickupPointService.update(point.id, pickupPointData).subscribe({
+          next: (res: AppResponse) => {
+            const pickupPoint = (res as any).pickuppoint;
+
+            // If containers were selected/changed, assign them
+            if (containerIds !== undefined && pickupPoint) {
+              this.assignContainersToPickupPoint(containerIds, pickupPoint.id).then(() => {
+                this.toastService.showSuccess('Pickup point updated and containers assigned');
+                this.loadPickupPoints();
+                this.loadContainers();
+                this.loading = false;
+              });
+            } else {
+              this.toastService.showSuccess('Pickup point updated successfully');
+              if (pickupPoint) {
+                this.pickupPoints = this.pickupPoints.map(p => p.id === point.id ? pickupPoint : p);
+              } else {
+                this.loadPickupPoints();
+              }
+              this.loading = false;
+            }
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to update pickup point');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  deletePickupPoint(point: any) {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: { title: 'Confirm Deletion', message: `Are you sure you want to delete pickup point #${point.id?.substring(0, 6)}?` }
+    });
+    ref.afterClosed().subscribe({
+      next: (res) => {
+        if (res) {
+          this.loading = true;
+          this.pickupPointService.delete(point.id).subscribe({
+            next: (res: AppResponse) => {
+              this.toastService.showSuccess('Pickup point deleted successfully');
+              this.pickupPoints = this.pickupPoints.filter(p => p.id !== point.id);
+              this.loading = false;
+            },
+            error: (err: any) => {
+              this.toastService.showError(err.error?.message || 'Failed to delete pickup point');
+              this.loading = false;
+            }
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * Helper to assign containers to a pickup point.
+   * This handles the bidirectional relationship:
+   * 1. Updates each container's pickUpPointId
+   * 2. Updates the pickup point's list of containers (for @DocumentReference)
+   */
+  async assignContainersToPickupPoint(containerIds: string[], pickupPointId: string): Promise<void> {
+    try {
+      // Step 1: Update each container's pickUpPointId
+      // Note: We should also clear pickUpPointId for containers that were removed, 
+      // but for now we focus on assigning the selected ones.
+      // Ideally, we'd fetch all containers for this PP and unassign those not in containerIds.
+      // But let's start with assigning the selected ones.
+
+      const updatePromises = containerIds.map(containerId => {
+        return this.containerService.update(containerId, {
+          pickUpPointId: pickupPointId
+        }).toPromise();
+      });
+
+      await Promise.all(updatePromises);
+
+      // Step 2: Fetch the full container objects to send to the pickup point
+      // This is necessary because @DocumentReference expects a list of objects (or DBRefs)
+      const containersResponse = await this.containerService.getAll().toPromise();
+      const allContainers = (containersResponse as any).containers || [];
+      const selectedContainers = allContainers.filter((c: any) =>
+        containerIds.includes(c.id)
+      );
+
+      // Step 3: Update the pickup point with the container references
+      await this.pickupPointService.update(pickupPointId, {
+        containers: selectedContainers
+      }).toPromise();
+
+    } catch (error) {
+      console.error('Error assigning containers:', error);
+      this.toastService.showError('Some containers could not be assigned');
+    }
+  }
+
+  // --------------------------------------------------------------------------------
+  // VEHICLES
+  // --------------------------------------------------------------------------------
+  loadVehicles() {
+    this.loading = true;
+    this.vehiculeService.getAll().subscribe({
+      next: (res: AppResponse) => {
+        this.vehicles = (res as any).vehicules || [];
+        this.loading = false;
+      },
+      error: (err: any) => {
+        this.toastService.showError(`${err.error?.message || 'Failed to load vehicles'}`);
+        this.loading = false;
+      }
+    });
+  }
+
+  addVehicle() {
+    const dialogRef = this.dialog.open(VehicleFormComponent, {
+      width: '600px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.vehiculeService.create(result).subscribe({
+          next: (res: AppResponse) => {
+            this.toastService.showSuccess('Vehicle created successfully');
+            if ((res as any).vehicule) {
+              this.vehicles = [...this.vehicles, (res as any).vehicule];
+            } else {
+              this.loadVehicles();
+            }
+            this.loading = false;
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to create vehicle');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  editVehicle(vehicle: any) {
+    const dialogRef = this.dialog.open(VehicleFormComponent, {
+      width: '600px',
+      data: { ...vehicle }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.vehiculeService.update(vehicle.id, result).subscribe({
+          next: (res: AppResponse) => {
+            this.toastService.showSuccess('Vehicle updated successfully');
+            if ((res as any).vehicule) {
+              this.vehicles = this.vehicles.map(v => v.id === vehicle.id ? (res as any).vehicule : v);
+            } else {
+              this.loadVehicles();
+            }
+            this.loading = false;
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to update vehicle');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  deleteVehicle(vehicle: any) {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: { title: 'Confirm Deletion', message: `Are you sure you want to delete vehicle ${vehicle.matricul}?` }
+    });
+    ref.afterClosed().subscribe({
+      next: (res) => {
+        if (res) {
+          this.loading = true;
+          this.vehiculeService.delete(vehicle.id).subscribe({
+            next: (res: AppResponse) => {
+              this.toastService.showSuccess('Vehicle deleted successfully');
+              this.vehicles = this.vehicles.filter(v => v.id !== vehicle.id);
+              this.loading = false;
+            },
+            error: (err: any) => {
+              this.toastService.showError(err.error?.message || 'Failed to delete vehicle');
+              this.loading = false;
+            }
+          });
+        }
+      }
+    });
+  }
+
+  // --------------------------------------------------------------------------------
+  // INCIDENTS
+  // --------------------------------------------------------------------------------
+  loadIncidents() {
+    this.loading = true;
+    this.incidentService.getAll().subscribe({
+      next: (res: AppResponse) => {
+        this.incidents = (res as any).incidents || [];
+        this.loading = false;
+      },
+      error: (err: any) => {
+        this.toastService.showError(`${err.error?.message || 'Failed to load incidents'}`);
+        this.loading = false;
+      }
+    });
+  }
+
+  addIncident() {
+    const dialogRef = this.dialog.open(IncidentFormComponent, {
+      width: '600px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.incidentService.create(result).subscribe({
+          next: (res: AppResponse) => {
+            this.toastService.showSuccess('Incident created successfully');
+            if ((res as any).incident) {
+              this.incidents = [...this.incidents, (res as any).incident];
+            } else {
+              this.loadIncidents();
+            }
+            this.loading = false;
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to create incident');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  editIncident(incident: any) {
+    const dialogRef = this.dialog.open(IncidentFormComponent, {
+      width: '600px',
+      data: { ...incident }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.incidentService.update(incident.id, result).subscribe({
+          next: (res: AppResponse) => {
+            this.toastService.showSuccess('Incident updated successfully');
+            if ((res as any).incident) {
+              this.incidents = this.incidents.map(i => i.id === incident.id ? (res as any).incident : i);
+            } else {
+              this.loadIncidents();
+            }
+            this.loading = false;
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to update incident');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  resolveIncident(incident: any) {
+    this.loading = true;
+    this.incidentService.update(incident.id, { status: 'resolved' } as any).subscribe({
+      next: (res: AppResponse) => {
+        this.toastService.showSuccess('Incident resolved successfully');
+        this.incidents = this.incidents.map(i => i.id === incident.id ? { ...i, status: 'resolved' } : i);
+        this.loading = false;
+      },
+      error: (err: any) => {
+        this.toastService.showError(err.error?.message || 'Failed to resolve incident');
+        this.loading = false;
+      }
+    });
+  }
+
+  viewIncident(incident: any) {
+    // Re-use edit form but maybe in read-only mode, or just open it
+    this.editIncident(incident);
+  }
+
+  // --------------------------------------------------------------------------------
+  // NOTIFICATIONS
+  // --------------------------------------------------------------------------------
+  loadNotifications() {
+    this.loading = true;
+    this.notificationService.getAll().subscribe({
+      next: (res: AppResponse) => {
+        this.notifications = (res as any).notifications || [];
+        this.loading = false;
+      },
+      error: (err: any) => {
+        this.toastService.showError(`${err.error?.message || 'Failed to load notifications'}`);
+        this.loading = false;
+      }
+    });
+  }
+
+  addNotification() {
+    const dialogRef = this.dialog.open(NotificationFormComponent, {
+      width: '600px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.notificationService.create(result).subscribe({
+          next: (res: AppResponse) => {
+            this.toastService.showSuccess('Notification sent successfully');
+            if ((res as any).notification) {
+              this.notifications = [...this.notifications, (res as any).notification];
+            } else {
+              this.loadNotifications();
+            }
+            this.loading = false;
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to send notification');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  editNotification(notification: any) {
+    const dialogRef = this.dialog.open(NotificationFormComponent, {
+      width: '600px',
+      data: { ...notification }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.notificationService.update(notification.id, result).subscribe({
+          next: (res: AppResponse) => {
+            this.toastService.showSuccess('Notification updated successfully');
+            if ((res as any).notification) {
+              this.notifications = this.notifications.map(n => n.id === notification.id ? (res as any).notification : n);
+            } else {
+              this.loadNotifications();
+            }
+            this.loading = false;
+          },
+          error: (err: any) => {
+            this.toastService.showError(err.error?.message || 'Failed to update notification');
+            this.loading = false;
+          }
+        });
+      }
+    });
+  }
+
+  deleteNotification(notification: any) {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: { title: 'Confirm Deletion', message: `Are you sure you want to delete this notification?` }
+    });
+    ref.afterClosed().subscribe({
+      next: (res) => {
+        if (res) {
+          this.loading = true;
+          this.notificationService.delete(notification.id).subscribe({
+            next: (res: AppResponse) => {
+              this.toastService.showSuccess('Notification deleted successfully');
+              this.notifications = this.notifications.filter(n => n.id !== notification.id);
+              this.loading = false;
+            },
+            error: (err: any) => {
+              this.toastService.showError(err.error?.message || 'Failed to delete notification');
+              this.loading = false;
+            }
+          });
+        }
+      }
+    });
+  }
+
+  viewNotification(notification: any) {
+    console.log('View notification', notification);
+  }
+
+  // --------------------------------------------------------------------------------
+  // ROUTES
+  // --------------------------------------------------------------------------------
+  loadRoutes() {
+    this.loading = true;
+    this.routeService.getAll().subscribe({
+      next: (res: AppResponse) => {
+        this.routes = (res as any).routes || [];
+        this.loading = false;
+      },
+      error: (err: any) => {
+        this.toastService.showError(`${err.error?.message || 'Failed to load routes'}`);
+        this.loading = false;
+      }
+    });
+  }
+
+  deleteRoute(route: any) {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: { title: 'Confirm Deletion', message: `Are you sure you want to delete route #${route.id?.substring(0, 8)}?` }
+    });
+    ref.afterClosed().subscribe({
+      next: (res) => {
+        if (res) {
+          this.loading = true;
+          this.routeService.delete(route.id).subscribe({
+            next: (res: AppResponse) => {
+              this.toastService.showSuccess('Route deleted successfully');
+              this.routes = this.routes.filter(r => r.id !== route.id);
+              this.loading = false;
+            },
+            error: (err: any) => {
+              this.toastService.showError(err.error?.message || 'Failed to delete route');
+              this.loading = false;
+            }
+          });
+        }
+      }
+    });
+  }
+
+  viewRoute(route: any) {
+    console.log('View route', route);
+  }
+
+  // Create route from optimized map data
+  createRouteFromMap() {
+    if (this.mapComponent && this.mapComponent.hasOptimizedRoute()) {
+      this.mapComponent.saveOptimizedRoute();
+      // Reload routes after a short delay to show the new route
+      setTimeout(() => this.loadRoutes(), 1000);
+    } else {
+      this.toastService.showError('Please optimize a route first on the map');
+    }
+  }
+
+  // Check if map has optimized route ready
+  hasOptimizedRoute(): boolean {
+    return this.mapComponent?.hasOptimizedRoute() || false;
+  }
+
+  show() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+}

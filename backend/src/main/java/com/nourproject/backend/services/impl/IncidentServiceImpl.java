@@ -124,12 +124,8 @@ public class IncidentServiceImpl implements IncidentService {
     public Response save(IncidentDto incidentDto) {
         Incident incident = incidentMapper.toEntity(incidentDto);
 
-        if (incident.getReportedAt() == null) {
-            incident.setReportedAt(LocalDateTime.now());
-        }
-
         if (incident.getStatus() == null) {
-            incident.setStatus(IncidentStatus.REPORTED);
+            incident.setStatus(IncidentStatus.reported);
         }
 
         Incident savedIncident = incidentRepository.save(incident);
@@ -148,7 +144,7 @@ public class IncidentServiceImpl implements IncidentService {
 
         incidentMapper.updateIncidentFromDto(incidentUpdateDto, incident);
 
-        if (incidentUpdateDto.getStatus() == IncidentStatus.RESOLVED && incident.getResolvedAt() == null) {
+        if (incidentUpdateDto.getStatus() == IncidentStatus.resolved && incident.getResolvedAt() == null) {
             incident.setResolvedAt(LocalDateTime.now());
         }
 

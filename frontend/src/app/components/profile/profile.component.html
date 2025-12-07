@@ -141,10 +141,14 @@
           type="text"
           id="userName"
           formControlName="userName"
-          class="form-input read-only"
-          readonly
+          class="form-input"
+          [class.read-only]="profileForm.get('userName')?.disabled"
+          [readonly]="profileForm.get('userName')?.disabled"
+          placeholder="Enter username"
         />
-        <p class="field-hint">Username cannot be changed</p>
+        <p class="field-hint" *ngIf="profileForm.get('userName')?.disabled">
+          Username cannot be changed
+        </p>
       </div>
 
       <!-- Email Field (Read-only) -->
@@ -175,10 +179,14 @@
           type="email"
           id="email"
           formControlName="email"
-          class="form-input read-only"
-          readonly
+          class="form-input"
+          [class.read-only]="profileForm.get('email')?.disabled"
+          [readonly]="profileForm.get('email')?.disabled"
+          placeholder="Enter email address"
         />
-        <p class="field-hint">Email cannot be changed</p>
+        <p class="field-hint" *ngIf="profileForm.get('email')?.disabled">
+          Email cannot be changed
+        </p>
       </div>
 
       <!-- First Name Field -->

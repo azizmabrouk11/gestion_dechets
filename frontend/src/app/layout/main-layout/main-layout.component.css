@@ -1,19 +1,15 @@
 app-header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100%;
   z-index: 100;
+  background: white;
+}
+
+main {
+  flex: 1;
 }
 
 app-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
   width: 100%;
-}
-
-.flex {
-  padding-top: 64px;   /* Adjust based on header height */
-  padding-bottom: 64px; /* Adjust based on footer height */
+  margin-top: auto;
 }

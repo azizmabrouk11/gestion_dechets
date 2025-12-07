@@ -10,19 +10,23 @@ export class ToastService {
 
     private getCommonConfig() {
         return {
-            positionClass: 'toast-b',
-            toastClass: 'toast-s',
+            positionClass: 'toast-top-right',
             closeButton: true,
             progressBar: true,
-            enableHtml: true
+            enableHtml: true,
+            timeOut: 4000,
+            extendedTimeOut: 1000,
+            progressAnimation: 'decreasing' as const,
+            messageClass: 'toast-message',
+            titleClass: 'toast-title'
         };
     }
 
     // Success Messages
     showSuccess(message: string, title?: string, timeOut: number = 4000) {
         this.toastr.success(
-            `✅ ${message}`,
-            title ? `🎉 ${title}` : '🎉 Succès',
+            message,
+            title || '✓ Success',
             { ...this.getCommonConfig(), timeOut }
         );
     }
@@ -30,8 +34,8 @@ export class ToastService {
     // Error Messages  
     showError(message: string, title?: string, timeOut: number = 5000) {
         this.toastr.error(
-            `❌ ${message}`,
-            title ? `🚨 ${title}` : '🚨 Erreur',
+            message,
+            title || '✕ Error',
             { ...this.getCommonConfig(), timeOut }
         );
     }
@@ -39,23 +43,25 @@ export class ToastService {
     // Warning Messages
     showWarning(message: string, title?: string, timeOut: number = 4500) {
         this.toastr.warning(
-            `⚠️ ${message}`,
-            title ? `🔔 ${title}` : '🔔 Attention',
+            message,
+            title || '⚠ Warning',
             { ...this.getCommonConfig(), timeOut }
         );
     }
+
     showAccesDenied(message: string, title?: string, timeOut: number = 4500) {
         this.toastr.warning(
-            ` ❌${message},please contact the support team`,
-            title ? `🔔 ${title}` : '🔔 Attention',
+            `${message}, please contact the support team`,
+            title || '⊘ Access Denied',
             { ...this.getCommonConfig(), timeOut }
         );
     }
+
     // Info Messages
     showInfo(message: string, title?: string, timeOut: number = 4000) {
         this.toastr.info(
-            `ℹ️ ${message}`,
-            title ? `💡 ${title}` : '💡 Information',
+            message,
+            title || 'ⓘ Information',
             { ...this.getCommonConfig(), timeOut }
         );
     }

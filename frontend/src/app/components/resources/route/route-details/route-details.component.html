@@ -1,0 +1,484 @@
+<div class="route-details-dialog">
+  <!-- Header -->
+  <div class="dialog-header">
+    <button class="close-btn" (click)="close()" aria-label="Close">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <div class="title-container">
+      <span class="title-dot"></span>
+      <h2 class="dialog-title">Route Details</h2>
+      <span class="title-dot"></span>
+    </div>
+    <p class="dialog-subtitle">Route ID: #{{ data.id?.substring(0, 8) }}</p>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="dialog-content">
+    <!-- Route Summary -->
+    <div class="info-section">
+      <h3 class="section-title">Route Summary</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="info-card">
+          <div class="info-label">Status</div>
+          <span class="badge" [ngClass]="getStatusBadgeClass(data.status)">
+            {{ getStatusLabel(data.status) }}
+          </span>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Route Date</div>
+          <div class="info-value">
+            {{ data.routeDate | date : "MMM d, y - HH:mm" }}
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Total Distance</div>
+          <div class="info-value">{{ formatDistance(data.totalDistance) }}</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Total Time</div>
+          <div class="info-value">{{ formatTime(data.totalTime) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vehicle Information -->
+    <div class="info-section">
+      <h3 class="section-title">
+        Assigned Vehicle
+        <button *ngIf="!isEditMode" (click)="toggleEditMode()" class="edit-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+            />
+          </svg>
+          Edit Assignment
+        </button>
+      </h3>
+
+      <!-- View Mode -->
+      <div *ngIf="!isEditMode">
+        <div
+          class="vehicle-card"
+          *ngIf="selectedVehicle && (selectedVehicle.id || selectedVehicle._id)"
+        >
+          <div class="flex items-center gap-4">
+            <div class="vehicle-icon">🚛</div>
+            <div class="flex-1">
+              <div class="font-semibold text-gray-900">
+                {{ selectedVehicle.matricul || "N/A" }}
+              </div>
+              <div class="text-sm text-gray-600">
+                <span>{{ selectedVehicle.vehiculeType || "N/A" }}</span>
+                <span class="mx-2">•</span>
+                <span>Capacity: {{ selectedVehicle.capacity || 0 }} L</span>
+              </div>
+            </div>
+            <span
+              class="badge"
+              [ngClass]="
+                selectedVehicle.vehiculeStatus === 'functional'
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800'
+              "
+            >
+              {{ selectedVehicle.vehiculeStatus || "N/A" }}
+            </span>
+          </div>
+        </div>
+        <div
+          class="empty-state"
+          *ngIf="
+            !selectedVehicle || (!selectedVehicle.id && !selectedVehicle._id)
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-12 w-12 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
+          </svg>
+          <p>No vehicle assigned to this route</p>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div *ngIf="isEditMode" class="form-group">
+        <label class="form-label">Select Vehicle</label>
+        <div class="custom-select-wrapper">
+          <div
+            class="custom-select-box"
+            [class.active]="showVehicleDropdown"
+            (click)="toggleVehicleDropdown()"
+          >
+            <span
+              class="custom-select-text"
+              [class.placeholder]="!selectedVehicle"
+            >
+              {{ selectedVehicle?.matricul || "Select a vehicle" }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="dropdown-arrow"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+          <div class="custom-dropdown" *ngIf="showVehicleDropdown">
+            <div class="custom-dropdown-container">
+              <div
+                *ngFor="let vehicle of availableVehicles"
+                class="custom-option"
+                [class.selected]="
+                  (selectedVehicle?.id || selectedVehicle?._id) ===
+                  (vehicle.id || vehicle._id)
+                "
+                (click)="selectVehicle(vehicle)"
+              >
+                <span
+                  >🚛 {{ vehicle.matricul }} - {{ vehicle.vehiculeType }}</span
+                >
+                <svg
+                  *ngIf="
+                    (selectedVehicle?.id || selectedVehicle?._id) ===
+                    (vehicle.id || vehicle._id)
+                  "
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="check-icon"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users/Employees Assignment -->
+    <div class="info-section">
+      <h3 class="section-title">Assigned Employees</h3>
+
+      <!-- View Mode -->
+      <div *ngIf="!isEditMode">
+        <div
+          class="users-grid"
+          *ngIf="selectedUsers && selectedUsers.length > 0"
+        >
+          <div *ngFor="let user of selectedUsers" class="user-card">
+            <div class="user-avatar">
+              {{ user.firstName?.charAt(0) }}{{ user.lastName?.charAt(0) }}
+            </div>
+            <div class="user-info">
+              <div class="user-name">
+                {{ user.firstName }} {{ user.lastName }}
+              </div>
+              <div class="user-email">{{ user.email }}</div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="empty-state"
+          *ngIf="!selectedUsers || selectedUsers.length === 0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-12 w-12 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+          <p>No employees assigned to this route</p>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div *ngIf="isEditMode">
+        <!-- Selected Users Display -->
+        <div class="selected-users-container" *ngIf="selectedUsers.length > 0">
+          <div *ngFor="let user of selectedUsers" class="selected-user-chip">
+            <span>{{ user.firstName }} {{ user.lastName }}</span>
+            <button (click)="removeUser(user)" class="remove-chip-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Users Dropdown -->
+        <div class="form-group">
+          <label class="form-label">Select Employees</label>
+          <div class="custom-select-wrapper">
+            <div
+              class="custom-select-box"
+              [class.active]="showUsersDropdown"
+              (click)="toggleUsersDropdown()"
+            >
+              <span class="custom-select-text">
+                {{
+                  selectedUsers.length > 0
+                    ? selectedUsers.length + " employee(s) selected"
+                    : "Select employees"
+                }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="dropdown-arrow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+            <div class="custom-dropdown" *ngIf="showUsersDropdown">
+              <div class="custom-dropdown-container">
+                <div
+                  *ngIf="filteredUsers.length === 0"
+                  class="empty-dropdown-message"
+                >
+                  {{
+                    selectedVehicle
+                      ? "No drivers available"
+                      : "Please select a vehicle first to see available drivers"
+                  }}
+                </div>
+                <div
+                  *ngFor="let user of filteredUsers"
+                  class="custom-option"
+                  [class.selected]="isUserSelected(user)"
+                  (click)="toggleUserSelection(user)"
+                >
+                  <span
+                    >👤 {{ user.firstName }} {{ user.lastName }}
+                    <span *ngIf="user.driver" class="driver-badge"
+                      >🚗 Driver</span
+                    ></span
+                  >
+                  <svg
+                    *ngIf="isUserSelected(user)"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="check-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="edit-actions" *ngIf="false">
+          <!-- Removed inline buttons, moved to footer -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Pickup Points -->
+    <div class="info-section">
+      <h3 class="section-title">
+        Pickup Points
+        <span class="badge bg-blue-100 text-blue-800 ml-2">{{
+          data.pickUpPoints?.length || 0
+        }}</span>
+      </h3>
+      <div class="pickup-points-list">
+        <div
+          *ngFor="let point of data.pickUpPoints; let i = index"
+          class="pickup-point-card"
+        >
+          <div class="pickup-point-header">
+            <div class="flex items-center gap-3">
+              <div class="point-number">{{ i + 1 }}</div>
+              <div class="flex-1">
+                <div class="font-semibold text-gray-900">
+                  {{ point.address || "Unknown Location" }}
+                </div>
+                <div class="text-sm text-gray-600">
+                  📍 {{ point.locationLatitude?.toFixed(4) }},
+                  {{ point.locationLongitude?.toFixed(4) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Containers at this point -->
+          <div
+            class="containers-section"
+            *ngIf="point.containers && point.containers.length > 0"
+          >
+            <div class="containers-label">
+              Containers ({{ point.containers.length }})
+            </div>
+            <div class="containers-grid">
+              <div
+                *ngFor="let container of point.containers"
+                class="container-item"
+              >
+                <div class="flex items-center justify-between mb-2">
+                  <span class="container-type">
+                    {{
+                      container.containerType === "carton"
+                        ? "📦 Carton"
+                        : "🧴 Plastique"
+                    }}
+                  </span>
+                  <span
+                    class="badge text-xs"
+                    [ngClass]="
+                      container.containerStatus === 'functionel'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                    "
+                  >
+                    {{
+                      container.containerStatus === "functionel"
+                        ? "Active"
+                        : "Damaged"
+                    }}
+                  </span>
+                </div>
+                <div class="fill-level-bar">
+                  <div
+                    class="fill-level-progress"
+                    [style.width.%]="getFillPercentage(container)"
+                    [ngClass]="{
+                      'bg-green-500': getFillPercentage(container) < 50,
+                      'bg-yellow-500':
+                        getFillPercentage(container) >= 50 &&
+                        getFillPercentage(container) < 80,
+                      'bg-red-500': getFillPercentage(container) >= 80
+                    }"
+                  ></div>
+                </div>
+                <div class="text-xs text-gray-600 mt-1">
+                  {{ container.fillLevel }}L / {{ container.capacity }}L ({{
+                    getFillPercentage(container) | number : "1.0-0"
+                  }}%)
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Turn-by-Turn Instructions -->
+    <div
+      class="info-section"
+      *ngIf="data.instructions && data.instructions.length > 0"
+    >
+      <h3 class="section-title">
+        Turn-by-Turn Instructions
+        <span class="badge bg-purple-100 text-purple-800 ml-2">{{
+          data.instructions.length
+        }}</span>
+      </h3>
+      <div class="instructions-list">
+        <div
+          *ngFor="let instruction of data.instructions; let i = index"
+          class="instruction-item"
+        >
+          <div class="instruction-number">{{ i + 1 }}</div>
+          <div class="instruction-content">
+            <div class="instruction-text">{{ instruction.text }}</div>
+            <div class="instruction-meta">
+              <span>{{ formatDistance(instruction.distance) }}</span>
+              <span class="mx-2">•</span>
+              <span>{{ formatTime(instruction.time) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Footer -->
+  <div class="dialog-footer">
+    <button *ngIf="!isEditMode" (click)="close()" class="btn-secondary">
+      Close
+    </button>
+    <ng-container *ngIf="isEditMode">
+      <button (click)="cancelEdit()" class="btn-cancel">Cancel</button>
+      <button (click)="saveChanges()" class="btn-save">Save Changes</button>
+    </ng-container>
+  </div>
+</div>

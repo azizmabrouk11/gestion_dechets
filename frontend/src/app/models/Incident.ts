@@ -10,7 +10,7 @@ export interface Incident {
     citizenId: string;
     pickUpPointId?: string;
     imageUrl?: string;
-    reportedAt?: string;
+    date?: Date | string;
     resolvedAt?: string;
     assignedTo?: string;
     resolutionNotes?: string;

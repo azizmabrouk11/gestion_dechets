@@ -1,4 +1,4 @@
 export enum ContainerStatus {
-    functional = 'functional',
-    non_functional = 'non_functional'
+    functionel = 'functionel',
+    non_functionel = 'non_functionel'
 }
