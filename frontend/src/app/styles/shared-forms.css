@@ -1,0 +1,241 @@
+/* ============================================
+   SHARED FORM STYLES - Fix Bootstrap/Tailwind Conflicts
+   ============================================ */
+
+/* Reset all select fields to remove Bootstrap/Tailwind conflicts */
+select,
+select.form-select,
+select.form-input,
+.form-select,
+.custom-select-box {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: none !important;
+}
+
+/* Standard Select Field Styling */
+select.form-select,
+select.form-input,
+.form-select {
+  width: 100% !important;
+  padding: 0.75rem 2.5rem 0.75rem 0 !important;
+  font-size: 1rem !important;
+  color: #2d3748 !important;
+  background-color: transparent !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.5rem center !important;
+  background-size: 16px !important;
+  border: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  font-weight: 400 !important;
+  font-family: inherit !important;
+  line-height: 1.5 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  outline: none !important;
+  height: auto !important;
+  min-height: auto !important;
+}
+
+select.form-select:hover,
+select.form-input:hover,
+.form-select:hover {
+  border-bottom-color: #cbd5e0 !important;
+}
+
+select.form-select:focus,
+select.form-input:focus,
+.form-select:focus {
+  border-bottom-color: #3b82f6 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  box-shadow: none !important;
+}
+
+/* Select Options Styling */
+select.form-select option,
+select.form-input option,
+.form-select option {
+  padding: 0.75rem 1rem !important;
+  background: #ffffff !important;
+  color: #2d3748 !important;
+  font-size: 1rem !important;
+}
+
+select.form-select option:first-child,
+select.form-input option:first-child,
+.form-select option:first-child {
+  color: #9ca3af !important;
+  font-style: italic !important;
+}
+
+/* Custom Select Box (for custom dropdowns) */
+.custom-select-box {
+  position: relative;
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 0;
+  font-size: 1rem;
+  color: #2d3748;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.custom-select-box:hover {
+  border-bottom-color: #cbd5e0;
+}
+
+.custom-select-box.active {
+  border-bottom-color: #3b82f6;
+}
+
+.custom-select-text {
+  flex: 1;
+  text-align: left;
+}
+
+.custom-select-text.placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* ============================================
+   PROFESSIONAL BUTTON STYLES WITH LOADING SPINNER
+   ============================================ */
+
+.btn-submit {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+  min-width: 140px;
+  overflow: hidden;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px 0 rgba(59, 130, 246, 0.3);
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading Spinner */
+.btn-submit .spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-submit.loading {
+  pointer-events: none;
+}
+
+.btn-submit.loading .btn-text {
+  opacity: 0.7;
+}
+
+/* Cancel Button */
+.btn-cancel {
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6b7280;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 140px;
+}
+
+.btn-cancel:hover {
+  background: #e5e7eb;
+  color: #4b5563;
+  border-color: #d1d5db;
+}
+
+.btn-cancel:active {
+  background: #d1d5db;
+}
+
+/* Form Actions Container */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 1.5rem 0 0 0;
+  margin-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* ============================================
+   LOADING SPINNER COMPONENT
+   ============================================ */
+
+.loading-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner .spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(59, 130, 246, 0.2);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-spinner.small .spinner {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.loading-spinner.large .spinner {
+  width: 32px;
+  height: 32px;
+  border-width: 4px;
+}
+

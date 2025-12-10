@@ -17,6 +17,7 @@ import { ToastService } from '../../../../services/toast.service';
 export class RouteDetailsComponent implements OnInit {
     formGroup!: FormGroup;
     isEditMode: boolean = false;
+    isLoading: boolean = false;
 
     // Available options
     availableVehicles: any[] = [];
