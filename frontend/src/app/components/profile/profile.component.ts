@@ -5,11 +5,14 @@ import { UserProfile } from '../../models/UserProfile';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
+import { UserRole } from '../../models/enums/UserRole';
 import { Subject, takeUntil } from 'rxjs';
 
 interface ProfileFormData {
   userName: string;
   email: string;
+  role?: string;
+  driver?: boolean;
   firstName: string;
   lastName: string;
   profileImage: string | null;
@@ -19,7 +22,7 @@ interface ProfileFormData {
   selector: 'app-profile',
   imports: [MatDialogModule, ReactiveFormsModule, MatSnackBarModule, CommonModule],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   profileForm!: FormGroup;
@@ -60,6 +63,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.data.firstName || '',
         [Validators.required, Validators.minLength(2), Validators.maxLength(50)]
       ],
+      role: [
+        this.data.role || '',
+        [Validators.required, Validators.minLength(2), Validators.maxLength(50)]
+      ],
+      driver: [this.data.driver || false],
       lastName: [
         this.data.lastName || '',
         [Validators.required, Validators.minLength(2), Validators.maxLength(50)]
@@ -82,8 +90,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
       ...this.data,
       userName: formValues.userName,
       email: formValues.email,
+      role: formValues.role ? (formValues.role as UserRole) : this.data.role,
       firstName: formValues.firstName.trim(),
       lastName: formValues.lastName.trim(),
+      driver: formValues.driver !== undefined ? formValues.driver : this.data.driver,
       profileImage: (this.selectedImage as string) || formValues.profileImage || undefined
     };
 
@@ -192,7 +202,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       firstName: 'First name',
       lastName: 'Last name',
       email: 'Email',
-      userName: 'Username'
+      userName: 'Username',
+      role: 'User role'
     };
     return labels[fieldName] || fieldName;
   }

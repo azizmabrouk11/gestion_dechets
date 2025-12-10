@@ -14,6 +14,85 @@ select.form-input,
   background-image: none !important;
 }
 
+/* Ensure Material select triggers / form field infix areas are transparent */
+.mat-mdc-select .mat-mdc-select-trigger,
+.mat-mdc-select .mat-mdc-select-value,
+.mat-form-field .mat-select-value,
+.mat-form-field .mat-form-field-infix,
+.mat-mdc-form-field .mat-mdc-form-field-infix {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Additional overrides for MDC/Legacy select inner text to avoid skeleton-style backgrounds */
+.mat-mdc-select .mat-mdc-select-value .mat-mdc-select-value-text,
+.mat-select-value,
+.mat-form-field .mat-form-field-infix .mat-select-placeholder,
+.mat-mdc-select .mat-mdc-select-trigger .mat-mdc-select-value {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+/* Inline vehicle / pickup point display for select boxes */
+.inline-vehicle, .inline-pickup-point {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.inline-vehicle .vehicle-icon.small, .inline-pickup-point .point-number.small {
+  width: 40px;
+  height: 40px;
+  font-size: 1.1rem;
+  background: #f3f4f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.inline-vehicle .vehicle-inline-info, .inline-pickup-point .pickup-inline-info {
+  display: flex;
+  flex-direction: column;
+}
+.inline-vehicle .font-semibold, .inline-pickup-point .font-semibold {
+  font-weight: 600;
+  color: #111827;
+}
+.inline-vehicle .text-sm, .inline-pickup-point .text-sm {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* Selected container small chips */
+.selected-containers-preview {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+.container-chip {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 160px;
+}
+.container-chip .container-type {
+  font-weight: 600;
+}
+.container-chip .container-meta {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+.container-chip .chip-remove {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+}
+
 /* Standard Select Field Styling */
 select.form-select,
 select.form-input,
@@ -76,10 +155,11 @@ select.form-input option:first-child,
 .custom-select-box {
   position: relative;
   width: 100%;
-  padding: 0.75rem 2.5rem 0.75rem 0;
+  padding: 0.625rem 0.75rem 0.625rem 0.5rem;
   font-size: 1rem;
   color: #2d3748;
-  background-color: transparent;
+  background-color: transparent !important;
+  background-image: none !important;
   border: none;
   border-bottom: 1px solid #e2e8f0;
   border-radius: 0;
@@ -88,6 +168,18 @@ select.form-input option:first-child,
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+/* Force transparency even when other frameworks add skeleton backgrounds */
+.form-card .custom-select-box,
+.dialog-content .custom-select-box,
+.custom-select-box {
+  background: transparent !important;
+  background-image: none !important;
+  min-height: 40px !important;
+}
+.custom-select-box .custom-select-text {
+  background: transparent !important;
 }
 
 .custom-select-box:hover {
@@ -101,11 +193,28 @@ select.form-input option:first-child,
 .custom-select-text {
   flex: 1;
   text-align: left;
+  min-height: 1.2rem;
+  padding: 0;
+  background: transparent !important;
+  background-image: none !important;
 }
 
 .custom-select-text.placeholder {
   color: #9ca3af;
   font-style: italic;
+  background: transparent!important;
+  display: inline-block!important;
+  line-height: 1.2!important;
+}
+
+/* Force placeholders to appear as text (not skeleton bars) */
+.custom-select-box .custom-select-text.placeholder,
+select.form-select option:first-child,
+.form-select option:disabled {
+  background: transparent !important;
+  color: #9ca3af !important;
+  font-style: italic !important;
+  opacity: 1 !important;
 }
 
 /* ============================================
@@ -152,12 +261,27 @@ select.form-input option:first-child,
 /* Loading Spinner */
 .btn-submit .spinner {
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 16px !important;
+  height: 16px !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
   border-top-color: #ffffff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
+}
+
+/* Fallback: ensure any button that contains a spinner uses small size */
+.btn .spinner,
+.btn-primary .spinner,
+.btn-secondary .spinner,
+.btn-cancel .spinner,
+.btn-save .spinner,
+.btn-submit .spinner {
+  width: 16px !important;
+  height: 16px !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  border-top-color: #ffffff !important;
+  border-radius: 50% !important;
+  animation: spin 0.8s linear infinite !important;
 }
 
 @keyframes spin {
@@ -228,14 +352,14 @@ select.form-input option:first-child,
 }
 
 .loading-spinner.small .spinner {
-  width: 16px;
-  height: 16px;
-  border-width: 2px;
+  width: 16px !important;
+  height: 16px !important;
+  border-width: 2px !important;
 }
 
 .loading-spinner.large .spinner {
-  width: 32px;
-  height: 32px;
-  border-width: 4px;
+  width: 32px !important;
+  height: 32px !important;
+  border-width: 4px !important;
 }
 

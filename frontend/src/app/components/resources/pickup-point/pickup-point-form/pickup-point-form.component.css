@@ -449,7 +449,7 @@ select.form-input option:first-child {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 0;
+  padding: 0.625rem 0.75rem 0.625rem 0.5rem;
   border-bottom: 1px solid #e2e8f0;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -484,6 +484,8 @@ select.form-input option:first-child {
 .selected-location.placeholder {
   color: #9ca3af;
   font-style: italic;
+  background: transparent!important;
+  display:inline-block!important;
 }
 
 .dropdown-arrow {

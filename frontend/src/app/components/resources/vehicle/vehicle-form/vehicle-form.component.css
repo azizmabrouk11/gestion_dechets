@@ -340,6 +340,8 @@
 .custom-select-text.placeholder {
   color: #9ca3af;
   font-style: italic;
+  background: transparent!important;
+  display:inline-block!important;
 }
 
 .dropdown-arrow {

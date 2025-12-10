@@ -293,26 +293,29 @@
               [class.active]="showPickupPointDropdown"
               (click)="togglePickupPointDropdown()"
             >
-              <span
-                class="custom-select-text"
-                [class.placeholder]="!selectedPickupPointName"
-              >
-                {{ selectedPickupPointName || "None" }}
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="dropdown-arrow"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.5"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+              <ng-container *ngIf="selectedPickupPoint; else noPick">
+                <div class="inline-pickup-point">
+                  <div class="point-number small">
+                    #{{ selectedPickupPoint.id?.substring(0, 6) }}
+                  </div>
+                  <div class="pickup-inline-info">
+                    <div class="font-semibold">
+                      {{ selectedPickupPoint.address || "Pickup Point" }}
+                    </div>
+                    <div class="text-sm text-gray-600">
+                      {{ selectedPickupPoint.description || "" }}
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-template #noPick>
+                <span
+                  class="custom-select-text"
+                  [class.placeholder]="!selectedPickupPointName"
+                >
+                  {{ selectedPickupPointName || "None" }}
+                </span>
+              </ng-template>
             </div>
 
             <div class="custom-dropdown" *ngIf="showPickupPointDropdown">
@@ -395,15 +398,21 @@
       type="button"
       class="btn-submit"
       [disabled]="formGroup.invalid || isLoading"
+      [class.loading]="isLoading"
       (click)="onSubmit()"
     >
-      {{
-        isLoading
-          ? "Saving..."
-          : editMode
-          ? "Update Incident"
-          : "Create Incident"
-      }}
+      <span class="btn-text">
+        <span *ngIf="isLoading" class="loading-spinner small"
+          ><span class="spinner"></span
+        ></span>
+        {{
+          isLoading
+            ? "Saving..."
+            : editMode
+            ? "Update Incident"
+            : "Create Incident"
+        }}
+      </span>
     </button>
     <button type="button" class="btn-cancel" (click)="onCancel()">
       Cancel

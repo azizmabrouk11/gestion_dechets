@@ -34,6 +34,7 @@ export class IncidentFormComponent implements OnInit {
     selectedPriorityName: string = '';
     selectedCitizenName: string = '';
     selectedPickupPointName: string = '';
+    selectedPickupPoint: any = null;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -78,6 +79,14 @@ export class IncidentFormComponent implements OnInit {
         this.pickUpPointService.getAll().subscribe({
             next: (res: AppResponse) => {
                 this.pickUpPoints = res.pickuppoints || [];
+                // If a pickUpPointId is already selected in the form (edit mode), set the selectedPickupPoint object
+                const selectedId = this.formGroup.get('pickUpPointId')?.value;
+                if (selectedId) {
+                    this.selectedPickupPoint = this.pickUpPoints.find(p => p.id === selectedId) || null;
+                    if (this.selectedPickupPoint) {
+                        this.selectedPickupPointName = this.selectedPickupPoint.address || `Pickup Point #${this.selectedPickupPoint.id?.substring(0, 8)}`;
+                    }
+                }
                 this.isLoading = false;
             },
             error: (err) => {
@@ -100,11 +109,16 @@ export class IncidentFormComponent implements OnInit {
 
     onSubmit() {
         if (this.formGroup.valid) {
-            if (this.editMode) {
-                this.matDialogRef.close({ ...this.formGroup.value, id: this.id });
-            } else {
-                this.matDialogRef.close(this.formGroup.value);
-            }
+            this.isLoading = true;
+            // Simulate async operation
+            setTimeout(() => {
+                this.isLoading = false;
+                if (this.editMode) {
+                    this.matDialogRef.close({ ...this.formGroup.value, id: this.id });
+                } else {
+                    this.matDialogRef.close(this.formGroup.value);
+                }
+            }, 100);
         } else {
             Object.keys(this.formGroup.controls).forEach(key => {
                 this.formGroup.get(key)?.markAsTouched();
@@ -174,6 +188,7 @@ export class IncidentFormComponent implements OnInit {
 
     selectPickupPoint(point: any) {
         this.selectedPickupPointName = point.address || `Pickup Point #${point.id?.substring(0, 8)}`;
+        this.selectedPickupPoint = point;
         this.formGroup.patchValue({ pickUpPointId: point.id });
         this.showPickupPointDropdown = false;
     }

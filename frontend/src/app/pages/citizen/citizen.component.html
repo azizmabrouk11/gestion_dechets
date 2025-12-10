@@ -10,7 +10,9 @@
   <!-- Loading State -->
   @if (isLoading) {
   <div class="loading-container">
-    <div class="spinner"></div>
+    <div class="loading-spinner large">
+      <div class="spinner"></div>
+    </div>
     <p>Chargement des données...</p>
   </div>
   }
@@ -83,7 +85,9 @@
                 <span class="container-icon">{{
                   getContainerTypeIcon(container.containerType)
                 }}</span>
-                <span class="container-type">{{ container.containerType }}</span>
+                <span class="container-type">{{
+                  container.containerType
+                }}</span>
                 <span class="container-status">{{
                   container.containerStatus
                 }}</span>

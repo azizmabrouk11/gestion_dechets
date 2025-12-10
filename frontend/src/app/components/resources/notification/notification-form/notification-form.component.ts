@@ -101,11 +101,16 @@ export class NotificationFormComponent implements OnInit {
 
     onSubmit() {
         if (this.formGroup.valid) {
-            if (this.editMode) {
-                this.matDialogRef.close({ ...this.formGroup.value, id: this.id });
-            } else {
-                this.matDialogRef.close(this.formGroup.value);
-            }
+            this.isLoading = true;
+            // Simulate async operation
+            setTimeout(() => {
+                this.isLoading = false;
+                if (this.editMode) {
+                    this.matDialogRef.close({ ...this.formGroup.value, id: this.id });
+                } else {
+                    this.matDialogRef.close(this.formGroup.value);
+                }
+            }, 100);
         } else {
             Object.keys(this.formGroup.controls).forEach(key => {
                 this.formGroup.get(key)?.markAsTouched();

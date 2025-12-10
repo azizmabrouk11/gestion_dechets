@@ -11,7 +11,7 @@ import { AppResponse } from '../../../../models/AppResponse';
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule, FormsModule, MatDialogModule],
     templateUrl: './pickup-point-form.component.html',
-    styleUrl: './pickup-point-form.component.css'
+    styleUrls: ['./pickup-point-form.component.css']
 })
 export class PickupPointFormComponent implements OnInit {
     formGroup!: FormGroup;
@@ -177,23 +177,34 @@ export class PickupPointFormComponent implements OnInit {
 
     onSubmit() {
         if (this.formGroup.valid) {
+            this.isLoading = true;
             const formData = {
                 ...this.formGroup.value,
                 locationLatitude: Number(this.formGroup.value.locationLatitude),
                 locationLongitude: Number(this.formGroup.value.locationLongitude),
                 containerIds: this.selectedContainers
             };
-            if (this.editMode) {
-                this.matDialogRef.close({ ...formData, id: this.id });
-            } else {
-                this.matDialogRef.close(formData);
-            }
+            // Simulate async operation
+            setTimeout(() => {
+                this.isLoading = false;
+                if (this.editMode) {
+                    this.matDialogRef.close({ ...formData, id: this.id });
+                } else {
+                    this.matDialogRef.close(formData);
+                }
+            }, 100);
         } else {
             Object.keys(this.formGroup.controls).forEach(key => {
                 this.formGroup.get(key)?.markAsTouched();
             });
             this.toastService.showError('Please fill in all required fields correctly');
         }
+    }
+
+    getSelectedContainerObjects(): any[] {
+        return this.selectedContainers
+            .map(id => this.containers.find(c => c.id === id))
+            .filter(c => !!c);
     }
 
     onCancel() {

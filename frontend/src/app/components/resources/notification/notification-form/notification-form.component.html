@@ -401,15 +401,21 @@
       type="button"
       class="btn-submit"
       [disabled]="formGroup.invalid || isLoading"
+      [class.loading]="isLoading"
       (click)="onSubmit()"
     >
-      {{
-        isLoading
-          ? "Sending..."
-          : editMode
-          ? "Update Notification"
-          : "Send Notification"
-      }}
+      <span class="btn-text">
+        <span *ngIf="isLoading" class="loading-spinner small"
+          ><span class="spinner"></span
+        ></span>
+        {{
+          isLoading
+            ? "Sending..."
+            : editMode
+            ? "Update Notification"
+            : "Send Notification"
+        }}
+      </span>
     </button>
     <button type="button" class="btn-cancel" (click)="onCancel()">
       Cancel

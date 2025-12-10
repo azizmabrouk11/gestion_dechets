@@ -255,6 +255,60 @@
           />
         </div>
 
+        <!-- Selected containers preview or placeholder -->
+        <div
+          class="selected-containers-preview"
+          *ngIf="getSelectedContainerObjects().length > 0"
+        >
+          <div
+            *ngFor="let c of getSelectedContainerObjects()"
+            class="container-chip"
+          >
+            <div class="container-type">
+              {{ c.containerType === "carton" ? "📦 Carton" : "🧴 Plastique" }}
+            </div>
+            <div class="container-meta">
+              ID: {{ c.id }} • Capacity: {{ c.capacity }}L
+            </div>
+            <span
+              class="badge"
+              [ngClass]="
+                c.containerStatus === 'functionel'
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800'
+              "
+              >{{ c.containerStatus || "N/A" }}</span
+            >
+            <button
+              class="chip-remove"
+              (click)="toggleContainer(c.id)"
+              aria-label="Remove"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+        <div
+          class="empty-state"
+          *ngIf="getSelectedContainerObjects().length === 0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 7h18M3 12h18M3 17h18"
+            />
+          </svg>
+          <div class="text-sm text-gray-600">No containers selected</div>
+        </div>
+
         <div class="container-selection">
           <div
             *ngIf="
@@ -332,15 +386,21 @@
       type="button"
       class="btn-submit"
       [disabled]="formGroup.invalid || isLoading"
+      [class.loading]="isLoading"
       (click)="onSubmit()"
     >
-      {{
-        isLoading
-          ? "Saving..."
-          : editMode
-          ? "Update Pickup Point"
-          : "Create Pickup Point"
-      }}
+      <span class="btn-text">
+        <span *ngIf="isLoading" class="loading-spinner small"
+          ><span class="spinner"></span
+        ></span>
+        {{
+          isLoading
+            ? "Saving..."
+            : editMode
+            ? "Update Pickup Point"
+            : "Create Pickup Point"
+        }}
+      </span>
     </button>
     <button type="button" class="btn-cancel" (click)="onCancel()">
       Cancel

@@ -137,6 +137,7 @@ export class RouteDetailsComponent implements OnInit {
 
     saveChanges(): void {
         if (this.formGroup.valid) {
+            this.isLoading = true;
             const updateData: any = {};
 
             // Always send vehiculeId (can be null to clear, or an ID to set)
@@ -156,6 +157,7 @@ export class RouteDetailsComponent implements OnInit {
 
             this.routeService.update(this.data.id, updateData).subscribe({
                 next: (response: any) => {
+                    this.isLoading = false;
                     this.toastService.showSuccess('Route updated successfully');
                     this.isEditMode = false;
 
@@ -175,6 +177,7 @@ export class RouteDetailsComponent implements OnInit {
                     }
                 },
                 error: (error: any) => {
+                    this.isLoading = false;
                     console.error('Error updating route:', error);
                     this.toastService.showError('Failed to update route');
                 }

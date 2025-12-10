@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RouteDetailsComponent } from '../route-details/route-details.component';
 
 @Component({
   selector: 'app-route-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatDialogModule],
   templateUrl: './route-card.component.html',
-  styleUrl: './route-card.component.css'
+  styleUrls: ['./route-card.component.css']
 })
 export class RouteCardComponent {
   @Input() route: any;

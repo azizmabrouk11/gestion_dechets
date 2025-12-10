@@ -19,7 +19,7 @@ import { ToastService } from '../../../../services/toast.service';
     ReactiveFormsModule,
     MatDialogModule],
   templateUrl: './container-form.component.html',
-  styleUrl: './container-form.component.css',
+  styleUrls: ['./container-form.component.css'],
 })
 export class ContainerFormComponent implements OnInit {
   isLoading: boolean = false;
@@ -61,6 +61,7 @@ export class ContainerFormComponent implements OnInit {
   }
   onSubmit() {
     if (this.formGroup.valid) {
+      this.isLoading = true;
       const formData = {
         ...this.formGroup.value,
         capacity: Number(this.formGroup.value.capacity),
@@ -70,11 +71,15 @@ export class ContainerFormComponent implements OnInit {
       console.log('Container form submitting:', formData);
       console.log('containerStatus value:', this.formGroup.get('containerStatus')?.value);
 
-      if (this.editMode) {
-        this.matDialogRef.close({ id: this.id, ...formData });
-      } else {
-        this.matDialogRef.close(formData);
-      }
+      // Simulate async operation
+      setTimeout(() => {
+        this.isLoading = false;
+        if (this.editMode) {
+          this.matDialogRef.close({ id: this.id, ...formData });
+        } else {
+          this.matDialogRef.close(formData);
+        }
+      }, 100);
     } else {
       // Mark all fields as touched to show validation errors
       Object.keys(this.formGroup.controls).forEach(key => {

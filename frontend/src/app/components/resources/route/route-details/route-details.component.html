@@ -140,12 +140,40 @@
             [class.active]="showVehicleDropdown"
             (click)="toggleVehicleDropdown()"
           >
-            <span
-              class="custom-select-text"
-              [class.placeholder]="!selectedVehicle"
+            <ng-container
+              *ngIf="
+                selectedVehicle && (selectedVehicle.id || selectedVehicle._id);
+                else noVehicle
+              "
             >
-              {{ selectedVehicle?.matricul || "Select a vehicle" }}
-            </span>
+              <div class="inline-vehicle">
+                <div class="vehicle-icon small">🚛</div>
+                <div class="vehicle-inline-info">
+                  <div class="font-semibold">
+                    {{ selectedVehicle.matricul || "N/A" }}
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    {{ selectedVehicle.vehiculeType || "N/A" }} • Capacity:
+                    {{ selectedVehicle.capacity || 0 }} L
+                  </div>
+                </div>
+                <span
+                  class="badge"
+                  [ngClass]="
+                    selectedVehicle.vehiculeStatus === 'functional'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                  "
+                >
+                  {{ selectedVehicle.vehiculeStatus || "N/A" }}
+                </span>
+              </div>
+            </ng-container>
+            <ng-template #noVehicle>
+              <span class="custom-select-text placeholder">{{
+                "Select a vehicle"
+              }}</span>
+            </ng-template>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="dropdown-arrow"
@@ -478,7 +506,19 @@
     </button>
     <ng-container *ngIf="isEditMode">
       <button (click)="cancelEdit()" class="btn-cancel">Cancel</button>
-      <button (click)="saveChanges()" class="btn-save">Save Changes</button>
+      <button
+        (click)="saveChanges()"
+        class="btn-save"
+        [disabled]="isLoading"
+        [class.loading]="isLoading"
+      >
+        <span class="btn-text">
+          <span *ngIf="isLoading" class="loading-spinner small"
+            ><span class="spinner"></span
+          ></span>
+          {{ isLoading ? "Saving..." : "Save Changes" }}
+        </span>
+      </button>
     </ng-container>
   </div>
 </div>

@@ -188,6 +188,53 @@
           Email cannot be changed
         </p>
       </div>
+      <div class="form-group">
+        <label for="role" class="form-label required">
+          <svg
+            class="label-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span> user role</span>
+        </label>
+        <input
+          type="text"
+          id="role"
+          formControlName="role"
+          class="form-input"
+          [class.error]="
+            profileForm.get('role')?.touched && profileForm.get('role')?.invalid
+          "
+          placeholder="Enter your user role"
+        />
+        <p *ngIf="getErrorMessage('role')" class="error-message">
+          {{ getErrorMessage("role") }}
+        </p>
+      </div>
+
+      <!-- Driver toggle -->
+      <div class="form-group">
+        <label for="driver" class="form-label">Driver</label>
+        <div class="input-wrapper">
+          <input
+            type="checkbox"
+            id="driver"
+            formControlName="driver"
+            class="form-input"
+          />
+          <span class="field-hint" style="margin-left: 0.5rem"
+            >Assign driver role to this user</span
+          >
+        </div>
+      </div>
 
       <!-- First Name Field -->
       <div class="form-group">
@@ -301,6 +348,9 @@
             stroke-linejoin="round"
           />
         </svg>
+        <span *ngIf="isLoading" class="loading-spinner small"
+          ><span class="spinner"></span
+        ></span>
         <span>Save Changes</span>
       </button>
     </div>

@@ -11,7 +11,7 @@ import { VehiculeStatus } from '../../../../models/enums/VehiculeStatus';
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule, MatDialogModule],
     templateUrl: './vehicle-form.component.html',
-    styleUrl: './vehicle-form.component.css'
+    styleUrls: ['./vehicle-form.component.css']
 })
 export class VehicleFormComponent implements OnInit {
     formGroup!: FormGroup;
@@ -64,6 +64,7 @@ export class VehicleFormComponent implements OnInit {
 
     onSubmit() {
         if (this.formGroup.valid) {
+            this.isLoading = true;
             const formData = {
                 matricul: this.formGroup.value.matricul,
                 capacity: Number(this.formGroup.value.capacity),
@@ -76,11 +77,15 @@ export class VehicleFormComponent implements OnInit {
             console.log('Type value:', this.formGroup.get('type')?.value);
             console.log('Status value:', this.formGroup.get('status')?.value);
 
-            if (this.editMode) {
-                this.matDialogRef.close({ ...formData, id: this.id });
-            } else {
-                this.matDialogRef.close(formData);
-            }
+            // Simulate async operation
+            setTimeout(() => {
+                this.isLoading = false;
+                if (this.editMode) {
+                    this.matDialogRef.close({ ...formData, id: this.id });
+                } else {
+                    this.matDialogRef.close(formData);
+                }
+            }, 100);
         } else {
             console.error('Form is invalid:', this.formGroup.errors);
             console.error('Form controls status:', {

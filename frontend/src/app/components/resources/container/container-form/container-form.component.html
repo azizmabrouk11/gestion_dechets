@@ -243,15 +243,21 @@
       type="button"
       class="btn-submit"
       [disabled]="formGroup.invalid || isLoading"
+      [class.loading]="isLoading"
       (click)="onSubmit()"
     >
-      {{
-        isLoading
-          ? "Saving..."
-          : editMode
-          ? "Update Container"
-          : "Create Container"
-      }}
+      <span class="btn-text">
+        <span *ngIf="isLoading" class="loading-spinner small"
+          ><span class="spinner"></span
+        ></span>
+        {{
+          isLoading
+            ? "Saving..."
+            : editMode
+            ? "Update Container"
+            : "Create Container"
+        }}
+      </span>
     </button>
     <button type="button" class="btn-cancel" (click)="onCancel()">
       Cancel
