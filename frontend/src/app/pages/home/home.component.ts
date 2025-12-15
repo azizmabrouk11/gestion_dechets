@@ -42,6 +42,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Authentication state
     isAuthenticated = false;
     isAdmin = false;
+    profileRole?: string | null = null;
 
     // Dashboard statistics
     stats: DashboardStats = {
@@ -155,6 +156,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         const profileSub = this.appKeycloakService.profileObservable.subscribe(profile => {
             this.isAdmin = profile?.role === UserRole.admin;
+            this.profileRole = profile?.role ? profile.role.toString() : null;
         });
 
         this.subscriptions.add(profileSub);

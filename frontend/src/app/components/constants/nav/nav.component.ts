@@ -21,8 +21,10 @@ export class NavComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.profileSubscription = this.appkeycloakSerice.profileObservable.subscribe(profile => {
-      this.admin = profile?.role && profile?.role == UserRole.admin ? true : false;
-      this.isEmploye = profile?.role && profile?.role == UserRole.employe ? true : false;
+      const roleStr = profile?.role ? profile.role.toString().toLowerCase() : '';
+      this.admin = roleStr === UserRole.admin;
+      this.isEmploye = roleStr === UserRole.employe || roleStr === 'employee' || roleStr === 'employé';
+      console.debug('NavComponent: profile role=', profile?.role, 'admin=', this.admin, 'employe=', this.isEmploye);
     })
   }
 

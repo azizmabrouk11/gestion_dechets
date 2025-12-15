@@ -79,7 +79,7 @@ export class AppKeycloakService {
             clientId: environment.KEYCLOAK_CLIENT_ID
         });
 
-       const auth= await this.keycloakService.init({
+        const auth = await this.keycloakService.init({
             config: {
                 url: 'https://dechet.46.lebondeveloppeur.net',   // ← NO /auth !!
                 realm: 'dechetrealm',
@@ -133,16 +133,26 @@ export class AppKeycloakService {
 
 
             if (tokenParsed) {
-                const keycloakRole = tokenParsed['realm_access']?.roles || "";
-                let userRole = UserRole.user; // Default to regular user
-                // Map Keycloak realm roles to local UserRole enum
-                if (keycloakRole.includes("admin")) {
+                // Roles may live under realm_access or resource_access (client roles)
+                const realmRoles: string[] = tokenParsed['realm_access']?.roles || [];
+                const clientRoles: string[] = tokenParsed['resource_access']?.[environment.KEYCLOAK_CLIENT_ID]?.roles || [];
+                const keycloakRoles: string[] = [...realmRoles, ...clientRoles];
+
+                // Normalize and map roles
+                const hasAdmin = keycloakRoles.some(r => (r || '').toString().toLowerCase() === 'admin');
+                const hasEmploye = keycloakRoles.some(r => {
+                    const v = (r || '').toString().toLowerCase();
+                    return v === 'employe' || v === 'employee' || v === 'employé';
+                });
+
+                let userRole = UserRole.user;
+                if (hasAdmin) {
                     userRole = UserRole.admin;
-                } else if (keycloakRole.includes("employe")) {
+                } else if (hasEmploye) {
                     userRole = UserRole.employe;
                 }
 
-                console.log('Detected Keycloak roles:', keycloakRole, 'mapped role:', userRole);
+                console.log('Detected Keycloak roles:', JSON.stringify(keycloakRoles), 'mapped role:', userRole);
 
                 this._profile = {
                     userName: tokenParsed['preferred_username'] || tokenParsed['sub'] || '',

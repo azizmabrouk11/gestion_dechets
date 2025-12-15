@@ -1,4 +1,5 @@
 import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom, APP_INITIALIZER } from '@angular/core';
+import { Router } from '@angular/router';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 
@@ -42,6 +43,30 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       useFactory: initializekeycloak,
       deps: [AppKeycloakService],
+      multi: true
+    },
+    // Prevent Angular router from throwing on silent-check-sso.html navigation errors
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (router: Router) => {
+        return () => {
+          // `errorHandler` is available at runtime but TypeScript's Router type
+          // can be stricter in AOT builds; cast to `any` to avoid TS2339.
+          (router as any).errorHandler = (error: any) => {
+            try {
+              const msg = error?.message || '';
+              if (msg.includes('silent-check-sso.html') || msg.includes('silent-check-sso')) {
+                console.warn('Ignored router navigation error for silent SSO:', msg);
+                return null;
+              }
+            } catch (e) {
+              // ignore
+            }
+            throw error;
+          };
+        };
+      },
+      deps: [Router],
       multi: true
     },
     {

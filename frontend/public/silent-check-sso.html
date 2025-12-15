@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Silent SSO</title>
+  </head>
+  <body>
+    <script>
+      (function () {
+        try {
+          // Post iframe URL back to parent window so keycloak-js can parse it
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage(location.href, location.origin);
+          }
+        } catch (e) {
+          // no-op
+        }
+      })();
+    </script>
+  </body>
+</html>

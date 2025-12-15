@@ -21,6 +21,7 @@ public class UserController {
 
     @GetMapping()
     public ResponseEntity<Response> getUsers() {
+        System.out.println("Fetching all users");
         return ResponseEntity.ok(this.userService.findAll());
     }
 
