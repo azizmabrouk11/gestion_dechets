@@ -1,18 +1,20 @@
-{
-  "_id": "V-1001-C",
-  "matricul": "TN-3301-KL",
-  "capacity": 8500.0,
-  "vehiculeStatus": "fonctionnel",
-  "vehiculeType": "camion",
-  "users": [
-    {
-      "id": "U-2005-D",
-      "user_name": "ali_benali",
-      "email": "ali.benali@company.tn",
-      "first_name": "Ali",
-      "last_name": "Benali",
-      "role": "employe",
-      "driver": true
-    }
-  ]
-}
+[
+  {
+    "_id": "V-1001-C",
+    "matricul": "TN-3301-KL",
+    "capacity": 8500.0,
+    "vehiculeStatus": "functionel",
+    "vehiculeType": "camion",
+    "users": [
+      {
+        "id": "U-2005-D",
+        "user_name": "ali_benali",
+        "email": "ali.benali@company.tn",
+        "first_name": "Ali",
+        "last_name": "Benali",
+        "role": "employe",
+        "driver": true
+      }
+    ]
+  }
+]

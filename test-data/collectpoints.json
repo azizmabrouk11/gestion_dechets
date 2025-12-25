@@ -6,18 +6,18 @@
     "containers": [
       {
         "_id": "6568d1b2c3d4e5f6a7b8c9d0",
-        "containerType": "Plastique",
+        "containerType": "plastique",
         "capacity": 1000.0,
         "fillLevel": 450.0,
-        "containerStatus": "functional",
+        "containerStatus": "functionel",
         "PickUpPointId": "6568c1b2c3d4e5f6a7b8c9d0"
       },
       {
         "_id": "6568d1b2c3d4e5f6a7b8c9d1",
-        "containerType": "Carton",
+        "containerType": "carton",
         "capacity": 800.0,
         "fillLevel": 720.0,
-        "containerStatus": "functional",
+        "containerStatus": "functionel",
         "PickUpPointId": "6568c1b2c3d4e5f6a7b8c9d0"
       }
     ]
@@ -29,10 +29,10 @@
     "containers": [
       {
         "_id": "6568d1b2c3d4e5f6a7b8c9d2",
-        "containerType": "Plastique",
+        "containerType": "plastique",
         "capacity": 1200.0,
         "fillLevel": 900.0,
-        "containerStatus": "functional",
+        "containerStatus": "functionel",
         "PickUpPointId": "6568c1b2c3d4e5f6a7b8c9d1"
       }
     ]
@@ -44,7 +44,7 @@
     "containers": [
       {
         "_id": "6568d1b2c3d4e5f6a7b8c9d3",
-        "containerType": "Carton",
+        "containerType": "carton",
         "capacity": 1000.0,
         "fillLevel": 200.0,
         "containerStatus": "non_functional",

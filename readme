@@ -1,21 +1,26 @@
-# Development Guide
-docker build \
-    --build-arg ENVIRONMENT=production \
-     --build-arg KEYCLOAK_URL=http://dechet.46.lebondeveloppeur.net \
-    --build-arg API_URL=http://dechet.46.lebondeveloppeur.net/api \
-    -t nourzakhama2003/dechet-frontend .
+# Waste Management System (Gestion des Déchets)
 
-ARG ENVIRONMENT=production
-ARG API_URL=http://dechet.46.lebondeveloppeur.net/api
-ARG KEYCLOAK_URL=http://dechet.46.lebondeveloppeur.net
-## Option 2: Run Backend/Frontend Manually (Recommended for Development)
+A comprehensive waste management application built with Spring Boot, Angular, MongoDB, and Keycloak for authentication.
 
-### 1. Start Infrastructure Only
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+- **Docker Desktop** - For running infrastructure services
+- **JDK 17** - Required for Spring Boot backend
+- **Node.js & npm** - Required for Angular frontend
+- **Git** - For version control
+
+## 🚀 Quick Start (Development)
+
+### 1. Start Infrastructure Services
+Start MongoDB, PostgreSQL, Keycloak, and Mongo Express:
 ```bash
 docker compose up -d mongo mongo-express postgres keycloak
 ```
 
-### 2. Run Backend Manually
+Wait about 30 seconds for Keycloak to fully start and import the realm configuration.
+
+### 2. Run Backend
 ```bash
 cd backend
 mvn clean package -DskipTests
@@ -23,7 +28,7 @@ mvn spring-boot:run
 ```
 Backend runs on: http://localhost:8082
 
-### 3. Run Frontend Manually
+### 3. Run Frontend
 ```bash
 cd frontend
 npm i --legacy-peer-deps
@@ -31,43 +36,129 @@ npm start
 ```
 Frontend runs on: http://localhost:4200
 
-## Access URLs
-- Frontend: http://localhost:4200
-- Backend API: http://localhost:8082/api
-- Keycloak Admin: http://localhost:8080 (admin/admin)
-- Mongo Express: http://localhost:8089 (admin/admin)
+### 4. Import Test Data (Optional)
+Import sample data for testing:
+```powershell
+# Containers
+docker cp test-data\containers.json projet-dechet-mongo-1:/tmp/containers.json
+docker exec projet-dechet-mongo-1 mongoimport --db dechet_db --collection containers --file /tmp/containers.json --jsonArray --username root --password admin --authenticationDatabase admin
 
-## Stop Services
+# Pickup Points
+docker cp test-data\collectpoints.json projet-dechet-mongo-1:/tmp/collectpoints.json
+docker exec projet-dechet-mongo-1 mongoimport --db dechet_db --collection pickuppoints --file /tmp/collectpoints.json --jsonArray --username root --password admin --authenticationDatabase admin
+
+# Vehicles
+docker cp test-data\vehicules.json projet-dechet-mongo-1:/tmp/vehicules.json
+docker exec projet-dechet-mongo-1 mongoimport --db dechet_db --collection vehicules --file /tmp/vehicules.json --jsonArray --username root --password admin --authenticationDatabase admin
+
+# Incidents
+docker cp test-data\incidents.json projet-dechet-mongo-1:/tmp/incidents.json
+docker exec projet-dechet-mongo-1 mongoimport --db dechet_db --collection incidents --file /tmp/incidents.json --jsonArray --username root --password admin --authenticationDatabase admin
+
+# Notifications
+docker cp test-data\notifications.json projet-dechet-mongo-1:/tmp/notifications.json
+docker exec projet-dechet-mongo-1 mongoimport --db dechet_db --collection notifications --file /tmp/notifications.json --jsonArray --username root --password admin --authenticationDatabase admin
+
+# Routes
+docker cp test-data\routes.json projet-dechet-mongo-1:/tmp/routes.json
+docker exec projet-dechet-mongo-1 mongoimport --db dechet_db --collection routes --file /tmp/routes.json --jsonArray --username root --password admin --authenticationDatabase admin
+```
+
+## 🔗 Access URLs
+
+- **Frontend**: http://localhost:4200
+- **Backend API**: http://localhost:8082/api
+- **Keycloak Admin Console**: http://localhost:8080 (admin/admin)
+- **Mongo Express**: http://localhost:8089 (exproot/expadmin)
+
+## 👤 Default Users
+
+- **Admin User**: 
+  - Username: `admin`
+  - Password: `nour123`
+  
+- **Normal User**: 
+  - Username: `testuser`
+  - Password: `test123`
+
+## 🛑 Stop Services
+
 ```bash
-# Stop all
+# Stop all containers
 docker compose down
 
-# Stop and remove volumes
+# Stop and remove volumes (WARNING: deletes all data)
 docker compose down -v
 ```
 
+## 🏗️ Production Build
 
-users :
-- admin role :
-              username:admin password:nour123
-  normal user :
-                username:testuser password:test123
-mongo express
-USERNAME=exproot
-PASSWORD=expadmin
+### Build Frontend Docker Image
+```bash
+docker build \
+    --build-arg ENVIRONMENT=production \
+    --build-arg KEYCLOAK_URL=http://your-domain.com \
+    --build-arg API_URL=http://your-domain.com/api \
+    -t your-dockerhub/dechet-frontend \
+    -f frontend/Dockerfile \
+    frontend
+```
 
-Yes, you're absolutely right! The Route entity should use @DocumentReference for pickUpPoints, vehicule, and users to avoid the same problem. Without it, MongoDB will try to embed the entire objects, which can cause issues with updates and data consistency.
+### Build Backend Docker Image
+```bash
+docker build \
+    -t your-dockerhub/dechet-backend \
+    -f backend/Dockerfile \
+    backend
+```
 
+### Run Full Stack with Docker Compose
+```bash
+# Set environment variables in .env file
+docker compose up -d
+```
 
+## 🔧 Troubleshooting
 
-cd frontend; Remove-Item -Recurse -Force .angular -ErrorAction SilentlyContinue ; 
-realm import  keycloak
-realm-config-dev.json
-realm-config-prod.json
-https://github.com/nourzakhama2003/projet-dechet.git
+### Keycloak realm not imported
+If users cannot log in, the realm might not have imported:
+```bash
+docker compose restart keycloak
+# Wait 30 seconds, then check http://localhost:8080
+```
 
+### Frontend build errors
+Clear Angular cache:
+```powershell
+cd frontend
+Remove-Item -Recurse -Force .angular -ErrorAction SilentlyContinue
+npm start
+```
 
+### Backend connection errors
+Ensure infrastructure is running:
+```bash
+docker ps
+# Should show mongo, postgres, keycloak, mongo-express running
+```
 
-database 
-docker cp test-data\containers.json projet-dechet-mongo-1:/tmp/containers.json;
-docker exec projet-dechet-mongo-1 mongoimport --db dechet_db --collection containers --file /tmp/containers.json --jsonArray --username root --password admin --authenticationDatabase admin
+## 📦 Project Structure
+
+```
+├── backend/               # Spring Boot application
+├── frontend/              # Angular application
+├── keycloak/
+│   └── keycloak-import/  # Realm configuration
+├── test-data/            # Sample data for testing
+├── devops/               # Deployment configurations
+├── docker-compose.yml    # Docker services configuration
+└── .env                  # Environment variables
+```
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 🔗 Repository
+
+https://github.com/azizmabrouk11/gestion_dechets
