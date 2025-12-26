@@ -142,6 +142,35 @@ docker ps
 # Should show mongo, postgres, keycloak, mongo-express running
 ```
 
+## 🤖 Automated Incident Reporting (n8n Workflow)
+
+The system includes an n8n workflow that automates incident reporting via email:
+
+### Features
+- **Email Monitoring**: Automatically monitors Gmail for citizen incident reports
+- **AI-Powered Extraction**: Uses Groq AI to extract structured incident data from emails
+- **Duplicate Detection**: Checks MongoDB for similar incidents using AI similarity matching
+- **Smart Responses**: 
+  - If duplicate detected (≥75% similarity): Sends automated reply to citizen
+  - If new incident: Notifies admin and creates incident record
+
+### Workflow Location
+`workflows/incident_report.json`
+
+### Setup Requirements
+- n8n instance with the workflow imported
+- Gmail OAuth2 credentials configured
+- Groq API credentials for AI processing
+- MongoDB connection for duplicate detection
+
+### How It Works
+1. Gmail trigger monitors incoming emails every minute
+2. AI agent extracts incident details (description, location, priority)
+3. Duplicate check compares against existing incidents in MongoDB
+4. Conditional logic routes to appropriate response:
+   - **Duplicate found**: Reply to citizen with confirmation
+   - **New incident**: Notify admin and process new report
+
 ## 📦 Project Structure
 
 ```
@@ -150,6 +179,7 @@ docker ps
 ├── keycloak/
 │   └── keycloak-import/  # Realm configuration
 ├── test-data/            # Sample data for testing
+├── workflows/            # n8n automation workflows
 ├── devops/               # Deployment configurations
 ├── docker-compose.yml    # Docker services configuration
 └── .env                  # Environment variables

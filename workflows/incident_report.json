@@ -1,0 +1,440 @@
+{
+  "name": "incident_report",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1504,
+        236
+      ],
+      "id": "60546e89-e34a-43da-bb7b-f8c54a7605c8",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0eaQyNlzQkpRWnJB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{ $json.id }}",
+        "simple": false,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -1280,
+        236
+      ],
+      "id": "d4f285dd-5485-49e1-bb3f-11df84e0199f",
+      "name": "Gmail1",
+      "webhookId": "61d90c56-4f27-4a4f-bb3f-7b54103f87ac",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0eaQyNlzQkpRWnJB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=You are an information extraction agent for a municipal waste management platform.\n\nYour task is to analyze a citizen’s email and extract structured incident data\nthat matches the platform’s MongoDB incident schema.\n\nSTRICT RULES (MANDATORY):\n1. You MUST return ONLY valid JSON.\n2. Do NOT add explanations, comments, or extra text.\n3. Use EXACT field names as defined below.\n4. If a value cannot be inferred, use null (except required defaults).\n5. Normalize all text: lowercase, trimmed, no extra spaces.\n6. Do NOT invent IDs or personal data.\n\nOUTPUT FORMAT (JSON ONLY):\n{\n  \"_id\": null,\n  \"assignedTo\": null,\n  \"citizenId\": string | null,\n  \"description\": string,\n  \"imageUrl\": null,\n  \"location\": string,\n  \"pickUpPointId\": string | null,\n  \"priority\": \"low\" | \"medium\" | \"high\",\n  \"reportedAt\": string,\n  \"resolutionNotes\": null,\n  \"resolvedAt\": null,\n  \"status\": \"new\"\n}\n\nFIELD RULES & LOGIC:\n- _id: Always null. Database will generate it.\n- assignedTo: Always null at creation.\n- citizenId: Extract ONLY if explicitly mentioned. Otherwise null.\n- description: Short factual summary (max 2 sentences).\n- imageUrl: Always null.\n- location: Extract street, landmark, neighborhood, city if available.\n- pickUpPointId: Infer ONLY if explicitly mentioned. Otherwise null.\n- priority: high → fire/hazard/health risk, medium → road blockage/strong odor, low → normal.\n- reportedAt: ISO 8601 datetime, use email timestamp if unknown.\n- resolutionNotes: Always null.\n- resolvedAt: Always null.\n- status: Always \"new\".\nIMPORTANT: If email is NOT a waste report, return all fields null except _id."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -1056,
+        236
+      ],
+      "id": "ceb1627b-f097-444d-8b8b-16353cfa4d1d",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"incidentDescription\": \"{{ JSON.parse($json.output).description }}\",\n  \"incidentLocation\": \"{{ JSON.parse($json.output).location }}\",\n  \"reportedAt\": \"{{ JSON.parse($json.output).reportedAt }}\",\n  \"citizenId\": \"{{ JSON.parse($json.output).citizenId }}\",\n  \"pickUpPointId\": \"{{ JSON.parse($json.output).pickUpPointId }}\",\n  \"priority\": \"{{ JSON.parse($json.output).priority }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -704,
+        236
+      ],
+      "id": "293b26db-9ba9-414f-b9e5-b77beba76a4d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.incidentDescription }}{{ $json.incidentLocation }}{{ $json.priority }}",
+        "options": {
+          "systemMessage": "=You are a duplicate-detection agent for a municipal waste management platform.\n\nYour task is to determine whether a newly reported incident is already present in the MongoDB database..."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        236
+      ],
+      "id": "fec9496d-25a8-41b1-b831-7d2f14c0eee5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"isDuplicate\":{{ JSON.parse($json.output).isDuplicate }},\n  \"matchedIncidentId\": \"{{ JSON.parse($json.output).matchedIncidentId }}\",\n  \"similarityScore\": \"{{ JSON.parse($json.output).similarityScore }}\",\n  \"incidentDescription\":\"{{ $('Edit Fields').item.json.incidentDescription }}\",\n  \"incidentLocation\":\"{{ $('Edit Fields').item.json.incidentLocation }}\",\n  \"priority\":\"{{ $('Edit Fields').item.json.priority }}\",\n  \"reportedAt\":\"{{ $('Edit Fields').item.json.reportedAt }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -128,
+        236
+      ],
+      "id": "645fb44d-335c-45d5-9f4b-1626987d2cb2",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "38a99969-bdea-4466-9f21-cb527060886e",
+              "leftValue": "={{ $json.isDuplicate }}",
+              "rightValue": "\"true\"",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "9242e7c0-aea4-494e-aebc-d06a9b6bb75a",
+              "leftValue": "={{ $json.similarityScore }}",
+              "rightValue": 0.75,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        96,
+        236
+      ],
+      "id": "5a13e3ba-49aa-4c50-b191-3d287265231b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.incidentDescription }}{{ $json.incidentLocation }}{{ $json.priority }}",
+        "options": {
+          "systemMessage": "=You are an AI agent that generates the **body of an email** to notify the municipal admin about a newly reported waste incident..."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        320,
+        384
+      ],
+      "id": "67871c4b-03fd-4266-ba37-138c821ad34e",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "sendTo": "azizmabrouk@ieee.org",
+        "subject": "mongo-bot",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        384
+      ],
+      "id": "244cea28-cd2f-4018-8005-fbcb7ecd2c83",
+      "name": "Gmail",
+      "webhookId": "ae9a0015-7115-455f-be53-87edc4e1a815",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0eaQyNlzQkpRWnJB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.incidentDescription }}{{ $json.incidentLocation }}{{ $json.priority }}",
+        "options": {
+          "systemMessage": "=You are an AI agent that generates the **body of an email** to reply to a citizen who reported a waste incident..."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        320,
+        -16
+      ],
+      "id": "9d98a8da-47e4-4c9c-b0a1-28a6aead19c8",
+      "name": "AI Agent3"
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail1').item.json.id }}",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        88
+      ],
+      "id": "3959a22f-b3b2-4f64-ac2b-fe1228e34fa8",
+      "name": "Gmail2",
+      "webhookId": "ae9a0015-7115-455f-be53-87edc4e1a815",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0eaQyNlzQkpRWnJB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        656
+      ],
+      "id": "0a292e0c-050c-41bf-bdf9-aff74f074ce3",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "4YyK8rPN0p6zFRPr",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "collection": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Collection', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDbTool",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        752
+      ],
+      "id": "99f7ff99-620e-404d-b575-ce0a6135f9b4",
+      "name": "Find documents in MongoDB",
+      "credentials": {
+        "mongoDb": {
+          "id": "EXSl5jdLbJShsRzW",
+          "name": "MongoDB account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent3": {
+      "main": [
+        [
+          {
+            "node": "Gmail2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find documents in MongoDB": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2f3ad509-a0ea-4b00-966e-06cfd43a2299",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1ba805a388991bf841d4fe709744e24fd33b47f0e35bb17f758e3ab5b4775f73"
+  },
+  "id": "W2NgrJ0Tlmjq9vQO",
+  "tags": []
+}
