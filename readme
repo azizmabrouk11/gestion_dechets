@@ -1,10 +1,10 @@
 # Waste Management System (Gestion des Déchets)
 
-A comprehensive waste management application built with Spring Boot, Angular, MongoDB, and Keycloak for authentication.
+A comprehensive waste management application built with Spring Boot, Angular, MongoDB, and Keycloak for authentication .
 
 ## 📋 Prerequisites
 
-Before you begin, ensure you have the following installed:
+Before you begin, ensure you have the following things installed:
 - **Docker Desktop** - For running infrastructure services
 - **JDK 17** - Required for Spring Boot backend
 - **Node.js & npm** - Required for Angular frontend
