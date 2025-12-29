@@ -19,6 +19,7 @@ import { NavComponent } from '../nav/nav.component';
 export class HeaderComponent implements OnInit, OnDestroy {
 
   isProfileDropdownOpen = false;
+  isMobileMenuOpen = false;
   profileImage!: string;
   admin = false;
   private profileSubscription?: Subscription;
@@ -82,6 +83,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+  }
 
   openDialog() {
     const dialogRef = this.matDialog.open(ProfileComponent, {

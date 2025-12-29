@@ -21,9 +21,16 @@
       </div>
     </div>
 
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+
     <!-- Navigation Links -->
-    <div class="nav-center">
-      <app-nav></app-nav>
+    <div class="nav-center" [class.mobile-open]="isMobileMenuOpen">
+      <app-nav (click)="closeMobileMenu()"></app-nav>
     </div>
 
     <!-- Right Section: Auth & Profile -->

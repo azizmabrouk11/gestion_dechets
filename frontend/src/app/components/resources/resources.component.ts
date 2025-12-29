@@ -50,7 +50,7 @@ export class ResourcesComponent implements OnInit {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
   activeTab: 'users' | 'containers' | 'pickuppoints' | 'vehicles' | 'incidents' | 'notifications' | 'routes' = 'users';
-  sidebarOpen: boolean = true;
+  sidebarOpen: boolean = false; // Closed by default on mobile
   users: any[] = [];
   containers: any[] = [];
   pickupPoints: any[] = [];
@@ -866,5 +866,11 @@ export class ResourcesComponent implements OnInit {
 
   show() {
     this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  closeSidebar() {
+    if (window.innerWidth < 1024) {
+      this.sidebarOpen = false;
+    }
   }
 }

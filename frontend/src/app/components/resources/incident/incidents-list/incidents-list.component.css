@@ -25,7 +25,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
-  app-container-card {
+  app-incident-card {
     display: block !important;
     padding: 1rem;
   }
@@ -41,7 +41,7 @@
     border-radius: 6px;
   }
 
-  app-container-card {
+  app-incident-card {
     padding: 0.75rem;
   }
 }

@@ -1,4 +1,7 @@
-<div class="flex h-screen bg-gray-50 font-sans overflow-hidden">
+<div class="flex h-screen bg-gray-50 font-sans overflow-hidden" [class.sidebar-open]="sidebarOpen">
+  <!-- Overlay -->
+  <div class="sidebar-overlay" (click)="closeSidebar()" *ngIf="sidebarOpen"></div>
+  
   <!-- Sidebar -->
   <div class="realtive">
     <button class="absolute left-2 mt-2" (click)="show()">
@@ -35,7 +38,7 @@
     </button>
     @if(sidebarOpen) {
     <aside
-      class="w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm z-10"
+      class="w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm z-10 sidebar-open"
     >
       <div
         class="p-6 flex items-center justify-center border-b border-gray-100"
@@ -49,7 +52,7 @@
 
       <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
         <button
-          (click)="setActiveTab('users')"
+          (click)="setActiveTab('users'); closeSidebar()"
           [class.bg-gray-100]="activeTab === 'users'"
           [class.text-gray-700]="activeTab === 'users'"
           class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
@@ -73,7 +76,7 @@
         </button>
 
         <button
-          (click)="setActiveTab('containers')"
+          (click)="setActiveTab('containers'); closeSidebar()"
           [class.bg-gray-100]="activeTab === 'containers'"
           [class.text-gray-700]="activeTab === 'containers'"
           class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
@@ -97,7 +100,7 @@
         </button>
 
         <button
-          (click)="setActiveTab('pickuppoints')"
+          (click)="setActiveTab('pickuppoints'); closeSidebar()"
           [class.bg-gray-100]="activeTab === 'pickuppoints'"
           [class.text-gray-700]="activeTab === 'pickuppoints'"
           class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
@@ -127,7 +130,7 @@
         </button>
 
         <button
-          (click)="setActiveTab('vehicles')"
+          (click)="setActiveTab('vehicles'); closeSidebar()"
           [class.bg-gray-100]="activeTab === 'vehicles'"
           [class.text-gray-700]="activeTab === 'vehicles'"
           class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
@@ -157,7 +160,7 @@
         </button>
 
         <button
-          (click)="setActiveTab('incidents')"
+          (click)="setActiveTab('incidents'); closeSidebar()"
           [class.bg-gray-100]="activeTab === 'incidents'"
           [class.text-gray-700]="activeTab === 'incidents'"
           class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
@@ -181,7 +184,7 @@
         </button>
 
         <button
-          (click)="setActiveTab('notifications')"
+          (click)="setActiveTab('notifications'); closeSidebar()"
           [class.bg-gray-100]="activeTab === 'notifications'"
           [class.text-gray-700]="activeTab === 'notifications'"
           class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"
@@ -205,7 +208,7 @@
         </button>
 
         <button
-          (click)="setActiveTab('routes')"
+          (click)="setActiveTab('routes'); closeSidebar()"
           [class.bg-gray-100]="activeTab === 'routes'"
           [class.text-gray-700]="activeTab === 'routes'"
           class="w-full flex items-center px-4 py-3 text-gray-600 rounded-xl transition-all duration-200 hover:bg-gray-50 hover:text-gray-700 group"

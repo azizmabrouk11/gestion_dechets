@@ -1,0 +1,45 @@
+/* Responsive Design */
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody,
+  tr {
+    display: block;
+  }
+
+  tr {
+    margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  tr:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  app-user-card {
+    display: block !important;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  tr {
+    margin-bottom: 0.75rem;
+    border-radius: 6px;
+  }
+
+  app-user-card {
+    padding: 0.75rem;
+  }
+}
