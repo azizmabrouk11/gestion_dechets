@@ -1,44 +1,153 @@
-# Waste Management System (Gestion des Déchets)
+# 🗑️ Waste Management System (Gestion des Déchets)
 
-A comprehensive waste management application built with Spring Boot, Angular, MongoDB, and Keycloak for authentication .
+A comprehensive, enterprise-grade waste management platform for smart cities, built with modern technologies and following clean architecture principles.
+
+## 🎯 Project Overview
+
+This intelligent waste management system provides a complete solution for municipalities to manage waste collection operations, including:
+- 📍 **Smart Collection Points** - GPS-tracked pickup locations with real-time container monitoring
+- 🚛 **Fleet Management** - Vehicle tracking, capacity management, and maintenance scheduling
+- 📊 **Admin Dashboard** - Comprehensive analytics and operational control
+- 👥 **Citizen Portal** - Community engagement and service information
+- 🤖 **AI-Powered Incident Reporting** - Automated email monitoring with duplicate detection
+- 🔐 **Enterprise Security** - OAuth2/OpenID Connect via Keycloak with role-based access control
+
+## 🏗️ Architecture
+
+### Tech Stack
+
+**Backend:**
+- ☕ **Spring Boot 3.3.0** (Java 17)
+- 🗄️ **MongoDB** - NoSQL database for flexible data modeling
+- 🔒 **Spring Security + OAuth2** - Resource server with JWT validation
+- 🗺️ **MapStruct** - Type-safe bean mapping
+- 📧 **Spring Mail** - Email notification system
+
+**Frontend:**
+- 🅰️ **Angular 20** - Modern reactive framework
+- 🎨 **Angular Material + Tailwind CSS + DaisyUI** - Beautiful, responsive UI
+- 🗺️ **Leaflet** - Interactive maps for collection points
+- 📊 **ApexCharts + Chart.js** - Data visualization
+- 🔐 **Keycloak Angular** - Seamless authentication
+
+**Infrastructure:**
+- 🐳 **Docker + Docker Compose** - Containerized deployment
+- 🔑 **Keycloak 25.0.5** - Identity and access management
+- 🐘 **PostgreSQL 16** - Keycloak database
+- 🌐 **Nginx** - Reverse proxy for production
+- 🤖 **n8n** - Workflow automation
 
 ## 📋 Prerequisites
 
-Before you begin, ensure you have the following things installed:
-- **Docker Desktop** - For running infrastructure services
-- **JDK 17** - Required for Spring Boot backend
-- **Node.js & npm** - Required for Angular frontend
+Before you begin, ensure you have:
+- **Docker Desktop** (v20.10+) - For infrastructure services
+- **JDK 17** - For Spring Boot backend development
+- **Node.js 20+ & npm** - For Angular frontend development
+- **Maven 3.9+** - For backend build (or use included Maven wrapper)
 - **Git** - For version control
 
-## 🚀 Quick Start (Development)
 
-### 1. Start Infrastructure Services
-Start MongoDB, PostgreSQL, Keycloak, and Mongo Express:
+## 🚀 Quick Start Guide
+
+### 🔧 Initial Setup
+
+#### 1. Environment Configuration
+Create a `.env` file in the project root (or copy from `.env.example`):
+
+```bash
+# Keycloak Configuration
+KEYCLOAK_VERSION=25.0.5
+KEYCLOAK_ADMIN_USER=admin
+KEYCLOAK_ADMIN_PASSWORD=admin
+KEYCLOAK_EXTERNAL_FQDN=localhost
+
+# PostgreSQL (Keycloak Database)
+KEYCLOAK_DB_NAME=keycloak
+KEYCLOAK_DB_USER=keycloak_user
+KEYCLOAK_DB_PASSWORD=keycloak_pass
+
+# MongoDB Configuration
+MONGO_INITDB_ROOT_USERNAME=root
+MONGO_INITDB_ROOT_PASSWORD=admin
+
+# Mongo Express (Web UI)
+ME_CONFIG_BASICAUTH_USERNAME=exproot
+ME_CONFIG_BASICAUTH_PASSWORD=expadmin
+
+# Application Profile (dev/prod)
+PROFILE=dev
+```
+
+### 🐳 Development Setup (Recommended)
+
+#### Step 1: Start Infrastructure Services
 ```bash
 docker compose up -d mongo mongo-express postgres keycloak
 ```
 
-Wait about 30 seconds for Keycloak to fully start and import the realm configuration.
+**Services starting:**
+- MongoDB (port 27017) - Main database
+- Mongo Express (port 8089) - Database management UI
+- PostgreSQL (port 5433) - Keycloak authentication database
+- Keycloak (port 8080) - Identity provider
 
-### 2. Run Backend
+⏱️ **Wait ~30 seconds** for Keycloak to fully initialize and import the realm configuration.
+
+#### Step 2: Configure Frontend Environment
+Navigate to frontend and copy the environment example:
+```bash
+cd frontend
+# Copy and configure your environment file
+cp src/environments/environment-example.ts src/environments/environment-dev.ts
+```
+
+Update `environment-dev.ts` with your local settings (default values usually work):
+```typescript
+export const environment = {
+    production: false,
+    API_URL: 'http://localhost:8082/api',
+    GRAPHHOPPER_KEY: 'your-graphhopper-api-key',  // For routing features
+    KEYCLOAK_URL: 'http://localhost:8080',
+    KEYCLOAK_REALM: 'dechetrealm',
+    KEYCLOAK_CLIENT_ID: 'dechet-frontend',
+};
+```
+
+#### Step 3: Run Backend
 ```bash
 cd backend
 mvn clean package -DskipTests
 mvn spring-boot:run
 ```
-Backend runs on: http://localhost:8082
+✅ Backend available at: **http://localhost:8082**
 
-### 3. Run Frontend
+**Or using Maven wrapper (no Maven installation required):**
+```bash
+# Windows
+mvnw.cmd clean package -DskipTests
+mvnw.cmd spring-boot:run
+
+# Linux/Mac
+./mvnw clean package -DskipTests
+./mvnw spring-boot:run
+```
+
+#### Step 4: Run Frontend
 ```bash
 cd frontend
-npm i --legacy-peer-deps
+npm install --legacy-peer-deps
 npm start
 ```
-Frontend runs on: http://localhost:4200
+✅ Frontend available at: **http://localhost:4200**
 
-### 4. Import Test Data (Optional)
-Import sample data for testing:
+### 📊 Import Test Data (Optional but Recommended)
+
+Load sample data for development and testing:
+
 ```powershell
+# Navigate to project root directory
+cd c:\Users\ADMIN\Desktop\projet-dechet
+
 # Containers
 docker cp test-data\containers.json projet-dechet-mongo-1:/tmp/containers.json
 docker exec projet-dechet-mongo-1 mongoimport --db dechet_db --collection containers --file /tmp/containers.json --jsonArray --username root --password admin --authenticationDatabase admin
@@ -64,131 +173,780 @@ docker cp test-data\routes.json projet-dechet-mongo-1:/tmp/routes.json
 docker exec projet-dechet-mongo-1 mongoimport --db dechet_db --collection routes --file /tmp/routes.json --jsonArray --username root --password admin --authenticationDatabase admin
 ```
 
-## 🔗 Access URLs
+**Note:** MongoDB container name may vary. Check with `docker ps` and adjust if needed.
 
-- **Frontend**: http://localhost:4200
-- **Backend API**: http://localhost:8082/api
-- **Keycloak Admin Console**: http://localhost:8080 (admin/admin)
-- **Mongo Express**: http://localhost:8089 (exproot/expadmin)
 
-## 👤 Default Users
+## 🔗 Access URLs & Credentials
 
-- **Admin User**: 
-  - Username: `admin`
-  - Password: `nour123`
+### Application URLs
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Frontend Application** | http://localhost:4200 | Main user interface |
+| **Backend API** | http://localhost:8082/api | REST API endpoints |
+| **Keycloak Admin** | http://localhost:8080 | Identity management |
+| **Mongo Express** | http://localhost:8089 | MongoDB web interface |
+| **API Documentation** | http://localhost:8082/swagger-ui.html | API docs (if configured) |
+
+### 👤 Default Users
+
+#### Admin Account (Full Access)
+- **Username:** `admin`
+- **Password:** `nour123`
+- **Permissions:** Full system access, user management, analytics
+
+#### Test Citizen/Employee Account
+- **Username:** `testuser`
+- **Password:** `test123`
+- **Permissions:** View collection schedules, report incidents
+
+#### Keycloak Admin Console
+- **Username:** `admin`
+- **Password:** `admin`
+- **Purpose:** Realm and user management
+
+#### Mongo Express
+- **Username:** `exproot`
+- **Password:** `expadmin`
+- **Purpose:** Database inspection and management
+
+## 📱 Features Overview
+
+### 🏠 Citizen Portal (`/citizen`)
+**For residents and employees:**
+- 📍 View nearby collection points with interactive maps
+- 📅 Check collection schedules and routes
+- 🗑️ Container status and fill levels
+- 📝 Report incidents and issues
+- 📚 Waste sorting guidelines
+
+### ⚙️ Admin Dashboard (`/dashboard`)
+**For administrators:**
+- 📊 **Real-time Analytics Dashboard**
+  - User statistics (active/inactive)
+  - Vehicle fleet status
+  - Container monitoring
+  - Route efficiency metrics
   
-- **Normal User**: 
-  - Username: `testuser`
-  - Password: `test123`
+- 👥 **User Management**
+  - Role assignment (Admin, Employee, Citizen)
+  - Account activation/deactivation
+  - Face authentication setup
+  
+- 🚛 **Vehicle Fleet Management**
+  - Track vehicle status (operational, maintenance)
+  - Capacity monitoring
+  - Driver assignment
+  
+- 🗑️ **Container Management**
+  - Real-time fill level monitoring
+  - Status tracking (functional, damaged)
+  - Type classification (plastic, cardboard, glass, etc.)
+  
+- 📍 **Pickup Point Management**
+  - GPS coordinate mapping
+  - Container assignment
+  - Location optimization
+  
+- 🛣️ **Route Planning**
+  - Schedule creation
+  - Vehicle assignment
+  - Pickup point sequencing
+  - Time window management
 
-## 🛑 Stop Services
+### 🔔 Incident Management System
+- 📧 Email-based incident reporting
+- 🤖 AI-powered data extraction
+- 🔍 Duplicate detection with similarity matching
+- ⚡ Automated notifications to relevant parties
+- 📊 Priority-based incident tracking
 
+## 🔒 Security & Authentication
+
+### OAuth 2.0 / OpenID Connect via Keycloak
+
+**Authentication Flow:**
+1. User accesses application
+2. Redirected to Keycloak login
+3. JWT token issued upon successful authentication
+4. Token validated by backend resource server
+5. Role-based access control enforced
+
+**User Roles:**
+- **ADMIN** - Full system access
+- **EMPLOYE** - Employee operations
+- **USER** - Citizen portal access
+
+**Security Features:**
+- 🔐 JWT-based stateless authentication
+- 🔄 Token refresh mechanism
+- 🚪 Silent SSO check
+- 🛡️ CORS protection
+- 🔒 Password policies enforced by Keycloak
+
+## 📡 Backend API Endpoints
+
+### Public Endpoints (No Authentication Required)
+*Note: Most endpoints require authentication. Public access is limited.*
+
+### Protected Endpoints (Authentication Required)
+
+#### User Management (`/api/public/users`)
+- `GET /api/public/users` - List all users
+- `GET /api/public/users/{id}` - Get user by ID
+- `POST /api/public/users` - Create new user
+- `PUT /api/public/users/{id}` - Update user
+- `DELETE /api/public/users/{id}` - Delete user
+
+#### Vehicle Management (`/api/public/vehicules`)
+- `GET /api/public/vehicules` - List all vehicles
+- `GET /api/public/vehicules/{id}` - Get vehicle details
+- `POST /api/public/vehicules` - Register new vehicle
+- `PUT /api/public/vehicules/{id}` - Update vehicle
+- `DELETE /api/public/vehicules/{id}` - Remove vehicle
+
+#### Container Management (`/api/public/containers`)
+- `GET /api/public/containers` - List all containers
+- `GET /api/public/containers/{id}` - Get container details
+- `POST /api/public/containers` - Add new container
+- `PUT /api/public/containers/{id}` - Update container
+- `DELETE /api/public/containers/{id}` - Remove container
+
+#### Pickup Points (`/api/public/pickuppoints`)
+- `GET /api/public/pickuppoints` - List all pickup points
+- `GET /api/public/pickuppoints/{id}` - Get point details
+- `POST /api/public/pickuppoints` - Create pickup point
+- `PUT /api/public/pickuppoints/{id}` - Update pickup point
+- `DELETE /api/public/pickuppoints/{id}` - Remove pickup point
+
+#### Route Management (`/api/public/routes`)
+- `GET /api/public/routes` - List all routes
+- `GET /api/public/routes/{id}` - Get route details
+- `POST /api/public/routes` - Create route
+- `PUT /api/public/routes/{id}` - Update route
+- `DELETE /api/public/routes/{id}` - Delete route
+
+#### Incident Reporting (`/api/public/incidents`)
+- `GET /api/public/incidents` - List incidents
+- `GET /api/public/incidents/{id}` - Get incident details
+- `POST /api/public/incidents` - Report incident
+- `PUT /api/public/incidents/{id}` - Update incident
+- `DELETE /api/public/incidents/{id}` - Remove incident
+
+#### Notifications (`/api/public/notifications`)
+- `GET /api/public/notifications` - List notifications
+- `POST /api/public/notifications` - Send notification
+
+#### Admin Operations (`/api/admin`)
+- `POST /api/admin/sync` - Sync users with Keycloak
+
+## 🗄️ Database Schema (MongoDB Collections)
+
+### Collections Overview
+
+1. **users** - User accounts and profiles
+   - Fields: `id`, `userName`, `email`, `firstName`, `lastName`, `role`, `isActive`, `profileImage`, `faceAuthEnabled`, `driver`, `vehicules[]`
+   - Indexes: Unique on `userName` and `email`
+
+2. **vehicules** - Waste collection vehicles
+   - Fields: `id`, `matricul`, `type`, `capacity`, `status`, `users[]`
+   - Types: TRUCK, COMPACTOR, ELECTRIC, SMALL_VEHICLE
+
+3. **containers** - Waste containers at pickup points
+   - Fields: `id`, `type`, `capacity`, `fillLevel`, `containerStatus`, `pickUpPointId`
+   - Types: PLASTIC, CARDBOARD, GLASS, ORGANIC, MIXED
+
+4. **pickuppoints** - Collection locations
+   - Fields: `id`, `location`, `address`, `latitude`, `longitude`, `containers[]`
+
+5. **routes** - Collection routes and schedules
+   - Fields: `id`, `pickUpPoints[]`, `vehicule`, `users[]`, `routeDate`, `startTime`, `endTime`, `status`
+
+6. **incidents** - Reported issues
+   - Fields: `id`, `description`, `location`, `priority`, `status`, `reportedBy`, `reportedAt`
+
+7. **notifications** - System notifications
+   - Fields: `id`, `userId`, `message`, `type`, `isRead`, `createdAt`
+
+
+## 🛑 Stop & Clean Services
+
+### Stop All Services
 ```bash
-# Stop all containers
 docker compose down
+```
 
-# Stop and remove volumes (WARNING: deletes all data)
+### Stop and Remove All Data (⚠️ WARNING: Deletes all data)
+```bash
 docker compose down -v
 ```
 
-## 🏗️ Production Build
+### Restart Specific Service
+```bash
+# Restart Keycloak
+docker compose restart keycloak
 
-### Build Frontend Docker Image
+# Restart MongoDB
+docker compose restart mongo
+
+# Restart Backend
+docker compose restart backend
+```
+
+## 🐳 Production Deployment
+
+### Full Stack Docker Deployment
+
+#### 1. Configure Production Environment
+Create/update `.env` file for production:
+
+```bash
+PROFILE=prod
+KEYCLOAK_EXTERNAL_FQDN=your-domain.com
+KEYCLOAK_SERVER_URL=https://your-domain.com
+
+# Update MongoDB credentials
+MONGO_INITDB_ROOT_USERNAME=secure_username
+MONGO_INITDB_ROOT_PASSWORD=secure_password
+
+# Update Keycloak credentials
+KEYCLOAK_ADMIN_USER=admin
+KEYCLOAK_ADMIN_PASSWORD=secure_password
+```
+
+#### 2. Build Docker Images
+
+**Backend:**
+```bash
+docker build -t your-dockerhub/dechet-backend:latest -f backend/Dockerfile backend
+```
+
+**Frontend:**
 ```bash
 docker build \
     --build-arg ENVIRONMENT=production \
-    --build-arg KEYCLOAK_URL=http://your-domain.com \
-    --build-arg API_URL=http://your-domain.com/api \
-    -t your-dockerhub/dechet-frontend \
+    --build-arg API_URL=https://your-domain.com/api \
+    --build-arg KEYCLOAK_URL=https://your-domain.com \
+    -t your-dockerhub/dechet-frontend:latest \
     -f frontend/Dockerfile \
     frontend
 ```
 
-### Build Backend Docker Image
+#### 3. Push to Registry
 ```bash
-docker build \
-    -t your-dockerhub/dechet-backend \
-    -f backend/Dockerfile \
-    backend
+docker push your-dockerhub/dechet-backend:latest
+docker push your-dockerhub/dechet-frontend:latest
 ```
 
-### Run Full Stack with Docker Compose
+#### 4. Deploy with Docker Compose
 ```bash
-# Set environment variables in .env file
-docker compose up -d
+docker compose -f docker-compose.yml up -d
 ```
+
+### Production Checklist
+
+- [ ] Update all default passwords
+- [ ] Configure SSL/TLS certificates (use Let's Encrypt)
+- [ ] Set up backup strategy for MongoDB
+- [ ] Configure firewall rules
+- [ ] Set up monitoring and logging
+- [ ] Configure email SMTP credentials
+- [ ] Update CORS origins for production domain
+- [ ] Review and update Keycloak realm settings
+- [ ] Set up automated backups for PostgreSQL (Keycloak)
+- [ ] Configure resource limits in docker-compose
+- [ ] Set up health checks and alerting
+
 
 ## 🔧 Troubleshooting
 
-### Keycloak realm not imported
-If users cannot log in, the realm might not have imported:
+### Keycloak Issues
+
+**Problem:** Users cannot log in, Keycloak realm not found
 ```bash
+# Solution: Restart Keycloak and wait for realm import
 docker compose restart keycloak
-# Wait 30 seconds, then check http://localhost:8080
+# Wait 30-60 seconds, then check http://localhost:8080
 ```
 
-### Frontend build errors
-Clear Angular cache:
+**Problem:** Keycloak shows "realm not found"
+- Check that the realm configuration file exists: `keycloak/keycloak-import/realm-config-dev.json`
+- Verify `PROFILE` environment variable is set correctly in `.env`
+- Check Keycloak logs: `docker logs dechet-keycloak`
+
+### Frontend Issues
+
+**Problem:** Build errors or dependency conflicts
 ```powershell
 cd frontend
+# Clear cache
 Remove-Item -Recurse -Force .angular -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force node_modules -ErrorAction SilentlyContinue
+# Reinstall
+npm install --legacy-peer-deps
 npm start
 ```
 
-### Backend connection errors
-Ensure infrastructure is running:
+**Problem:** "Cannot connect to backend API"
+- Verify backend is running: `curl http://localhost:8082/api`
+- Check CORS configuration in `backend/src/main/resources/application-dev.properties`
+- Ensure `spring.web.cors.allowed-origins=http://localhost:4200`
+
+### Backend Issues
+
+**Problem:** Backend fails to start - MongoDB connection error
 ```bash
-docker ps
-# Should show mongo, postgres, keycloak, mongo-express running
+# Check MongoDB is running
+docker ps | grep mongo
+
+# Test MongoDB connection
+docker exec -it projet-dechet-mongo-1 mongosh -u root -p admin
 ```
+
+**Problem:** "Failed to authenticate"
+- Verify MongoDB credentials in `.env` and `application-dev.properties`
+- Check MongoDB logs: `docker logs projet-dechet-mongo-1`
+
+**Problem:** Port 8082 already in use
+```powershell
+# Windows: Find process using port
+netstat -ano | findstr :8082
+# Kill the process (replace PID)
+taskkill /PID <process_id> /F
+
+# Or change backend port in application.properties
+# server.port=8083
+```
+
+### Docker Issues
+
+**Problem:** "Cannot start service: port is already allocated"
+```bash
+# Check what's using the port
+docker ps -a
+netstat -ano | findstr :<port_number>
+
+# Stop all containers and retry
+docker compose down
+docker compose up -d
+```
+
+**Problem:** MongoDB container keeps restarting
+```bash
+# Check logs
+docker logs projet-dechet-mongo-1
+
+# Remove volume and recreate
+docker compose down -v
+docker compose up -d mongo
+```
+
+### Database Issues
+
+**Problem:** Test data import fails
+```bash
+# Verify container name
+docker ps --format "{{.Names}}" | grep mongo
+
+# Use correct container name in import commands
+docker exec <correct-container-name> mongoimport ...
+```
+
+**Problem:** Cannot access Mongo Express
+- Verify credentials in `.env` match Mongo Express configuration
+- Check if service is running: `docker ps | grep mongo-express`
+- Try accessing: http://localhost:8089
+
+### Common Error Messages
+
+| Error | Solution |
+|-------|----------|
+| `ECONNREFUSED` | Service not started or wrong port |
+| `Realm does not exist` | Keycloak not fully initialized, wait and retry |
+| `JWT token invalid` | Clear browser cookies/localStorage, login again |
+| `Cannot find module` | Run `npm install --legacy-peer-deps` |
+| `Port already in use` | Kill process or change port in configuration |
+| `Authentication failed` | Check credentials in `.env` and properties files |
 
 ## 🤖 Automated Incident Reporting (n8n Workflow)
 
-The system includes an n8n workflow that automates incident reporting via email:
+The system includes an intelligent n8n workflow that automates incident reporting via email.
 
 ### Features
-- **Email Monitoring**: Automatically monitors Gmail for citizen incident reports
-- **AI-Powered Extraction**: Uses Groq AI to extract structured incident data from emails
-- **Duplicate Detection**: Checks MongoDB for similar incidents using AI similarity matching
-- **Smart Responses**: 
-  - If duplicate detected (≥75% similarity): Sends automated reply to citizen
-  - If new incident: Notifies admin and creates incident record
+- 📧 **Email Monitoring**: Automatically monitors Gmail for citizen incident reports
+- 🤖 **AI-Powered Extraction**: Uses Groq AI to extract structured incident data from emails
+- 🔍 **Duplicate Detection**: Checks MongoDB for similar incidents using AI similarity matching (≥75% threshold)
+- 📨 **Smart Responses**: 
+  - If duplicate detected: Sends automated reply to citizen with existing incident reference
+  - If new incident: Notifies admin and creates incident record in database
 
 ### Workflow Location
 `workflows/incident_report.json`
 
 ### Setup Requirements
-- n8n instance with the workflow imported
-- Gmail OAuth2 credentials configured
-- Groq API credentials for AI processing
-- MongoDB connection for duplicate detection
+
+1. **n8n Instance** - Self-hosted or cloud
+2. **Gmail OAuth2 Credentials** - For email monitoring
+3. **Groq API Key** - For AI processing (https://groq.com)
+4. **MongoDB Connection** - For duplicate detection
+
+### Setup Instructions
+
+1. Import workflow into n8n:
+   ```bash
+   # In n8n UI: Import workflow from file
+   # Select: workflows/incident_report.json
+   ```
+
+2. Configure credentials:
+   - Gmail OAuth2: Connect your Gmail account
+   - Groq API: Add your API key
+   - MongoDB: Connection string from `.env`
+
+3. Activate workflow in n8n
 
 ### How It Works
-1. Gmail trigger monitors incoming emails every minute
-2. AI agent extracts incident details (description, location, priority)
-3. Duplicate check compares against existing incidents in MongoDB
-4. Conditional logic routes to appropriate response:
-   - **Duplicate found**: Reply to citizen with confirmation
-   - **New incident**: Notify admin and process new report
+
+```mermaid
+graph LR
+    A[Gmail Monitor] --> B[Email Received]
+    B --> C[Groq AI Extraction]
+    C --> D[Parse Incident Data]
+    D --> E{Check Duplicates}
+    E -->|Duplicate Found| F[Reply to Citizen]
+    E -->|New Incident| G[Notify Admin]
+    G --> H[Create Incident Record]
+```
+
+1. **Email Trigger**: Monitors Gmail inbox every minute
+2. **AI Extraction**: Groq AI extracts:
+   - Description
+   - Location (address/coordinates)
+   - Priority (Low/Medium/High/Critical)
+3. **Duplicate Check**: Compares with existing incidents using semantic similarity
+4. **Conditional Response**:
+   - **≥75% similarity**: Automatic reply with confirmation
+   - **<75% similarity**: New incident created, admin notified
+
+### Email Format for Citizens
+
+Send emails to configured Gmail address with:
+```
+Subject: Incident Report - [Brief Description]
+
+Body:
+Location: [Street address or coordinates]
+Description: [Detailed description of the issue]
+Priority: [Low/Medium/High/Critical]
+```
+
+### Customization
+
+Edit workflow nodes to:
+- Change duplicate similarity threshold
+- Modify email templates
+- Add additional notification channels
+- Integrate with other systems
+
 
 ## 📦 Project Structure
 
 ```
-├── backend/               # Spring Boot application
-├── frontend/              # Angular application
+projet-dechet/
+├── backend/                    # Spring Boot Application
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/nourproject/backend/
+│   │   │   │   ├── controllers/      # REST API Controllers
+│   │   │   │   │   ├── UserController.java
+│   │   │   │   │   ├── VehiculeController.java
+│   │   │   │   │   ├── ContainerController.java
+│   │   │   │   │   ├── PickUpPointController.java
+│   │   │   │   │   ├── RouteController.java
+│   │   │   │   │   ├── IncidentController.java
+│   │   │   │   │   ├── NotificationController.java
+│   │   │   │   │   └── AdminController.java
+│   │   │   │   ├── entities/         # MongoDB Document Models
+│   │   │   │   │   ├── User.java
+│   │   │   │   │   ├── Vehicule.java
+│   │   │   │   │   ├── Container.java
+│   │   │   │   │   ├── PickUpPoint.java
+│   │   │   │   │   ├── Route.java
+│   │   │   │   │   ├── Incident.java
+│   │   │   │   │   └── Notification.java
+│   │   │   │   ├── repositories/     # MongoDB Repositories
+│   │   │   │   ├── services/         # Business Logic
+│   │   │   │   │   ├── interfaces/
+│   │   │   │   │   └── impl/
+│   │   │   │   ├── dtos/            # Data Transfer Objects
+│   │   │   │   ├── mappers/         # MapStruct Mappers
+│   │   │   │   ├── config/          # Security & Config
+│   │   │   │   │   ├── SecurityConfig.java
+│   │   │   │   │   └── MongoConfig.java
+│   │   │   │   ├── enums/           # Enumerations
+│   │   │   │   └── exceptions/      # Custom Exceptions
+│   │   │   └── resources/
+│   │   │       ├── application.properties
+│   │   │       ├── application-dev.properties
+│   │   │       └── application-prod.properties
+│   │   └── test/
+│   ├── Dockerfile
+│   ├── pom.xml
+│   └── USER_MANAGEMENT_DOCUMENTATION.md
+│
+├── frontend/                   # Angular Application
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── components/
+│   │   │   │   ├── admin-layout/
+│   │   │   │   ├── map/              # Leaflet map integration
+│   │   │   │   ├── profile/
+│   │   │   │   ├── sidebar/
+│   │   │   │   └── resources/        # CRUD components
+│   │   │   ├── pages/
+│   │   │   │   ├── home/             # Landing page
+│   │   │   │   ├── dashboard/        # Admin dashboard
+│   │   │   │   └── citizen/          # Citizen portal
+│   │   │   ├── services/             # HTTP Services
+│   │   │   │   ├── user.service.ts
+│   │   │   │   ├── vehicule.service.ts
+│   │   │   │   ├── container.service.ts
+│   │   │   │   ├── pickup-point.service.ts
+│   │   │   │   ├── route.service.ts
+│   │   │   │   ├── incident.service.ts
+│   │   │   │   └── notification.service.ts
+│   │   │   ├── keycloak/             # Authentication
+│   │   │   │   ├── appKeycloakService.ts
+│   │   │   │   ├── auth.guard.ts
+│   │   │   │   └── auth.interceptor.ts
+│   │   │   ├── models/               # TypeScript Models
+│   │   │   └── styles/
+│   │   ├── environments/
+│   │   │   ├── environment-dev.ts
+│   │   │   ├── environment-prod.ts
+│   │   │   └── environment-example.ts
+│   │   └── assets/
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   ├── package.json
+│   ├── angular.json
+│   ├── tailwind.config.js
+│   └── FRONTEND_PAGES_README.md
+│
 ├── keycloak/
-│   └── keycloak-import/  # Realm configuration
-├── test-data/            # Sample data for testing
-├── workflows/            # n8n automation workflows
-├── devops/               # Deployment configurations
-├── docker-compose.yml    # Docker services configuration
-└── .env                  # Environment variables
+│   └── keycloak-import/
+│       ├── realm-config-dev.json
+│       └── realm-config-dev example.json
+│
+├── test-data/                  # Sample Data
+│   ├── users.json
+│   ├── vehicules.json
+│   ├── containers.json
+│   ├── collectpoints.json
+│   ├── routes.json
+│   ├── incidents.json
+│   ├── notifications.json
+│   └── README.md
+│
+├── workflows/                  # n8n Workflows
+│   └── incident_report.json
+│
+├── devops/                     # Deployment Configurations
+│
+├── docker-compose.yml          # Docker Services
+├── .env                        # Environment Variables
+└── readme                      # This file
 ```
+
+## 📚 Additional Documentation
+
+- **Backend User Management**: [backend/USER_MANAGEMENT_DOCUMENTATION.md](backend/USER_MANAGEMENT_DOCUMENTATION.md)
+- **Frontend Pages Guide**: [frontend/FRONTEND_PAGES_README.md](frontend/FRONTEND_PAGES_README.md)
+- **Test Data Import**: [test-data/README.md](test-data/README.md)
+- **Angular README**: [frontend/README.md](frontend/README.md)
+
+## 🧪 Testing
+
+### Backend Tests
+```bash
+cd backend
+mvn test
+```
+
+### Frontend Tests
+```bash
+cd frontend
+npm test
+```
+
+### End-to-End Testing
+```bash
+cd frontend
+npm run e2e
+```
+
+## 🔄 Development Workflow
+
+1. **Create Feature Branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Make Changes**
+   - Backend: Modify Java files in `backend/src/`
+   - Frontend: Modify TypeScript/HTML/CSS in `frontend/src/`
+
+3. **Test Locally**
+   - Run both backend and frontend
+   - Test with sample data
+   - Verify authentication flows
+
+4. **Commit Changes**
+   ```bash
+   git add .
+   git commit -m "feat: your feature description"
+   ```
+
+5. **Push and Create PR**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+## 🌟 Key Technologies & Libraries
+
+### Backend Dependencies
+- **Spring Boot Starter Data MongoDB** - MongoDB integration
+- **Spring Boot Starter Security** - Security framework
+- **Spring Boot Starter OAuth2 Resource Server** - JWT validation
+- **Keycloak Admin Client 25.0.0** - Keycloak integration
+- **MapStruct 1.6.1** - Bean mapping
+- **Lombok** - Boilerplate reduction
+- **Spring Boot Starter Mail** - Email notifications
+- **Spring Boot Starter Validation** - Bean validation
+
+### Frontend Dependencies
+- **Angular 20** - Framework
+- **Angular Material** - UI components
+- **Tailwind CSS** - Utility-first CSS
+- **DaisyUI** - Component library
+- **Keycloak Angular 20** - Authentication
+- **Leaflet** - Interactive maps
+- **ApexCharts & Chart.js** - Data visualization
+- **ngx-toastr** - Toast notifications
+- **Bootstrap 5** - Additional UI components
+
+## 💡 Best Practices
+
+### Code Quality
+- Follow clean architecture principles
+- Use DTOs for API responses
+- Implement proper exception handling
+- Write meaningful commit messages
+- Add comments for complex logic
+
+### Security
+- Never commit sensitive data (passwords, API keys)
+- Use environment variables for configuration
+- Validate all user inputs
+- Implement proper CORS policies
+- Use HTTPS in production
+
+### Performance
+- Implement pagination for large datasets
+- Use lazy loading for MongoDB references
+- Optimize database queries
+- Minify frontend assets for production
+- Use CDN for static assets in production
+
+## 🚦 System Requirements
+
+### Minimum Requirements
+- **CPU**: 4 cores
+- **RAM**: 8 GB
+- **Disk**: 20 GB free space
+- **OS**: Windows 10/11, macOS 10.15+, Ubuntu 20.04+
+
+### Recommended for Production
+- **CPU**: 8 cores
+- **RAM**: 16 GB
+- **Disk**: 50 GB SSD
+- **Network**: Static IP with domain name
+
+## 📊 Monitoring & Logs
+
+### View Container Logs
+```bash
+# Backend logs
+docker logs -f dechet-backend
+
+# Keycloak logs
+docker logs -f dechet-keycloak
+
+# MongoDB logs
+docker logs -f projet-dechet-mongo-1
+
+# All services
+docker compose logs -f
+```
+
+### Application Logs
+- **Backend**: Logs to console and file (if configured)
+- **Frontend**: Browser console
+- **MongoDB**: Docker logs
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+### Code Style
+- **Java**: Follow Google Java Style Guide
+- **TypeScript**: Follow Angular Style Guide
+- **Naming**: Use descriptive names for variables and functions
 
 ## 📝 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🔗 Repository
+## 👥 Authors & Contributors
 
-https://github.com/azizmabrouk11/gestion_dechets
+- **Original Author**: Nour Project Team
+- **Repository**: https://github.com/azizmabrouk11/gestion_dechets
+
+## 🆘 Support
+
+For issues and questions:
+1. Check this README and additional documentation
+2. Search existing GitHub issues
+3. Create new issue with detailed description
+4. Include error logs and steps to reproduce
+
+## 🔮 Future Enhancements
+
+- [ ] Mobile application (React Native/Flutter)
+- [ ] Real-time GPS tracking for vehicles
+- [ ] IoT sensor integration for container fill levels
+- [ ] Advanced analytics and reporting dashboard
+- [ ] Multi-language support (i18n)
+- [ ] Push notifications
+- [ ] Export reports to PDF/Excel
+- [ ] Integration with payment systems
+- [ ] Citizen mobile app for on-the-go access
+- [ ] Machine learning for route optimization
+- [ ] Public API with rate limiting
+
+## 📅 Version History
+
+- **v1.0.0** (Current) - Initial release with core features
+  - User management with Keycloak
+  - Vehicle and container tracking
+  - Route planning
+  - Incident reporting with AI
+  - Admin dashboard and citizen portal
+
+---
+
+**Built with ❤️ for sustainable cities**
